@@ -86,15 +86,37 @@
 
 \section{Introdução}
 
+% Apresentação do problema U-curve (na linha do projeto da primeira IC, só que
+% procurando ser mais sucinto);
+% Recapitulação da IC anterior (melhoramentos do algoritmo UCS com ROBDDs), com
+% particular destaque para a limitação dos melhoramentos obtidos.
+% 
 \subsection{O problema U-Curve}
+O problema de seleção de característica consiste em, dado um cojunto $S$
+de características, escolher um subconjunto de características que seja
+ótimo. A solução desse problema tem aplicações na construção de modelos
+para aprendizado de máquina e reconhecimento de padrões, que dependem da
+escolha de um subconjunto de características que seja o mais relevante 
+possível (ótimo), de acordo com alguma métrica. Formalmente, podemos 
+definir o problema de seleção de características como um problema de 
+busca, no qual procuramos um subconjunto $X \in \mathcal{P}(S)$ que 
+minimiza uma função de custo $c : \mathcal{P}(S) \to \mathbb{R_+}$.
 
-\begin{itemize}
-\item Apresentação do problema U-curve (na linha do projeto da primeira IC, só que
-procurando ser mais sucinto);
+O espaço de busca do problema de seleção de características pode ser
+visto como um reticulado booleano ($\mathcal{P}(S)$, $\subseteq$), onde
+cada nó é um conjunto de características, também chamado de 
+classificador. É comum nesse problema que as cadeias do reticulado
+descrevam "curvas em u" quando avaliadas pela  função de custo $c$. Esse
+comportamento pode ser intuitivamente explicado se considerarmos que um 
+classificador melhora ao adicionarmos novas características até um ponto
+em que o grande número de características causa grandes erros de 
+estimação, piorando o classificador. 
 
-\item Recapitulação da IC anterior (melhoramentos do algoritmo UCS com ROBDDs), com
-particular destaque para a limitação dos melhoramentos obtidos.
-\end{itemize}
+O problema U-Curve é um caso particular do problema de seleção de
+características em que todas as cadeias do espaço de busca descrevem
+"curvas em u" quando avaliadas pela função de custo. Existem algoritmos
+ótimos para solução do problema U-Curve, como o Poset-Forest Search
+({\tt PFS}) e U-Curve Search ({\tt UCS}) ~\cite{msreis thesis}.
 
 \subsection{O algoritmo Poset-Forest Search}
 
@@ -168,5 +190,9 @@ Descrição das atividades da tabela da subseção anterior.
     functions defined on poset chains–algorithms and applications."
     PhD thesis, Institute of Mathematics and Statistics, University of
     São Paulo, Brazil, (2012).
+
+\bibitem{ucsrobdd ic}
+    %% como citar ic?
+
 \end{thebibliography}
 \end{document}
