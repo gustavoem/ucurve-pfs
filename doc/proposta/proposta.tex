@@ -85,18 +85,80 @@
 \newpage
 
 \section{Introdução}
+
 \subsection{O problema U-Curve}
+
+\begin{itemize}
+\item Apresentação do problema U-curve (na linha do projeto da primeira IC, só que
+procurando ser mais sucinto);
+
+\item Recapitulação da IC anterior (melhoramentos do algoritmo UCS com ROBDDs), com
+particular destaque para a limitação dos melhoramentos obtidos.
+\end{itemize}
+
 \subsection{O algoritmo Poset-Forest Search}
+
+Levando-se em consideração tais limitações, existe a necessidade de
+novos algoritmos para atacar esse problema. Nesse sentido, foi proposto o 
+algoritmo Poset-Forest Search (PFS) (Reis, 2012, capítulo 6.2~\cite{msreis thesis}). Uma versão
+preliminar foi implementada e testada, com resultados promissores; todavia,
+novos melhoramentos e testes são necessários para que o PFS se torne uma 
+alternativa competitiva para resolver o problema de seleção de características.
 
 \section{Objetivos}
 
+\begin{enumerate}
+\item Utilização dos ROBDDs, implementados no IC anterior, para representar as 
+listas de raízes do algoritmo PFS.
+
+\item Desenho de uma versão paralelizada do PFS, com maior escalabilidade. Para
+este fim, paralelizaremos o percorrimento das florestas de posets, com o
+programa principal gerenciando a escolha das raízes (i.e., início de um percor-
+rimento), guardando o mínimo corrente e centralizando a atualização das podas.
+
+\item Desenvolvimento de uma versão do PFS que funcione como algoritmo de 
+aproximação para o problema U-curve, utilizando como critério de aproximação da
+solução ótima o teorema da navalha de Ockham:\\
+\smallskip
+Dado um espaço de hipóteses H (i.e., espaço de busca), o número mínimo de
+amostras necessário para se obter uma solução que erra no máximo $\epsilon$ com
+$1 - \delta$ de probabilidade é expresso por:
+\begin{equation}
+\displaystyle  m(\delta,\epsilon) = \frac{1}{\epsilon} log (\frac{|H|}{\delta}).
+\end{equation}
+
+\item Implementação e testes dos algoritmos propostos, para isso empregando o 
+arcabouço featsel.
+\end{enumerate}
+
+
 \section{Plano de trabalho}
+
 \subsection{Cronograma}
+
+Tabela listando atividades de janeiro a dezembro de 2017.
+
 \subsection{Descrição de atividades}
+
+Descrição das atividades da tabela da subseção anterior.
 
 \section{Materiais e métodos}
 
 \section{Forma de análise e divulgação de resultados}
+
+\begin{itemize}
+\item Arcabouço featsel, já contando com os acréscimos de classes de ROBDDs;
+
+\item Biblioteca OpenMP.
+\end{itemize}
+
+\section{Forma de Análise e de Divulgação dos Resultados}
+
+\begin{itemize}
+\item Benchmarking contra outros algoritmos de seleção de caracteríscas;
+
+\item Elaboração de paper para ser enviado para publicação ao final da IC proposta.
+\end{itemize}
 
 \newpage
 \begin{thebibliography}{}
