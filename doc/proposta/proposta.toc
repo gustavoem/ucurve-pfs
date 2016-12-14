@@ -6,7 +6,7 @@
 \contentsline {section}{\numberline {3}Plano de trabalho}{6}{section.3}
 \contentsline {subsection}{\numberline {3.1}Cronograma}{6}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Descri\IeC {\c c}\IeC {\~a}o de atividades}{6}{subsection.3.2}
-\contentsline {section}{\numberline {4}Materiais e m\IeC {\'e}todos}{6}{section.4}
-\contentsline {section}{\numberline {5}Forma de an\IeC {\'a}lise e divulga\IeC {\c c}\IeC {\~a}o de resultados}{6}{section.5}
-\contentsline {section}{\numberline {6}Forma de An\IeC {\'a}lise e de Divulga\IeC {\c c}\IeC {\~a}o dos Resultados}{6}{section.6}
-\contentsline {section}{Refer\IeC {\^e}ncias}{7}{section*.2}
+\contentsline {section}{\numberline {4}Materiais e m\IeC {\'e}todos}{7}{section.4}
+\contentsline {section}{\numberline {5}Forma de an\IeC {\'a}lise e divulga\IeC {\c c}\IeC {\~a}o de resultados}{7}{section.5}
+\contentsline {section}{\numberline {6}Forma de An\IeC {\'a}lise e de Divulga\IeC {\c c}\IeC {\~a}o dos Resultados}{7}{section.6}
+\contentsline {section}{Refer\IeC {\^e}ncias}{8}{section*.2}

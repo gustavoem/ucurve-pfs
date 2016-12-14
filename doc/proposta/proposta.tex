@@ -130,7 +130,7 @@ foram limitadas, uma vez que manter a estrutura de ROBDD, em alguns
 casos, demandava grande processamento e uso de memória. Portanto, 
 torna-se necessário a criação de novos algoritmos para resolver o 
 problema, o que nos leva ao estudo do algoritmo Poset-Fores Search 
-({\tt PFS}).
+({\tt PFS}) ~\cite{msreis thesis}.
 
 
 % Levando-se em consideração tais limitações, existe a necessidade de
@@ -141,12 +141,33 @@ problema, o que nos leva ao estudo do algoritmo Poset-Fores Search
 % testes são necessários para que o PFS se torne uma alternativa
 % competitiva para resolver o problema de seleção de características.
 \subsection{O algoritmo Poset-Forest Search}
+O algoritmo {\tt PFS} é um algoritmo ótimo do tipo 
+{\em branch-and-bound}. Esse algoritmo define duas florestas que são 
+subgrafos do reticulado booleano que define o espaço de busca. Essas
+florestas são compostas por árvores que são definidas por uma enumeração
+arbitrária dos elementos do conjunto de característica. A ideia 
+principal do algoritmo é, partindo de um raíz, percorrer um caminho 
+dentro de uma árvore, fazendo podas no espaço de busca quando possível.
+
+Uma versão preliminar desse algoritmo já foi implementada 
+~\cite{msreis thesis} e mostrou resultados promissores, principalmente
+quando analizado o número de nós do reticulado que são visitados. Apesar
+disso, o algoritmo ainda pode ser estudado e apresenta características
+que podem ser exploradas para melhorar seu desempenho. Para isso, 
+podemos estudar o uso de ROBDDs para representar raízes das árvores na
+floresta que representa o espaço de busca; paralelizar o percorrimento 
+das árvores; e estudar modificações na dinâmica do algoritmo, que podem
+se ajustar melhor as novas estruturas de dados, e também aproveitar
+a estrutura do reticulado booleano.
+
 
 \section{Objetivos}
+Neste trabalho, propomos atingir os seguintes objetivos:
 
 \begin{enumerate}
-\item Utilização dos ROBDDs, implementados no IC anterior, para representar as 
-listas de raízes do algoritmo PFS.
+\item Utilização dos ROBDDs, implementados na iniciação científica
+anterior, para representar as listas de raízes da floresta que 
+representa o espaço de busca no algoritmo PFS.
 
 \item Desenho de uma versão paralelizada do PFS, com maior escalabilidade. Para
 este fim, paralelizaremos o percorrimento das florestas de posets, com o
