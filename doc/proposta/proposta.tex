@@ -132,6 +132,35 @@ torna-se necessário a criação de novos algoritmos para resolver o
 problema, o que nos leva ao estudo do algoritmo Poset-Fores Search 
 ({\tt PFS}) ~\cite{msreis thesis}.
 
+\begin{figure}[!ht]
+\centering 
+\begin{tabular}{c c}
+    \subfigure[] {
+        \scalebox{0.75}{
+        \includegraphics
+        [trim=2cm 17.5cm 12.2cm 2cm,clip=true]{Boolean_lattice_3_A.pdf}}
+        \label{fig:U-curve-example:A}
+    }  
+    &
+    \subfigure[] {
+        \scalebox{0.30}{
+        \includegraphics[clip=true]{exemplo1.pdf}} 
+        \label{fig:U-curve-example:B} 
+    }
+\end{tabular}
+\caption{um exemplo de instância do problema U-curve. 
+Figura~\ref{fig:U-curve-example:A}: o diagrama de Hasse de um reticulado
+Booleano de grau $3$ -- as cadeias do reticulado, cujos custos de seus
+elementos são definidos através dos números ao lado dos nós, descrevem
+curvas em U; a cadeia maximal $\{ \emptyset, c, bc, abc \}$ está
+destacada em negrito. O elemento $bc$, destacado em verde, é mínimo na
+cadeia (e também no reticulado Booleano). 
+Figura~\ref{fig:U-curve-example:B}: o gráfico dos custos em função dos
+elementos da cadeia maximal destacada em negrito, mostrando sua curva em
+U. Figura extraída de Reis~\cite{msreis thesis}.} 
+    \label{fig:U-curve} 
+\end{figure}
+
 
 % Levando-se em consideração tais limitações, existe a necessidade de
 % novos algoritmos para atacar esse problema. Nesse sentido, foi 
