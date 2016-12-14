@@ -169,36 +169,126 @@ Neste trabalho, propomos atingir os seguintes objetivos:
 anterior, para representar as listas de raízes da floresta que 
 representa o espaço de busca no algoritmo PFS.
 
-\item Desenho de uma versão paralelizada do PFS, com maior escalabilidade. Para
-este fim, paralelizaremos o percorrimento das florestas de posets, com o
-programa principal gerenciando a escolha das raízes (i.e., início de um percor-
-rimento), guardando o mínimo corrente e centralizando a atualização das podas.
+\item Desenho de uma versão paralelizada do PFS, com maior
+escalabilidade. Para este fim, paralelizaremos o percorrimento das
+árvores nas florestas que representam o espaço de busca, com o programa
+principal gerenciando a escolha das raízes (i.e., início de um 
+percorrimento), guardando o mínimo corrente e centralizando a
+atualização das podas.
 
-\item Desenvolvimento de uma versão do PFS que funcione como algoritmo de 
-aproximação para o problema U-curve, utilizando como critério de aproximação da
-solução ótima o teorema da navalha de Ockham:\\
+\item Desenvolvimento de uma versão do PFS que funcione como algoritmo 
+de aproximação para o problema U-curve, utilizando como critério de
+aproximação da solução ótima o teorema da navalha de Ockham:\\
 \smallskip
-Dado um espaço de hipóteses H (i.e., espaço de busca), o número mínimo de
-amostras necessário para se obter uma solução que erra no máximo $\epsilon$ com
-$1 - \delta$ de probabilidade é expresso por:
+Dado um espaço de hipóteses H (i.e., espaço de busca), o número mínimo 
+de amostras necessário para se obter uma solução que erra no máximo 
+$\epsilon$ com $1 - \delta$ de probabilidade é expresso por:
 \begin{equation}
-\displaystyle  m(\delta,\epsilon) = \frac{1}{\epsilon} log (\frac{|H|}{\delta}).
+\displaystyle  m(\delta,\epsilon) = 
+    \frac{1}{\epsilon} log (\frac{|H|}{\delta}).
 \end{equation}
 
-\item Implementação e testes dos algoritmos propostos, para isso empregando o 
-arcabouço featsel.
+\item Implementação e testes dos algoritmos propostos, para isso
+empregando o arcabouço featsel.
 \end{enumerate}
 
 
 \section{Plano de trabalho}
-
 \subsection{Cronograma}
-
 Tabela listando atividades de janeiro a dezembro de 2017.
 
-\subsection{Descrição de atividades}
+\begin{table}[!ht]
+\caption{cronograma de atividades previstas neste projeto de
+    Iniciação Científica. As descrições das atividades listadas seguem
+    na seção a seguir.} 
+\label{tab:cronograma}
+\begin{center}
+\smallskip
+\begin{tabular}{l ccc ccc}
+    \toprule
+    \small Atividade/mês & \small Jan.17 & \small Fev.17 & \small Mar.17
+                         & \small Abr.17 & \small Mai.17 & \small Jun.17
+    \\ \hline
 
-Descrição das atividades da tabela da subseção anterior.
+    \small Atividade 1   
+    & \small {\bf x} & \small - & \small - & \small - & \small - \\
+
+    \small Atividade 2   
+    & \small {\bf x} & \small {\bf x} & \small - & \small - 
+    & \small - \\
+
+    \small Atividade 3   
+    & \small - & \small {\bf x} & \small {\bf x} & \small - & \small -
+    & \small - \\
+
+    \small Atividade 4
+    & \small - & \small - & \small {\bf x} & \small {\bf x} 
+    & \small {\bf x} &  \small - \\
+
+    \small Atividade 5   
+    & \small - & \small - & \small - & \small - & \small {\bf x} 
+    & \small {\bf x} \\
+
+    \small Primeiro Relatório  
+    & \small - & \small - & \small - & \small - & \small {\bf x} 
+    & \small {\bf x} \\
+    \bottomrule
+    \toprule
+    \small Atividade/mês & \small Jul.17 & \small Ago.17 & \small Set.17
+                         & \small Out.17 & \small Nov.17 & \small Dez.17
+    \\ \hline
+
+    \small Atividade 6   
+    & \small {\bf x} & \small {\bf x} & \small - & \small - & \small - 
+    & \small - \\
+
+    \small Atividade 7
+    & \small - & \small {\bf x} & \small {\bf x} & \small{\bf x} 
+    & \small - &  \small -\\
+
+    \small Atividade 8  
+    & \small - & \small - & \small - & \small {\bf x} & \small {\bf x} 
+    & \small - \\
+
+    \small Atividade 9
+    & \small - & \small - & \small - & \small - & \small {\bf x} 
+    & \small {\bf x}\\
+
+    \small Segundo Relatório
+    & \small - & \small - & \small - & \small - & \small {\bf x} 
+    & \small {\bf x}\\
+    \bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{Descrição de atividades}
+\begin{itemize}
+    \item{\bf Atividade 1.}
+        Estudo do algoritmo {\tt PFS}.
+    \item{\bf Atividade 2.}
+        Implementação de uma variação do {\tt PFS} que usa ROBDDs como 
+        estrutura de dados para representar início de caminhos.
+    \item{\bf Atividade 3.}
+        Estudo da biblioteca OpenMP, para paralelização do {\tt PFS}.
+    \item{\bf Atividade 4.}
+        Implementação de uma versão paralela do algoritmo {\tt PFS} com
+        o uso de ROBDDs como estrutura de dados.
+    \item{\bf Atividade 5.}
+        Testes da primeira versão do {\tt PFS} paralelo com instâncias
+        artificiais.
+    \item{\bf Atividade 6.}
+        Estudo do teorema da navalha de Ockham.
+    \item{\bf Atividade 7.} 
+        Implementação de uma variação do {\tt PFS} paralelo que se 
+        comporte como um algoritmo de aproximação.
+    \item{\bf Atividade 8.}
+        Testes com instâncias artificiais do algoritmo de aproximação.
+    \item{\bf Atividade 9.}
+        Estudo comparativo entre os algoritmos produzidos, incluindo
+        testes com instâncias reais.
+\end{itemize}
+
 
 \section{Materiais e métodos}
 
