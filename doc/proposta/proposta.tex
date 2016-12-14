@@ -298,7 +298,13 @@ arcabouço featsel. Esse arcabouço foi implementado em C++ e conta com
 diversas estruturas de dados que serão necessárias para implementar os
 algoritmos sugeridos nesse trabalho. Além disso, o arcabouço featsel 
 possui a estrutura de dados de ROBDDs, implementada em uma outra 
-oportunidade de iniciação científica.
+oportunidade de iniciação científica. 
+
+O arcabouço featsel segue a licença \textit{GNU General Public License}
+(GNU-GPL), o que nos permite utilizar o código do arcabouço para 
+implementação dos novos algoritmos. Por utilizarmos o arcabouço como 
+base, o código que será implementado nesse trabalho também seguirá a
+licença GPL.
 
 Também utilizaremos a especificação OpenMP junto ao compilador g++ para
 compilar os códigos produzidos. A especificação OpenMP determina uma 
@@ -306,11 +312,25 @@ biblioteca que dá suporte ao programador, por meio de diretivas de
 compilação, ao determinar como um código pode ser executado em 
 paralelo no processador.
 
-
 % Benchmarking contra outros algoritmos de seleção de caracteríscas;
 % Elaboração de paper para ser enviado para publicação ao final da IC
 % proposta.
 \section{Forma de Análise e de Divulgação dos Resultados}
+Para analisar os resultados obtidos utilizaremos o próprio arcabouço
+featsel, que já possui métodos que registram dados sobre a execução dos
+algoritmos. As principais métricas a serem consideradas nos algoritmos
+implementados serão tempo de execução e gasto de memória. As instâncias
+utilizadas para geração desses dados serão tanto artificiais quanto 
+reais, o que também nos oferecerá uma terceira métrica: a robustez dos
+algoritmos quando violamos a suposição de que a função custo é 
+decomponível em "curvas em u".
+
+Após testarmos os algoritmos com instâncias reais e artificiais iremos
+escrever um paper onde descreveremos os avanços que os novos algoritmos
+trouxeram e quais características do problema U-Curve e de nossa solução
+podem ser exploradas futuramente para elaboração de novas abordagens 
+para resolver o problema.
+
 
 \newpage
 \begin{thebibliography}{}
