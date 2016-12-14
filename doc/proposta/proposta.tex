@@ -290,23 +290,27 @@ Tabela listando atividades de janeiro a dezembro de 2017.
 \end{itemize}
 
 
+% Arcabouço featsel, já contando com os acréscimos de classes de ROBDDs;
+% Biblioteca OpenMP.
 \section{Materiais e métodos}
+Os algoritmos produzidos nesse trabalho serão implementados junto ao 
+arcabouço featsel. Esse arcabouço foi implementado em C++ e conta com
+diversas estruturas de dados que serão necessárias para implementar os
+algoritmos sugeridos nesse trabalho. Além disso, o arcabouço featsel 
+possui a estrutura de dados de ROBDDs, implementada em uma outra 
+oportunidade de iniciação científica.
 
-\section{Forma de análise e divulgação de resultados}
+Também utilizaremos a especificação OpenMP junto ao compilador g++ para
+compilar os códigos produzidos. A especificação OpenMP determina uma 
+biblioteca que dá suporte ao programador, por meio de diretivas de 
+compilação, ao determinar como um código pode ser executado em 
+paralelo no processador.
 
-\begin{itemize}
-\item Arcabouço featsel, já contando com os acréscimos de classes de ROBDDs;
 
-\item Biblioteca OpenMP.
-\end{itemize}
-
+% Benchmarking contra outros algoritmos de seleção de caracteríscas;
+% Elaboração de paper para ser enviado para publicação ao final da IC
+% proposta.
 \section{Forma de Análise e de Divulgação dos Resultados}
-
-\begin{itemize}
-\item Benchmarking contra outros algoritmos de seleção de caracteríscas;
-
-\item Elaboração de paper para ser enviado para publicação ao final da IC proposta.
-\end{itemize}
 
 \newpage
 \begin{thebibliography}{}
