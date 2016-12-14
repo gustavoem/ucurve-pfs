@@ -1,10 +1,10 @@
 \select@language {portuguese}
 \contentsline {section}{\numberline {1}Introdu\IeC {\c c}\IeC {\~a}o}{4}{section.1}
 \contentsline {subsection}{\numberline {1.1}O problema U-Curve}{4}{subsection.1.1}
-\contentsline {subsection}{\numberline {1.2}O algoritmo Poset-Forest Search}{4}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.2}O algoritmo Poset-Forest Search}{5}{subsection.1.2}
 \contentsline {section}{\numberline {2}Objetivos}{5}{section.2}
-\contentsline {section}{\numberline {3}Plano de trabalho}{5}{section.3}
-\contentsline {subsection}{\numberline {3.1}Cronograma}{5}{subsection.3.1}
+\contentsline {section}{\numberline {3}Plano de trabalho}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}Cronograma}{6}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Descri\IeC {\c c}\IeC {\~a}o de atividades}{6}{subsection.3.2}
 \contentsline {section}{\numberline {4}Materiais e m\IeC {\'e}todos}{6}{section.4}
 \contentsline {section}{\numberline {5}Forma de an\IeC {\'a}lise e divulga\IeC {\c c}\IeC {\~a}o de resultados}{6}{section.5}
