@@ -182,13 +182,25 @@ Uma versão preliminar desse algoritmo já foi implementada
 ~\cite{msreis thesis} e mostrou resultados promissores, principalmente
 quando analizado o número de nós do reticulado que são visitados. Apesar
 disso, o algoritmo ainda pode ser estudado e apresenta características
-que podem ser exploradas para melhorar seu desempenho. Para isso, 
-podemos estudar o uso de ROBDDs para representar raízes das árvores na
-floresta que representa o espaço de busca; paralelizar o percorrimento 
-das árvores; e estudar modificações na dinâmica do algoritmo, que podem
-se ajustar melhor as novas estruturas de dados, e também aproveitar
-a estrutura do reticulado booleano.
+que podem ser exploradas para melhorar seu desempenho. 
 
+O primeiro ponto do algoritmo que pode ser explorado é a escolha da raíz
+de um caminho a ser percorrido no espaço. Quando se utiliza ROBDDs como 
+estrutura de dados, torna-se fácil representar uma função booleana que
+recebe como entrada um elemento do espaço de busca. Portanto, ao invés 
+de listar as raízes do espaço de busca, poderíamos usar um ROBDD para 
+representar esses elementos.
+
+Além disso, a floresta que representa o espaço de busca é composta por
+árvores, isto é, componentes conexas que podem ser percorridas 
+separadamente. Portanto, é natural que percorramos paralelamente as 
+árvores do espaço de busca. Porém, é necessário notar que o controle do
+espaço de busca deve ser feito de maneira centralizada.
+
+Por último, podemos explorar uma modificação no {\tt PFS} para que ele
+se torne um algoritmo de aproximação, isto é, um algoritmo que não é 
+ótimo mas garante que a sua solução dista $\epsilon$ da solução ótima
+com probabilidade $1 - \delta$.
 
 \section{Objetivos}
 Neste trabalho, propomos atingir os seguintes objetivos:

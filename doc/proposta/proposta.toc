@@ -7,5 +7,5 @@
 \contentsline {subsection}{\numberline {3.1}Cronograma}{8}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Descri\IeC {\c c}\IeC {\~a}o de atividades}{8}{subsection.3.2}
 \contentsline {section}{\numberline {4}Materiais e m\IeC {\'e}todos}{9}{section.4}
-\contentsline {section}{\numberline {5}Forma de An\IeC {\'a}lise e de Divulga\IeC {\c c}\IeC {\~a}o dos Resultados}{9}{section.5}
+\contentsline {section}{\numberline {5}Forma de An\IeC {\'a}lise e de Divulga\IeC {\c c}\IeC {\~a}o dos Resultados}{10}{section.5}
 \contentsline {section}{Refer\IeC {\^e}ncias}{10}{section*.2}
