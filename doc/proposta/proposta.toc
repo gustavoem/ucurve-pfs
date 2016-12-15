@@ -4,8 +4,8 @@
 \contentsline {subsection}{\numberline {1.2}O algoritmo Poset-Forest Search}{5}{subsection.1.2}
 \contentsline {section}{\numberline {2}Objetivos}{6}{section.2}
 \contentsline {section}{\numberline {3}Plano de trabalho}{7}{section.3}
-\contentsline {subsection}{\numberline {3.1}Cronograma}{7}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Descri\IeC {\c c}\IeC {\~a}o de atividades}{7}{subsection.3.2}
-\contentsline {section}{\numberline {4}Materiais e m\IeC {\'e}todos}{8}{section.4}
-\contentsline {section}{\numberline {5}Forma de An\IeC {\'a}lise e de Divulga\IeC {\c c}\IeC {\~a}o dos Resultados}{8}{section.5}
+\contentsline {subsection}{\numberline {3.1}Cronograma}{8}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Descri\IeC {\c c}\IeC {\~a}o de atividades}{8}{subsection.3.2}
+\contentsline {section}{\numberline {4}Materiais e m\IeC {\'e}todos}{9}{section.4}
+\contentsline {section}{\numberline {5}Forma de An\IeC {\'a}lise e de Divulga\IeC {\c c}\IeC {\~a}o dos Resultados}{9}{section.5}
 \contentsline {section}{Refer\IeC {\^e}ncias}{10}{section*.2}

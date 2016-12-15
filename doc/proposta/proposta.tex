@@ -223,6 +223,38 @@ empregando o arcabouço featsel.
 
 
 \section{Plano de trabalho}
+A pesquisa se iniciará com o estudo do algoritmo {\tt PFS}. Esse 
+algoritmo está atualmente implementado no arcabouço featsel, e será 
+usado como base para os futuros algoritmos desse projeto. O próximo 
+passo envolverá a construção de uma modificação do algoritmo {\tt PFS}
+que utiliza a estrutura de dados ROBDD para guardar as raízes da 
+floresta que representa o espaço de busca do problema.
+
+Estudaremos em seguida a biblioteca OpenMP, escolhida para paralelização
+do algoritmo. Após concluidos estudos da biblioteca, devemos analisar a
+dinâmica do algoritmo {\tt PFS} e reescreve-la com as necessárias 
+modificações para que partes do algoritmo possam ser executados em
+paralelo. A principio, a paralelização do algoritmo se dará no 
+percorrimento de caminhos das florestas do espaço de busca, que será 
+atualizado em um espaço comum da memória a todas as linhas de execução.
+Ao final dessa etapa, teremos um novo algoritmo, que será testado
+e comparado com outros algoritmos do arcabouço featsel.
+
+A próxima etapa do nosso trabalho será o estudo de algoritmos de 
+aproximação e do modelo de aprendizado \textit{Probably Approximately
+Correct} (PAC learning). Portanto, pretendemos construir uma variante do
+algoritmo {\tt PFS} que deixa de buscar uma solução ótima para buscar
+uma solução provavelmente aproximadamente correta. Utilizaremos como 
+critério de aproximação a solução ótima do teorema da navalha de Ockham.
+
+Após implementarmos o algoritmo de aproximação para o problema U-Curve
+poderemos testar o seu desempenho com instâncias artificiais. Além 
+disso, poderemos testar os algoritmos desenvolvidos durante o projeto
+com instâncias reais do problema U-Curve. Os resultados obtidos, assim
+como as descobertas feitas no processo de estudo e criação dos novos
+algoritmos serão descritas em um artigo que será escrito como ultima 
+atividade desse projeto.
+
 \subsection{Cronograma}
 Tabela listando atividades de janeiro a dezembro de 2017.
 
@@ -341,6 +373,7 @@ biblioteca que dá suporte ao programador, por meio de diretivas de
 compilação, ao determinar como um código pode ser executado em 
 paralelo no processador.
 
+
 % Benchmarking contra outros algoritmos de seleção de caracteríscas;
 % Elaboração de paper para ser enviado para publicação ao final da IC
 % proposta.
@@ -360,8 +393,6 @@ trouxeram e quais características do problema U-Curve e de nossa solução
 podem ser exploradas futuramente para elaboração de novas abordagens 
 para resolver o problema.
 
-
-\newpage
 \begin{thebibliography}{}
 \addcontentsline{toc}{section}{Referências}
 \bibitem{msreis thesis}
