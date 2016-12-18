@@ -52,7 +52,25 @@
 
     {\bf Resumo}    
 \end{center}
-    % Resumo
+% Resumo
+O problema U-Curve é um caso particular do problema de seleção de 
+características, que por sua vez possui diversas aplicações em 
+aprendizado de máquina. Existem algoritmos ótimos para o problema 
+U-Curve, como o Poset-Forest Search ({\tt PFS}), que decompõe o espaço 
+de busca em árvores; e o U-Curve Search ROBDD ({\tt UCSR}), que utiliza
+diagramas de decisão binárias ordenadas e reduzidas (ROBDDs) para
+representação do espaço de busca. Neste trabalho, propomos estudar o
+algoritmo {\tt PFS} e a elaboração de novos algoritmos que sejam mais
+eficientes computacionalmente. Para atingir melhores resultados, em
+tempo de execução e em uso de espaço de memória, propomos adicionar ao
+{\tt PFS} as estratégias: uso de ROBDDs como estrutura de dados, para
+representar as raízes das árvores que do espaço de busca; paralelismo,
+aproveitando que a decomposição do espaço de busca em árvores separa os
+elementos em conjuntos desconexos; e mudanças para que o novo algoritmo
+seja de aproximação, ou seja, a solução encontrada não é necessariamente
+ótima, mas garantimos que as soluções estão perto da solução ótima com
+uma alta probabilidade.
+
 
 \newpage
 
@@ -78,7 +96,25 @@
 
     {\bf Abstract}    
 \end{center}
-    % Resumo
+% Abstract
+The U-Curve problem is a special case of the feature selection problem,
+which has applications in machine learning. There are optimal algorithms
+for the U-Curve problem, such as the Poset-Forest Search ({\tt PFS}), 
+which decomposes the search space in a forest; and the U-Curve Search
+ROBDD ({\tt UCSR}), which uses Reduced Ordered Binary Decision Diagrams
+(ROBDD) for search space representation. In this project, we propose
+the study of the {\tt PFS} algorithm and the development of new 
+algorithms that are more efficient computationally. To achieve better 
+results, considering time of execution and memory space usage, we 
+propose adding to the {\tt PFS} algorithm the following strategies: use
+of ROBDDs as data structure, to represent roots of the search space 
+forest; parallelism, exploiting the fact that the decomposition of the 
+search space in trees separates the elements in disjoint sets; and 
+changes that makes the new algorithm an approximation algorithm, that 
+is, the solution found is not necessarily optimal, but we can guarantee
+that this solution is probably approximately close to the optimal 
+solution.
+
     
 \newpage
 \tableofcontents
@@ -106,7 +142,7 @@ O espaço de busca do problema de seleção de características pode ser
 visto como um reticulado booleano ($\mathcal{P}(S)$, $\subseteq$), onde
 cada nó é um conjunto de características, também chamado de 
 classificador. É comum nesse problema que as cadeias do reticulado
-descrevam "curvas em u" quando avaliadas pela  função de custo $c$. Esse
+descrevam curvas em u quando avaliadas pela  função de custo $c$. Esse
 comportamento pode ser intuitivamente explicado se considerarmos que um 
 classificador melhora ao adicionarmos novas características até um ponto
 em que o grande número de características causa grandes erros de 
@@ -114,7 +150,7 @@ estimação, piorando o classificador.
 
 O problema U-Curve é um caso particular do problema de seleção de
 características em que todas as cadeias do espaço de busca descrevem
-"curvas em u" quando avaliadas pela função de custo. Existem algoritmos
+curvas em u quando avaliadas pela função de custo. Existem algoritmos
 ótimos para solução do problema U-Curve, como o Poset-Forest Search
 ({\tt PFS}) e U-Curve Search ({\tt UCS}) ~\cite{msreis thesis}. Além 
 disso, em outra oportunidade de iniciação científica, estudamos o uso
@@ -123,14 +159,14 @@ estrutura de dados eficiente para o controle do espaço de busca
 ~\cite{ucsrobdd ic}.
 
 O uso de ROBDDs aliado a mudanças à dinâmica do {\tt UCS} nos levaram a 
-criação do algoritmo {\tt UCSR}. Esse novo algoritmo trouxe melhoras no
-tempo de execução, pois permite consultas rápidas ao espaço de busca, o
-que era mais custoso no algoritmo {\tt UCS}. Porém, as melhorias obtidas
-foram limitadas, uma vez que manter a estrutura de ROBDD, em alguns 
-casos, demandava grande processamento e uso de memória. Portanto, 
-torna-se necessário a criação de novos algoritmos para resolver o 
-problema, o que nos leva ao estudo do algoritmo Poset-Fores Search 
-({\tt PFS}) ~\cite{msreis thesis}.
+criação do algoritmo U-Curve Search ROBDD {\tt UCSR}. Esse novo 
+algoritmo trouxe melhoras no tempo de execução, pois permite consultas
+rápidas ao espaço de busca, o que era mais custoso no algoritmo
+{\tt UCS}. Porém, as melhorias obtidas foram limitadas, uma vez que
+manter a estrutura de ROBDD, em alguns casos, demandava grande 
+processamento e uso de memória. Portanto, torna-se necessário a criação
+de novos algoritmos para resolver o problema, o que nos leva ao estudo
+do algoritmo Poset-Forest Search ({\tt PFS}) ~\cite{msreis thesis}.
 
 \begin{figure}[!ht]
 \centering 
@@ -176,7 +212,8 @@ subgrafos do reticulado booleano que define o espaço de busca. Essas
 florestas são compostas por árvores que são definidas por uma enumeração
 arbitrária dos elementos do conjunto de característica. A ideia 
 principal do algoritmo é, partindo de um raíz, percorrer um caminho 
-dentro de uma árvore, fazendo podas no espaço de busca quando possível.
+dentro de uma árvore fazendo podas quando possível até que as florestas
+se tornem o grafo vazio.
 
 Uma versão preliminar desse algoritmo já foi implementada 
 ~\cite{msreis thesis} e mostrou resultados promissores, principalmente
@@ -187,15 +224,17 @@ que podem ser exploradas para melhorar seu desempenho.
 O primeiro ponto do algoritmo que pode ser explorado é a escolha da raíz
 de um caminho a ser percorrido no espaço. Quando se utiliza ROBDDs como 
 estrutura de dados, torna-se fácil representar uma função booleana que
-recebe como entrada um elemento do espaço de busca. Portanto, ao invés 
-de listar as raízes do espaço de busca, poderíamos usar um ROBDD para 
-representar esses elementos.
+recebe como entrada um elemento do espaço de busca e diz se ele é, ou 
+não, raíz de alguma árvore. Portanto, ao invés de listar explicitamente
+as raízes do espaço de busca, poderíamos usar um ROBDD para representar
+esses elementos.
 
 Além disso, a floresta que representa o espaço de busca é composta por
 árvores, isto é, componentes conexas que podem ser percorridas 
 separadamente. Portanto, é natural que percorramos paralelamente as 
 árvores do espaço de busca. Porém, é necessário notar que o controle do
-espaço de busca deve ser feito de maneira centralizada.
+espaço de busca deve ser feito de maneira centralizada, evitando 
+inconsistências.
 
 Por último, podemos explorar uma modificação no {\tt PFS} para que ele
 se torne um algoritmo de aproximação, isto é, um algoritmo que não é 
@@ -254,7 +293,7 @@ e comparado com outros algoritmos do arcabouço featsel.
 
 A próxima etapa do nosso trabalho será o estudo de algoritmos de 
 aproximação e do modelo de aprendizado \textit{Probably Approximately
-Correct} (PAC learning). Portanto, pretendemos construir uma variante do
+Correct} (PAC learning). Com isso, pretendemos construir uma variante do
 algoritmo {\tt PFS} que deixa de buscar uma solução ótima para buscar
 uma solução provavelmente aproximadamente correta. Utilizaremos como 
 critério de aproximação a solução ótima do teorema da navalha de Ockham.
@@ -264,7 +303,7 @@ poderemos testar o seu desempenho com instâncias artificiais. Além
 disso, poderemos testar os algoritmos desenvolvidos durante o projeto
 com instâncias reais do problema U-Curve. Os resultados obtidos, assim
 como as descobertas feitas no processo de estudo e criação dos novos
-algoritmos serão descritas em um artigo que será escrito como ultima 
+algoritmos serão descritas em um artigo que será escrito como última 
 atividade desse projeto.
 
 \subsection{Cronograma}
@@ -397,7 +436,7 @@ implementados serão tempo de execução e gasto de memória. As instâncias
 utilizadas para geração desses dados serão tanto artificiais quanto 
 reais, o que também nos oferecerá uma terceira métrica: a robustez dos
 algoritmos quando violamos a suposição de que a função custo é 
-decomponível em "curvas em u".
+decomponível em curvas em u.
 
 Após testarmos os algoritmos com instâncias reais e artificiais iremos
 escrever um paper onde descreveremos os avanços que os novos algoritmos
