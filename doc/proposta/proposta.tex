@@ -1,21 +1,3 @@
-%
-% Comentários do msreis (20/12/16):
-%
-% Em linhas gerais, o projeto ficou bom; as minhas observações mais gerais
-% seriam as seguintes:
-%
-%  i) Figura e tabela não foram referenciadas no texto;
-%
-% ii) Misturou na introdução o enunciado do problema com a proposta para 
-%     atacá-lo;
-%
-% iii) Faltou explicar melhor os princípios de funcionamento do PFS, de forma
-%     análoga ao que fizemos para o UCS na proposta do projeto de IC anterior;
-%
-% iv) Faltou um spell checking!
-%
-
-
 \documentclass[12pt]{article}
 \usepackage[portuguese, brazilian, english]{babel}
 \usepackage[utf8]{inputenc}
@@ -97,7 +79,7 @@ Laboratório Especial de Toxinologia Aplicada (LETA)\\
 \end{flushright}
 \begin{abstract}
 % Abstract
-The U-curve problem is a formulation of an optimization problem that can be used in the feature selection step of Machine Learning, with applications in the designing of computational models of biological systems. Nevertheless, the proposed solutions so far to tackle this problem have limitations from both required computational time and space points of view, which implies in the need for development of new algorithms. To this end, it was introduced in 2012 the Poset-Forest-Search ({\tt PFS}) algorithm, which organizes the search space in forests of posets. This algorithm was implemented and tested, with promising results; however, new improvements are required until {\tt PFS} becomes a competitive alternative to tackle the U-curve problem. In this project, we propose the design of a parallelized, scalable version of the {\tt PFS} algorithm, using reduced ordered binary decision diagrams. Moreover, we propose to adapt {\tt PFS} as an approximation algorithm, in which the approximation criterion to the optimal solution makes use of the Ockham razor's theorem. The developed algorithms will be implemented and tested on artificial instances and also on collection of datasets that are suitable for benchmarking of feature selection algorithms.
+The U-curve problem is a formulation of an optimization problem that can be used in the feature selection step of Machine Learning, with applications in the designing of computational models of biological systems. Nevertheless, the solutions so far proposed to tackle this problem have limitations from both required computational time and space points of view, which implies in the need for development of new algorithms. To this end, it was introduced in 2012 the Poset-Forest-Search ({\tt PFS}) algorithm, which organizes the search space in forests of posets. This algorithm was implemented and tested, with promising results; however, new improvements are required until {\tt PFS} becomes a competitive alternative to tackle the U-curve problem. In this project, we propose the design of a parallelized, scalable version of the {\tt PFS} algorithm, using reduced ordered binary decision diagrams. Moreover, we propose to adapt {\tt PFS} as an approximation algorithm, in which the approximation criterion to the optimal solution makes use of the Ockham's razor theorem. The developed algorithms will be implemented and tested on artificial instances and also on collection of datasets that are suitable for benchmarking of feature selection algorithms.
 \end{abstract}
 
     
@@ -178,9 +160,10 @@ princípios de funcionamento deste último serão apresentados a seguir.
 \subsection{O algoritmo Poset-Forest-Search ({\tt PFS})}
 O algoritmo {\tt PFS} é um algoritmo ótimo do tipo 
 {\em branch-and-bound}. A ideia básica é generalizar o algoritmo {\tt UBB},
-que é um {\em branch and bound} unidirecional, em um procedimento bidirecional.
-Para esse fim, {\tt PFS} inicializa representando o espaço de 
-busca com duas árvores $T$ e $T'$ tais que $T'$ é uma árvore complementar a 
+que é um {\em branch and bound} unidirecional tanto em termos de percorrimento do espaço de busca quanto de podas, em um algoritmo bidirecional em ambos os procedimentos. Podas bidirecionais em um reticulado Booleano completo resultam em uma coleção de posets, de onde vem o nome do algoritmo.
+
+Antes da inicialização do algoritmo, o espaço de 
+busca é representado em duas árvores $T$ e $T'$ tais que $T'$ é uma árvore complementar a 
 $T$, ou seja, para qualquer aresta $\{ X, Y \}$ na
 árvore $T$ existe uma aresta $\{ X^c, Y^c \}$ na árvore $T'$ 
 (figuras~\ref{fig:PFS_tree:A} e \ref{fig:PFS_tree:B}).
@@ -203,10 +186,10 @@ $T$, ou seja, para qualquer aresta $\{ X, Y \}$ na
   \label{fig:PFS_tree} 
 \end{figure}
 
-O algoritmo se inicializa escolhendo uma das duas árvores; sem perda de generalidade, digamos que $T$ foi escolhida. A partir
+O algoritmo inicia a execução escolhendo uma das duas árvores; sem perda de generalidade, digamos que $T$ foi escolhida. A partir
 do conjunto vazio, uma cadeia é percorrida até que o custo de um elemento seja maior que o do elemento $X$ que o precedeu na cadeia (figura~\ref{fig:PFS_pruning:A}); nesse caso, são eliminados do espaço de busca todos os elementos que se ramificam na árvore $T$ a partir de $X$, assim como as arestas percorridas desde o conjunto vazio. Esse procedimento resulta em uma floresta $\mathcal{A}$ composta por três árvores (figura~\ref{fig:PFS_pruning:A}). Ao removermos de $T'$ os mesmos elementos que foram removidos de $T$, o grafo induzido pelas arestas remanescentes resulta em uma floresta $\mathcal{B}$ também composta por três árvores (figura~\ref{fig:PFS_pruning:B}).
 
-O algoritmo {\tt PFS} inicia então uma nova iteração, escolhendo uma das florestas e em seguida repetindo o procedimento descrito acima para uma das árvores que a compõem. Se uma árvore é composta por um único elemento $X$ (i.e., uma árvore trivial, composta apenas por uma raiz), então $X$ é removido da floresta escolhida, e a outra floresta é atualizada eliminando-se $X$ e as arestas com uma das pontas ligada a esse elemento. O algoritmo {\tt PFS} itera até que todo o espaço de busca seja esgotado.
+O algoritmo {\tt PFS} inicia então uma nova iteração, escolhendo uma das florestas e em seguida repetindo o procedimento descrito acima para uma das árvores que a compõem. Se uma árvore contém apenas um único elemento $X$ (i.e., uma árvore trivial, composta apenas por uma raiz), então $X$ é removido da floresta escolhida, e a outra floresta é atualizada eliminando-se $X$ e as arestas com uma das pontas ligada a esse elemento. O algoritmo {\tt PFS} itera até que todo o espaço de busca seja esgotado.
 
 
 \begin{figure}[h]
@@ -247,9 +230,7 @@ atualização das podas.
 
 \item Desenvolvimento de uma versão do {\tt PFS} que funcione como algoritmo 
 de aproximação para o problema U-curve, utilizando como critério de
-aproximação da solução ótima o teorema da navalha de Ockham:\\
-\smallskip
-Dado um espaço de hipóteses $H$ (i.e., espaço de busca), o número mínimo 
+aproximação da solução ótima o teorema da navalha de Ockham: dado um espaço de hipóteses $H$ (i.e., espaço de busca), o número mínimo 
 de amostras necessário para se obter uma solução que erra no máximo 
 $\epsilon$ com $1 - \delta$ de probabilidade é expresso por:
 \begin{equation}
@@ -264,33 +245,59 @@ Para todos os algoritmos propostos, faremos implementação e testes empíricos,
 
 \section{Plano de trabalho}
 A pesquisa se iniciará com o estudo do algoritmo {\tt PFS}. Uma implementação desse algoritmo atualmente encontra-se disponível para o  
-\href{https://github.com/msreis/featsel}{featsel}, e será 
+arcabouço \href{https://github.com/msreis/featsel}{featsel}, e será 
 usado como base para os futuros algoritmos desse projeto. O próximo 
 passo envolverá a construção de uma modificação do algoritmo {\tt PFS}
-que utiliza a estrutura de dados ROBDD para guardar as raízes da 
-floresta que representa o espaço de busca do problema.
+que utiliza a estrutura de dados ROBDD para guardar as raízes das 
+florestas que representam o espaço de busca do problema.
 
 Estudaremos em seguida a biblioteca \href{http://www.openmp.org/}{OpenMP}, escolhida para paralelização
-do algoritmo através do uso de memória compartilhada. Após concluídos estudos dessa biblioteca, devemos analisar a
+do algoritmo através do uso de memória compartilhada. Após concluídos os estudos dessa biblioteca, devemos analisar a
 dinâmica do algoritmo {\tt PFS} e reescrevê-la com as necessárias 
 modificações para que partes do algoritmo possam ser executadas em
 paralelo. A princípio, a paralelização do algoritmo se dará no 
-percorrimento de caminhos das florestas do espaço de busca, que será 
-atualizado em um espaço comum da memória a todas as linhas de execução.
+percorrimento de caminhos nas florestas que compõem o espaço de busca, que será 
+atualizado em uma área da memória comum a todas as linhas de execução.
 Ao final dessa etapa, teremos um novo algoritmo, que será testado
 e comparado com outros algoritmos do arcabouço featsel, tais como o {\tt UBB} e o {\tt PFS} original.
 
 A próxima etapa do nosso trabalho será o estudo de algoritmos de 
 aproximação e do \textit{Probably Approximately
-Correct} (PAC learning), que é modelo de aprendizado no qual se aplica o teorema da navalha de Ockham. Com isso, pretendemos construir uma variante do algoritmo {\tt PFS} que deixa de buscar uma solução ótima para buscar
-uma solução provavelmente aproximadamente correta. Após implementarmos o algoritmo de aproximação para o problema U-Curve
+Correct} (PAC learning), que é o modelo de aprendizado no qual se aplica o teorema da navalha de Ockham. Com isso, pretendemos construir uma variante do algoritmo {\tt PFS} que deixa de buscar uma solução ótima para buscar
+uma solução provavelmente aproximadamente correta. Após implementarmos o algoritmo de aproximação para o problema U-curve,
 poderemos testar o seu desempenho de forma análoga ao que será feito com a versão paralelizada com OpenMP.
 
 Por fim, testaremos todos os algoritmos desenvolvidos durante o projeto
-com instâncias artificiais e reais do problema U-Curve. Para gerar instâncias artificiais, empregaremos a redução polinomial do problema {\em subset sum} para instâncias do problema U-curve apresentada em Reis~\cite{msreis thesis}, assim como outras funções custo que o beneficiário utilizou durante seu estágio na Universidade Texas A\&M (EUA), nas quais são introduzidas oscilações nas curvas em U das cadeias do reticulado Booleano. Já para instâncias reais, utilizaremos conjuntos de dados próprios para benchmarking de algoritmos, tais como os abrigados no \href{archive.ics.uci.edu/ml}{UCI Machine Learning Repository}.
+com instâncias artificiais e reais do problema U-curve. Para gerar instâncias artificiais, empregaremos a redução polinomial do problema {\em subset sum} para instâncias do problema U-curve apresentada em Reis~\cite{msreis thesis}, assim como outras funções custo que o beneficiário utilizou durante seu estágio na Universidade Texas A\&M (EUA), nas quais são introduzidas oscilações nas curvas em U das cadeias do reticulado Booleano. Já para instâncias reais, utilizaremos conjuntos de dados próprios para benchmarking de algoritmos, tais como os abrigados no \href{archive.ics.uci.edu/ml}{UCI Machine Learning Repository}.
 
 
-Um cronograma para este projeto proposto é apresentado na tabela~\ref{tab:cronograma}, enquanto que o detalhamento das atividades listadas no mesmo é feito na seção~\ref{sec:atividades}.
+A organização do plano de trabalho em uma lista de atividades é apresentada na na seção~\ref{sec:atividades}, enquanto que um cronograma para execução dessas atividades é proposto na seção seguinte (tabela~\ref{tab:cronograma}). 
+
+\subsection{Descrição de atividades} \label{sec:atividades}
+\begin{itemize}
+    \item{\bf Atividade 1.}
+        Estudo do algoritmo {\tt PFS}.
+    \item{\bf Atividade 2.}
+        Implementação de uma variante do {\tt PFS} que usa ROBDDs como 
+        estrutura de dados para representar as coleções de raízes das árvores das florestas.
+    \item{\bf Atividade 3.}
+        Estudo da biblioteca OpenMP, para paralelização do {\tt PFS}.
+    \item{\bf Atividade 4.}
+        Implementação de uma versão paralela do algoritmo {\tt PFS} com
+        o uso de ROBDDs como estrutura de dados.
+    \item{\bf Atividade 5.}
+        Testes da primeira versão do {\tt PFS} paralelizado com instâncias
+        artificiais.
+    \item{\bf Atividade 6.}
+        Estudos do {\em PAC learning} e do teorema da navalha de Ockham.
+    \item{\bf Atividade 7.} 
+        Implementação de versões do {\tt PFS}, sequencial e paralelizada, que se 
+        comportem como algoritmos de aproximação.
+    \item{\bf Atividade 8.}
+        Testes com instâncias artificiais dos algoritmos de aproximação.
+    \item{\bf Atividade 9.}
+        Estudo comparativo entre os algoritmos produzidos, incluindo testes com instâncias artificiais e também de problemas reais.
+\end{itemize}
 
 \subsection{Cronograma}
 
@@ -357,38 +364,12 @@ Um cronograma para este projeto proposto é apresentado na tabela~\ref{tab:crono
 \end{center}
 \end{table}
 
-\subsection{Descrição de atividades} \label{sec:atividades}
-\begin{itemize}
-    \item{\bf Atividade 1.}
-        Estudo do algoritmo {\tt PFS}.
-    \item{\bf Atividade 2.}
-        Implementação de uma variante do {\tt PFS} que usa ROBDDs como 
-        estrutura de dados para representar as coleções de raízes das árvores das florestas.
-    \item{\bf Atividade 3.}
-        Estudo da biblioteca OpenMP, para paralelização do {\tt PFS}.
-    \item{\bf Atividade 4.}
-        Implementação de uma versão paralela do algoritmo {\tt PFS} com
-        o uso de ROBDDs como estrutura de dados.
-    \item{\bf Atividade 5.}
-        Testes da primeira versão do {\tt PFS} paralelizado com instâncias
-        artificiais.
-    \item{\bf Atividade 6.}
-        Estudos do {\em PAC learning} e do teorema da navalha de Ockham.
-    \item{\bf Atividade 7.} 
-        Implementação de versões do {\tt PFS}, sequencial e paralelizada, que se 
-        comportem como algoritmos de aproximação.
-    \item{\bf Atividade 8.}
-        Testes com instâncias artificiais dos algoritmos de aproximação.
-    \item{\bf Atividade 9.}
-        Estudo comparativo entre os algoritmos produzidos, incluindo testes com instâncias artificiais e também de problemas reais.
-\end{itemize}
-
 
 % Arcabouço featsel, já contando com os acréscimos de classes de ROBDDs;
 % Biblioteca OpenMP.
 \section{Materiais e métodos}
 Os algoritmos produzidos serão implementados no arcabouço \href{https://github.com/msreis/featsel}{featsel}. Esse arcabouço foi implementado em C++ e conta com diversas estruturas de dados que serão necessárias para implementar os
-algoritmos sugeridos nesse trabalho. Além disso, featsel já conta com classes que implementam ROBDDs; tal melhoramento foi feito durante a Iniciação Científica anterior do beneficiário, numa tentativa de melhorar o desempenho do algoritmo U-Curve-Search ({\tt UCS}), resultando em ganhos modestos de desempenho do ponto de vista de desempenho computacional~\cite{ucsrobdd ic}. O arcabouço featsel está disponível sob a licença \textit{GNU General Public License} (GNU-GPL), o que nos permite utilizar livremente o código desse arcabouço para implementação dos novos algoritmos. 
+algoritmos sugeridos nesse trabalho. Além disso, featsel já conta com classes que implementam ROBDDs; tal melhoramento foi feito durante a Iniciação Científica anterior do beneficiário, numa tentativa de melhorar o desempenho do algoritmo U-Curve-Search ({\tt UCS}), resultando em ganhos de desempenho do ponto de vista de consumo de tempo computacional~\cite{ucsrobdd ic}. O arcabouço featsel está disponível sob a licença \textit{GNU General Public License} (GNU-GPL), o que nos permite utilizar livremente o código desse arcabouço para implementação dos novos algoritmos. 
 
 Também utilizaremos a biblioteca \href{http://www.openmp.org/}{OpenMP} junto ao compilador {\tt g++} para compilar os códigos produzidos. Por meio de diretivas de compilação, OpenMP determina como um código pode ser executado em paralelo no processador.
 
@@ -404,7 +385,7 @@ Para analisar os resultados obtidos utilizaremos o próprio arcabouço \href{htt
 
 Além disso, ao longo de 2017, o beneficiário deverá se matricular em \href{https://uspdigital.usp.br/jupiterweb/obterDisciplina?sgldis=MAC0499\&nomdis=}{MAC499 -- Trabalho de Formatura Supervisionado}, disciplina do IME-USP que exige a preparação de uma monografia ao final do curso e também a apresentação de um pôster contendo resultados finais da Iniciação Científica.
 
-Por fim, projetamos a escrita de um artigo científico, no qual descreveremos os avanços que os novos algoritmos trouxeram, além de eventuais propriedades do problema U-Curve e de nossa solução que 
+Por fim, projetamos a escrita de um artigo científico, no qual descreveremos os avanços que os novos algoritmos trouxeram, além de eventuais propriedades do problema U-curve e de nossa solução que 
 possam ser exploradas futuramente para elaboração de novas abordagens para resolver esse importante problema de otimização.
 
 \begin{thebibliography}{}
@@ -414,7 +395,7 @@ possam ser exploradas futuramente para elaboração de novas abordagens para res
     Tese de doutorado. Instituto de Matemática e Estatística, Universidade de São Paulo, Brasil (2012).
 
 \bibitem{bryant}
-Randal E. Bryant. ``Graph-based algorithms for boolean function manipulation". IEEE Transactions on Computers, 100.8 (1986): 677-691. 
+Randal E. Bryant. ``Graph-based algorithms for boolean function manipulation". IEEE Transactions on Computers, v. 100.8, p. 677--691 (1986). 
 
 \bibitem{kearns}
 Michael J. Kearns e Umesh V. Vazirani. ``An introduction to computational learning theory". MIT Press (1994).
