@@ -1,21 +1,3 @@
-%
-% Comentários do msreis (20/12/16):
-%
-% Em linhas gerais, o projeto ficou bom; as minhas observações mais gerais
-% seriam as seguintes:
-%
-%  i) Figura e tabela não foram referenciadas no texto;
-%
-% ii) Misturou na introdução o enunciado do problema com a proposta para 
-%     atacá-lo;
-%
-% iii) Faltou explicar melhor os princípios de funcionamento do PFS, de forma
-%     análoga ao que fizemos para o UCS na proposta do projeto de IC anterior;
-%
-% iv) Faltou um spell checking!
-%
-
-
 \documentclass[12pt]{article}
 \usepackage[portuguese, brazilian, english]{babel}
 \usepackage[utf8]{inputenc}
@@ -32,9 +14,18 @@
 \usepackage{hyperref}  % to allow hyperlinks
 \usepackage{booktabs}  % nicer table borders
 \usepackage{subfigure} % add subfigures
+\usepackage[bottom]{footmisc}
 
 \title{Projeto de algoritmos baseados em florestas de posets
 para o problema de otimização U-Curve}
+
+% Figures directory
+\graphicspath{{./figures/}} 
+
+\definecolor{myblue}{RGB}{80,80,160}
+\definecolor{mygreen}{RGB}{80,160,80}
+\setstretch{1.5}
+
 
 
 \setstretch{1.5}
@@ -45,17 +36,20 @@ para o problema de otimização U-Curve}
 \begin{flushright}
     {\LARGE Projeto de algoritmos baseados em florestas de posets\\
         \bigskip 
-        para o problema de otimização U-curve \footnote{Nota: uma versão
-        muito parecida desse texto foi utilizada como uma proposta de
-        iniciação científica, eviada à FAPESP, e outorgada como processo
-        de número 2016/25959-7}}
+        para o problema de otimização U-curve \footnote{Uma versão
+        muito parecida deste texto foi utilizada como uma proposta de
+        iniciação científica, enviada à FAPESP, e outorgada como 
+        processo de número 2016/25959-7. Aluno e orientador são os 
+        mesmos do processo.}}
 
 
   \bigskip
   \bigskip
         
-  {\large {\bf Aluno:} \href{mailto:gustavo.estrela.matos@usp.br}{Gustavo Estrela de Matos}\\ 
-  {\bf Orientador:} \href{mailto:marcelo.reis@butantan.gov.br}{Marcelo da Silva Reis}\\
+  {\large {\bf Aluno:} \href{mailto:gustavo.estrela.matos@usp.br}
+        {Gustavo Estrela de Matos}\\ 
+  {\bf Orientador:} \href{mailto:marcelo.reis@butantan.gov.br}
+        {Marcelo da Silva Reis}\\
   \bigskip
   }
 
@@ -63,47 +57,159 @@ para o problema de otimização U-Curve}
   \bigskip
 \end{flushright}
 
+\begin{abstract}
+% Resumo
+O problema U-curve é uma formulação de um problema de otimização que
+pode ser utilizado na etapa de seleção de características em Aprendizado
+de Máquina, com aplicações em desenho de modelos computacionais de 
+sistemas biológicos. Não obstante, soluções propostas até o presente 
+momento para atacar esse problema têm limitações do ponto de vista de 
+consumo de tempo computacional e/ou de memória, o que implica na 
+necessidade do desenvolvimento de novos algoritmos. Nesse sentido, em
+2012 foi proposto o algoritmo Poset-Forest-Search ({\tt PFS}), que 
+organiza o espaço de busca em florestas de posets. Esse algoritmo foi 
+implementado e testado, com resultados promissores; todavia, novos 
+melhoramentos são necessários para que o {\tt PFS} se torne uma 
+alternativa competitiva para resolver o problema U-curve. Neste 
+projeto propomos a construção de uma versão paralelizada e escalável 
+do algoritmo {\tt PFS}, utilizando diagramas de decisão binária 
+reduzidos e ordenados. Além disso, propomos adaptar o {\tt PFS} como 
+um algoritmo de aproximação, no qual o critério de aproximação da 
+solução ótima faça uso do teorema da navalha de Ockham. Os algoritmos 
+desenvolvidos serão implementados e testados em instâncias artificiais 
+e também em conjuntos de dados próprios para experimentos comparativos 
+entre diferentes algoritmos de seleção de características.
+\end{abstract}
+
+
 
 \section{Introdução}
+% Apresentação do problema U-curve (na linha do projeto da primeira IC,
+% só que procurando ser mais sucinto);
+% Recapitulação da IC anterior (melhoramentos do algoritmo UCS com 
+% ROBDDs), com particular destaque para a limitação dos melhoramentos 
+% obtidos.
+% 
+\subsection{O problema U-curve}
+O problema de seleção de característica consiste em, dado um conjunto $S$
+de características, escolher um subconjunto de $S$ que seja
+ótimo de acordo com
+alguma métrica. A solução desse problema tem aplicações em
+Aprendizado de Máquina e Reconhecimento de Padrões, com aplicações práticas
+em identificação de sistemas biológicos -- por exemplo, na estimação de redes
+gênicas regulatórias. Formalmente, podemos 
+definir o problema de seleção de características como um problema de 
+busca, no qual procuramos por um subconjunto $X \in \mathcal{P}(S)$ que 
+minimiza uma função de custo $c : \mathcal{P}(S) \to \mathbb{R^+}$.
+O espaço de busca do problema de seleção de características pode ser
+estruturado como um reticulado Booleano ($\mathcal{P}(S)$, $\subseteq$), no qual
+cada elemento é um subconjunto de características. Em funções custo $c$ que dependem
+da estimação de uma distribuição conjunta a partir de um número limitado de
+amostras, é comum que o custo das cadeias do reticulado, quando restritas a $c$,
+descrevam curvas em U (figura~\ref{fig:U-curve}); esse
+comportamento pode ser intuitivamente explicado se considerarmos que o
+erro de estimação diminui ao adicionarmos novas características, até um ponto
+em que a limitação de amostras faz com que acrescentar características
+leve a um aumento no erro de estimação.
 
-O problema U-Curve é um problema de otimização no qual o espaço de 
-buscas é descrito por um reticulado booleano e, para cada cadeia desse
-reticulado, a função de custo utilizada descreve curvas em formato de U.
-Já o problema de seleção de características, no contexto de aprendizado
-de máquina, consiste em, dado um conjunto de caracaterísticas $S$,
-escolher otimamente um conjunto de características 
-$X \in \mathcal{P}(S)$ de acordo com alguma métrica. É comum que essa
-métrica descreva curvas em U nas cadeias do reticulado $(\mathcal{P}(S),
-\subseteq)$, portanto é razoável utilizar o problema U-Curve como um
-modelo para a seleção de características em aprendizado de máquina, que
-por sua vez possui diversas aplicações, como W-Operadores e modelos de
-sistemas biológicos. 
+\begin{figure}[h]
+\centering 
+\begin{tabular}{c c}
+    \subfigure[] {
+        \scalebox{0.75}{
+        \includegraphics
+        [trim=2cm 17.5cm 12.2cm 2cm,clip=true]{Boolean_lattice_3_A.pdf}}
+        \label{fig:U-curve-example:A}
+    }  
+    &
+    \subfigure[] {
+        \scalebox{0.30}{
+        \includegraphics[clip=true]{exemplo1.pdf}} 
+        \label{fig:U-curve-example:B} 
+    }
+\end{tabular}
+\caption{exemplo de instância do problema U-curve. 
+Figura~\ref{fig:U-curve-example:A}: o diagrama de Hasse de um reticulado
+Booleano de grau $3$ -- as cadeias do reticulado, cujos custos de seus
+elementos são definidos através dos números ao lado dos elementos, descrevem
+curvas em U; a cadeia maximal $\{ \emptyset, c, bc, abc \}$ está
+destacada em negrito. O elemento $bc$, destacado em verde, é mínimo na
+cadeia (e também no reticulado Booleano). 
+Figura~\ref{fig:U-curve-example:B}: o gráfico dos custos em função dos
+elementos da cadeia maximal destacada em negrito, mostrando sua curva em
+U. Figuras extraídas de Reis~\cite{msreis thesis}.} 
+    \label{fig:U-curve} 
+\end{figure}
 
-Existem algoritmos na literatura que são capazes de resolver o problema
-U-Curve, entretanto, com limitações de consumo de tempo e/ou memória.
-Dadas essas limitações, torna-se necessário o desenvolvimento de novos
-algoritmos. Dentre os algoritmos da literatura, destacamos o nosso 
-objeto de estudo nesse projeto, {\tt PFS} (2012), que mostrou resultados
-promissores e ainda é passível de melhoramentos, o que pode implicar em
-novos algoritmos mais competitivos para solução do problema U-Curve.
 
-O {\tt PFS} é um algoritmo do tipo {\em branch-and-bound} que acha uma
-solução ótima para o problema U-Curve. Esse algoritmo representa o 
-espaço de busca por duas florestas, utilizadas para determinar caminhos 
-a serem percorridos no espaço (nos sentidos de baixo para cima
-e contrário). A cada iteração, o algoritmo escolhe uma raíz de uma 
-árvore e percorre um caminho dentro dessa árvore, fazendo atualizações
-na lista de elementos de custo mínimo encontrados assim como podas no
-espaço de busca.
 
-Propomos nesse projeto, criar novos algoritmos para o problema
-U-Curve, baseando-nos no {\tt PFS} e em melhorias que podem ser 
-aplicadas ao mesmo. Pretendemos alcançar melhorias com a criação
-de variantes paralelas do {\tt PFS} e que façam uso de {\em Reduced 
-Ordered Binary Decision Diagrams} (ROBDDs) como estrutura de 
-dados. Além disso, pretendemos criar variações do {\tt PFS} que se
-comportem como algoritmos de aproximação, com o uso do critério de 
-aproximação da solução ótima do teorema da navalha de Ockham.
+O problema U-curve é um caso particular do problema de seleção de
+características no qual todas as cadeias do espaço de busca descrevem
+curvas em U quando avaliadas pela função de custo (figura~\ref{fig:U-curve}).
+Existem algoritmos
+ótimos para solução do problema U-curve, tais como o U-curve-Branch-and-Bound
+({\tt UBB}) e o Poset-Forest-Search ({\tt PFS})~\cite{msreis thesis}; os
+princípios de funcionamento deste último serão apresentados a seguir.
+
+
+\subsection{O algoritmo Poset-Forest-Search ({\tt PFS})}
+O algoritmo {\tt PFS} é um algoritmo ótimo do tipo 
+{\em branch-and-bound}. A ideia básica é generalizar o algoritmo {\tt UBB},
+que é um {\em branch and bound} unidirecional, em um procedimento bidirecional.
+Para esse fim, {\tt PFS} inicializa representando o espaço de 
+busca com duas árvores $T$ e $T'$ tais que $T'$ é uma árvore complementar a 
+$T$, ou seja, para qualquer aresta $\{ X, Y \}$ na
+árvore $T$ existe uma aresta $\{ X^c, Y^c \}$ na árvore $T'$ 
+(figuras~\ref{fig:PFS_tree:A} e \ref{fig:PFS_tree:B}).
+
+
+\begin{figure}[h]
+  \centering 
+  \begin{tabular}{c c}
+    \subfigure[] {\scalebox{0.45}{
+     \includegraphics[trim=3cm 8.5cm 1.2cm 2cm, clip=true]{PFS_tree_A.pdf}}
+     \label{fig:PFS_tree:A} }
+    &
+    \subfigure[] {\scalebox{0.45}{
+    \includegraphics[trim=3cm 8.5cm 1.2cm 2cm, clip=true]{PFS_tree_B.pdf}}
+    \label{fig:PFS_tree:B} }
+  \end{tabular}
+  \caption{exemplo de enumerações de um reticulado Booleano, no qual a
+árvore $T$ (figura~\ref{fig:PFS_tree:A}) é complementar à árvore $T'$
+(figura~\ref{fig:PFS_tree:B}). Figuras extraídas de Reis~\cite{msreis thesis}.}
+  \label{fig:PFS_tree} 
+\end{figure}
+
+O algoritmo se inicializa escolhendo uma das duas árvores; sem perda de generalidade, digamos que $T$ foi escolhida. A partir
+do conjunto vazio, uma cadeia é percorrida até que o custo de um elemento seja maior que o do elemento $X$ que o precedeu na cadeia (figura~\ref{fig:PFS_pruning:A}); nesse caso, são eliminados do espaço de busca todos os elementos que se ramificam na árvore $T$ a partir de $X$, assim como as arestas percorridas desde o conjunto vazio. Esse procedimento resulta em uma floresta $\mathcal{A}$ composta por três árvores (figura~\ref{fig:PFS_pruning:A}). Ao removermos de $T'$ os mesmos elementos que foram removidos de $T$, o grafo induzido pelas arestas remanescentes resulta em uma floresta $\mathcal{B}$ também composta por três árvores (figura~\ref{fig:PFS_pruning:B}).
+
+O algoritmo {\tt PFS} inicia então uma nova iteração, escolhendo uma das florestas e em seguida repetindo o procedimento descrito acima para uma das árvores que a compõem. Se uma árvore é composta por um único elemento $X$ (i.e., uma árvore trivial, composta apenas por uma raiz), então $X$ é removido da floresta escolhida, e a outra floresta é atualizada eliminando-se $X$ e as arestas com uma das pontas ligada a esse elemento. O algoritmo {\tt PFS} itera até que todo o espaço de busca seja esgotado.
+
+
+\begin{figure}[h]
+  \centering 
+  \begin{tabular}{c c}
+    \subfigure[] {\scalebox{0.45}{
+    \includegraphics[trim=3cm 8.5cm 1.2cm 2cm, clip=true]{PFS_dynamics_D.pdf}}
+    \label{fig:PFS_pruning:A}  }
+    &
+    \subfigure[] {\scalebox{0.45}{
+    \includegraphics[trim=3cm 8.5cm 1.2cm 2cm, clip=true]{PFS_dynamics_G.pdf}}
+    \label{fig:PFS_pruning:B}  }
+  \end{tabular}
+  \caption{exemplo de um percorrimento e poda realizados na árvore $T$, no qual é eliminado 
+do espaço de busca o intervalo $[11100, 11111]$ e produzida uma floresta $\mathcal{A}$ contendo três árvores, cujas raízes estão destacadas em amarelo
+(figura~\ref{fig:PFS_pruning:A}). A eliminação desse intervalo em $T'$ produz
+uma floresta $\mathcal{B}$ também com três árvores (figura \ref{fig:PFS_pruning:B}). Figuras extraídas
+de Reis~\cite{msreis thesis}.}
+  \label{fig:PFS_pruning} 
+\end{figure}
+
+Uma versão preliminar do {\tt PFS} já foi implementada e mostrou resultados promissores, principalmente
+quando analisado o número de elementos do reticulado que são visitados~\cite{msreis thesis}. Apesar
+disso, o algoritmo apresenta propriedades interessantes que foram pouco exploradas nesse trabalho original; por exemplo, o gerenciamento do espaço de busca através de florestas poderia ser aproveitado para o desenvolvimento de algoritmos paralelizados ótimos para o problema U-curve, com maior escalabilidade em relação a variantes sequenciais. Ademais, seria interessante testar a aplicabilidade desse algoritmo em um conjunto abrangente de instâncias de interesse prático.
+
+
 
 
 \section{Objetivos}
@@ -152,7 +258,7 @@ seleção de características.
 A pesquisa se iniciará com o estudo do algoritmo {\tt PFS}. Uma 
 implementação desse algoritmo atualmente encontra-se disponível para o  
 \href{https://github.com/msreis/featsel}{featsel}, e será 
-usado como base para os futuros algoritmos desse projeto. O próximo 
+usado como base para os futuros algoritmos deste projeto. O próximo 
 passo envolverá a construção de uma modificação do algoritmo {\tt PFS}
 que utiliza a estrutura de dados ROBDD para guardar as raízes da 
 floresta que representa o espaço de busca do problema.
@@ -187,12 +293,6 @@ de dados próprios para benchmarking de algoritmos, tais como os
 abrigados no \href{archive.ics.uci.edu/ml}{UCI Machine Learning 
 Repository}.
 
-Os resultados obtidos nesse projeto serão apresentados na forma de uma
-apresentação para colegas de curso e professores; na forma de pôster,
-o qual será exposto no IME; e também em uma monografia. Além disso, 
-todo o desenvolvimento desse projeto deve ser reportado a FAPESP no
-formato de relatório de iniciação científica.
-
 Um cronograma para este projeto proposto é apresentado na 
 tabela~\ref{tab:cronograma}, enquanto que o detalhamento das atividades
 listadas no mesmo é feito na seção~\ref{sec:atividades}.
@@ -203,7 +303,7 @@ listadas no mesmo é feito na seção~\ref{sec:atividades}.
 \label{tab:cronograma}
 \begin{center}
 \smallskip
-\begin{tabular}{l  cccccccc}
+\begin{tabular}{l cccccccc}
     \toprule
     \small Atividade/mês & \small Mai.17 & \small Jun.17 & \small Jul.17
                          & \small Ago.17 & \small Set.17 & \small Out.17
@@ -295,18 +395,38 @@ listadas no mesmo é feito na seção~\ref{sec:atividades}.
         Escrita da monografia.
     \end{itemize}
 
+\subsection{Atividades realizadas}
+Em um outro trabalho, onde criamos um algoritmo paralelo para o problema
+U-Curve, tivemos a oportunidade de estudar e praticar o uso da 
+biblioteca OpenMP. Além disso, em uma iniciação científica anterior 
+~\cite{ucsrobdd ic}, implementamos a estrutura de dados ROBDD no mesmo
+arcabouço que propomos usar neste trabalho.
 
 % Arcabouço featsel, já contando com os acréscimos de classes de ROBDDs;
 % Biblioteca OpenMP.
 \section{Materiais e métodos}
 Os algoritmos produzidos serão implementados no arcabouço 
 \href{https://github.com/msreis/featsel}{featsel}. Esse arcabouço foi 
-implementado em C++ e conta com diversas estruturas de dados que serão necessárias para implementar os
-algoritmos sugeridos nesse trabalho. Além disso, featsel já conta com classes que implementam ROBDDs; tal melhoramento foi feito durante a Iniciação Científica anterior do beneficiário, numa tentativa de melhorar o desempenho do algoritmo U-Curve-Search ({\tt UCS}), resultando em ganhos modestos de desempenho do ponto de vista de desempenho computacional~\cite{ucsrobdd ic}. O arcabouço featsel está disponível sob a licença \textit{GNU General Public License} (GNU-GPL), o que nos permite utilizar livremente o código desse arcabouço para implementação dos novos algoritmos. 
+implementado em C++ e conta com diversas estruturas de dados que serão
+necessárias para implementar os algoritmos sugeridos neste trabalho.
+Além disso, featsel já conta com classes que implementam ROBDDs; tal
+melhoramento foi feito durante a Iniciação Científica anterior do
+aluno, numa tentativa de melhorar o desempenho do algoritmo
+U-Curve-Search ({\tt UCS}), resultando em ganhos modestos de desempenho
+do ponto de vista de desempenho computacional~\cite{ucsrobdd ic}.
+O arcabouço featsel está disponível sob a licença \textit{GNU General
+Public License} (GNU-GPL), o que nos permite utilizar livremente o
+código desse arcabouço para implementação dos novos algoritmos. 
 
-Também utilizaremos a biblioteca \href{http://www.openmp.org/}{OpenMP} junto ao compilador {\tt g++} para compilar os códigos produzidos. Por meio de diretivas de compilação, OpenMP determina como um código pode ser executado em paralelo no processador.
+Também utilizaremos a biblioteca \href{http://www.openmp.org/}{OpenMP}
+junto ao compilador {\tt g++} para compilar os códigos produzidos.
+Por meio de diretivas de compilação, OpenMP determina como um código
+pode ser executado em paralelo no processador.
 
-Experimentos computacionais, em particular os que envolverem paralelização de algoritmos, serão feitos em uma servidora do Instituto Butantan que é própria para esse fim: uma Dell PowerEdge 850, com 64 núcleos e 256 GB de memória RAM.
+Experimentos computacionais, em particular os que envolverem 
+paralelização de algoritmos, serão feitos em uma servidora do Instituto
+Butantan que é própria para esse fim: uma Dell PowerEdge 850, com 64 
+núcleos e 256 GB de memória RAM.
 
 
 % Benchmarking contra outros algoritmos de seleção de características;
@@ -314,12 +434,31 @@ Experimentos computacionais, em particular os que envolverem paralelização de 
 % proposta.
 \section{Forma de Análise e de Divulgação dos Resultados}
 
-Para analisar os resultados obtidos utilizaremos o próprio arcabouço \href{https://github.com/msreis/featsel}{featsel}, que já possui métodos que registram dados sobre a execução dos algoritmos, assim como um programa auxiliar para {\em benchmarking} de algoritmos e de funções custo implementados nessa ferramenta. As principais métricas a serem consideradas nos experimentos serão tempo de execução, consumo de memória e a robustez dos algoritmos quando violamos a suposição de que a função custo é decomponível em curvas em U. O código-fonte final do projeto será disponibilizado para a comunidade acadêmica no \href{https://github.com/msreis/featsel}{repositório web do arcabouço featsel}.
+Para analisar os resultados obtidos utilizaremos o próprio arcabouço
+\href{https://github.com/msreis/featsel}{featsel}, que já possui métodos
+que registram dados sobre a execução dos algoritmos, assim como um
+programa auxiliar para {\em benchmarking} de algoritmos e de funções
+custo implementados nessa ferramenta. As principais métricas a serem 
+consideradas nos experimentos serão tempo de execução, consumo de 
+memória e a robustez dos algoritmos quando violamos a suposição de que 
+a função custo é decomponível em curvas em U. O código-fonte final do 
+projeto será disponibilizado para a comunidade acadêmica no 
+\href{https://github.com/msreis/featsel}{repositório web do arcabouço
+featsel}.
 
-Além disso, ao longo de 2017, o beneficiário deverá se matricular em \href{https://uspdigital.usp.br/jupiterweb/obterDisciplina?sgldis=MAC0499\&nomdis=}{MAC499 -- Trabalho de Formatura Supervisionado}, disciplina do IME-USP que exige a preparação de uma monografia ao final do curso e também a apresentação de um pôster contendo resultados finais da Iniciação Científica.
+Os resultados obtidos e os conhecimentos adquiridos ao longo deste
+projeto serão apresentados na forma de uma apresentação para colegas de
+curso e professores; na forma de pôster, o qual será exposto no IME;
+e também em uma monografia. Além disso, todo o desenvolvimento deste 
+projeto deve ser reportado a FAPESP no formato de relatório de iniciação
+científica.
 
-Por fim, projetamos a escrita de um artigo científico, no qual descreveremos os avanços que os novos algoritmos trouxeram, além de eventuais propriedades do problema U-Curve e de nossa solução que 
-possam ser exploradas futuramente para elaboração de novas abordagens para resolver esse importante problema de otimização.
+Por fim, projetamos a escrita de um artigo científico, no qual 
+descreveremos os avanços que os novos algoritmos trouxeram, além de
+eventuais propriedades do problema U-Curve e de nossa solução que possam
+ser exploradas futuramente para elaboração de novas abordagens para 
+resolver esse importante problema de otimização.
+
 
 \begin{thebibliography}{}
 \addcontentsline{toc}{section}{Referências}
@@ -335,10 +474,6 @@ Michael J. Kearns e Umesh V. Vazirani. ``An introduction to computational learni
 
 \bibitem{ucsrobdd ic}
 Gustavo E. Matos e Marcelo S. Reis. ``Estudos de estruturas de dados eficientes para abordar o problema de otimização U-curve". Relatório científico final FAPESP, Instituto Butantan, Brasil (2015).
-
-
-
-    %% como citar ic?
 
 \end{thebibliography}
 \end{document}
