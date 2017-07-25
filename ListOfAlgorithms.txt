@@ -1,0 +1,10 @@
+                 ubb UcurveBranchandBound
+                  es ExhaustiveSearch
+                 sfs SFS
+                sffs SFFS
+                 ucs UCurveSearch
+            spec_cmi SpecCMI
+                  rc RandomChain
+                sbfs SBFS
+                 sbs SBS
+                 bfs BFS
