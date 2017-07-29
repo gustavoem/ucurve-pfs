@@ -8,3 +8,5 @@
                 sbfs SBFS
                  sbs SBS
                  bfs BFS
+            pfsrobdd PFSROBDD
+                 pfs PosetForestSearch
