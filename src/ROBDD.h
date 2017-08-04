@@ -82,6 +82,10 @@ protected:
   //
   Vertex * build_interval (unsigned int, unsigned int *, ElementSubset *, Vertex *, Vertex *, bool);
 
+  // Given a vertex, returns a copy of the subtree with that vertex as root
+  //
+  Vertex * copy_subtree (Vertex *);
+
   // Defines the structure used to save vertice on the reducing procedure
   //
   typedef struct MyVerticeEntry
@@ -143,9 +147,15 @@ public:
   //
   void add_interval (ElementSubset *, bool);
 
-  // Adds to the ROBDD a subset
+  // Adds to the ROBDD a subset. Does nothing if subset already in the
+  // ROBDD
   //
   void add_subset (ElementSubset *);
+
+  // Removes a subset from the ROBDD. Does nothing if subset not in the
+  // ROBDD.
+  //
+  void remove_subset (ElementSubset *);
 
   // Returns true if the ElementSubset * path of the robdds leads to a 1
   //

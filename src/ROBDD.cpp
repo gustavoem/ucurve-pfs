@@ -39,15 +39,6 @@ ROBDD::ROBDD (ElementSet * set, Vertex * root, int card)
 }
 
 
-ROBDD::ROBDD (ElementSet * set, unsigned int * ord)
-{
-  elm_set = set;
-  unsigned int n = elm_set->get_set_cardinality ();
-  root = new Vertex (false, n + 1);
-  cardinality = 1;
-}
-
-
 ROBDD::ROBDD (ElementSet * set, ElementSubset * subset)
 {
   unsigned int set_card = set->get_set_cardinality ();
@@ -61,24 +52,24 @@ ROBDD::ROBDD (ElementSet * set, ElementSubset * subset)
 }
 
 
-void ROBDD::build (Vertex * v, unsigned int ord_index, unsigned int set_card, \
+void ROBDD::build (Vertex * v, unsigned int elm_index, unsigned int set_card, \
   ElementSubset * subset, Vertex * zero, Vertex * one)
 {
   bool zeroside;
-  zeroside = !subset->has_element (ord_index - 1);
+  zeroside = !subset->has_element (elm_index - 1);
   v->set_child (zero, zeroside);
 
-  if (ord_index == set_card) 
+  if (elm_index == set_card) 
   {
     v->set_child (one, !zeroside);
     return;
   }
 
-  unsigned int child_index = ord_index + 1;
-  Vertex * next_vertice = new Vertex (elm_set->get_element (child_index - 1), ++ord_index);
+  unsigned int child_index = elm_index + 1;
+  Vertex * next_vertice = new Vertex (elm_set->get_element (child_index - 1), ++elm_index);
   v->set_child (next_vertice, !zeroside);
   cardinality++;
-  build (next_vertice, ord_index, set_card, subset, zero, one);   
+  build (next_vertice, elm_index, set_card, subset, zero, one);   
 }
 
 
@@ -229,7 +220,7 @@ void ROBDD::reduce ()
       VerticeEntry ve;
       if (u->get_index () == set_card + 1) 
       {
-                // Terminal vertex
+        // Terminal vertex
         ve.lo_id = -1;
         ve.hi_id = u->get_value ();
         ve.v = u;
@@ -237,7 +228,7 @@ void ROBDD::reduce ()
       }
       else if (u_hi->get_id () == u_lo->get_id ()) 
       {
-                // Redundant vertex
+        // Redundant vertex
         u->set_id (u_lo->get_id ());
         if (subgraph[u_hi->get_id ()] != u_hi) 
           trash_can.insert (trash_it, u_hi);
@@ -247,7 +238,7 @@ void ROBDD::reduce ()
       }
       else
       {
-                // Regular vertex
+        // Regular vertex
         ve.lo_id = u_lo->get_id ();
         ve.hi_id = u_hi->get_id ();
         ve.v = u;
@@ -255,7 +246,7 @@ void ROBDD::reduce ()
       }
     }
     pair<int, int> oldkey (-1, -1);
-        // sort Q by id
+    // sort Q by id
     Q.sort ();
     for (list<VerticeEntry>::iterator it = Q.begin(); it != Q.end(); it++)
     {
@@ -434,10 +425,55 @@ void ROBDD::add_interval (ElementSubset * subset, bool orientation)
 
 void ROBDD::add_subset (ElementSubset * subset) 
 {
-  ROBDD * subset_robdd = new ROBDD (elm_set, subset);
-  Vertex * root2 = subset_robdd->get_root ();
-  union_to (root2);
-  delete subset_robdd;
+  bool current_edge, last_edge;
+  unsigned int set_card = elm_set->get_set_cardinality ();
+  unsigned int idx = 0;
+  Vertex * aux, * new_current;
+  Vertex * current = root;
+  Vertex * last = NULL;
+
+  while (idx < set_card)
+  {
+    cout << "\n\n Iteration " << idx << "\n";
+    cout << "current = " << current << endl;
+    print ();
+    current_edge = subset->has_element (idx);
+    if ((current->get_index () - 1) != idx)
+    {
+      if (last == NULL) 
+      {
+        Vertex * new_root;
+        new_root = new Vertex (elm_set->get_element (idx), idx + 1);
+        new_root->set_child (root, current_edge);
+        new_root->set_child (copy_subtree (root), !current_edge);
+        current = root = new_root;
+      }
+      else
+      {
+        last_edge = subset->has_element (idx - 1);
+        current = new Vertex (elm_set->get_element (idx), idx + 1);
+        aux = last->get_child (last_edge);
+        last->set_child (current, last_edge);
+        current->set_child (aux, current_edge);
+        current->set_child (copy_subtree (aux), !current_edge);
+      }
+    }
+    if (idx == set_card - 1)
+    {
+      Vertex * one = new Vertex (true, set_card + 1);
+      current->set_child (one, current_edge);
+    }
+    last = current;
+    current = current->get_child (current_edge);
+    idx++;
+  }
+
+
+  cout << "\nROBDD before reduce: " << endl;
+  print ();
+  reduce ();
+  cout << "ROBDD after: " << endl;
+  print ();
 }
 
 
@@ -465,6 +501,23 @@ Vertex * ROBDD::build_interval (unsigned int index, unsigned int * card,
   }
   v->set_child (build_interval (index + 1, card, subset, zero, one, orientation), orientation);
   return v;
+}
+
+
+
+Vertex * ROBDD::copy_subtree (Vertex * r) {
+  Vertex * root_cpy = new Vertex (*r);
+  if (root_cpy->get_child (false) != NULL) 
+  {
+    Vertex * lo_cpy = copy_subtree (r->get_child (false));
+    root_cpy->set_child (lo_cpy, false);
+  }
+  if (root_cpy->get_child (true) != NULL) 
+  {
+    Vertex * hi_cpy = copy_subtree (r->get_child (true));
+    root_cpy->set_child (hi_cpy, true);
+  }
+  return root_cpy;
 }
 
 

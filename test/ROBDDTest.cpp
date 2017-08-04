@@ -217,6 +217,10 @@ namespace ROBDDTest
     subset->add_element (2);
     ROBDD * robdd = new ROBDD (elm_set);
     robdd->add_subset (subset);
+
+    subset->remove_element (0);
+    robdd->add_subset (subset);
+
     bool answ = robdd->contains (subset);
     delete robdd;
     delete subset;
