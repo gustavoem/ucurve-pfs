@@ -49,7 +49,8 @@ protected:
 
   // Auxiliar function to ROBDD (ElementSet *, ElementSubset*)
   //
-  void build (Vertex *, unsigned int, unsigned int, ElementSubset *, Vertex *, Vertex *);
+  void build (Vertex *, unsigned int, unsigned int, ElementSubset *, 
+      Vertex *, Vertex *);
 
   // Auxiliar function to ROBDD::reduce ()
   //
@@ -76,15 +77,26 @@ protected:
   //
   void fill_vertice (Vertex **, int *, Vertex *);
 
-  // Auxiliar function to add_lower_interval (). This method builds a tree of
-  // a ROBDD that has ones for subsets covered by the subset passed by 
-  // argument.
+  // Auxiliar function to add_lower_interval (). This method builds a 
+  // tree of a ROBDD that has ones for subsets covered by the subset 
+  // passed by argument.
   //
-  Vertex * build_interval (unsigned int, unsigned int *, ElementSubset *, Vertex *, Vertex *, bool);
+  Vertex * build_interval (unsigned int, unsigned int *, 
+      ElementSubset *, Vertex *, Vertex *, bool);
 
-  // Given a vertex, returns a copy of the subtree with that vertex as root
+  // Given a vertex, returns a copy of the subtree with that vertex as 
+  // root
   //
   Vertex * copy_subtree (Vertex *);
+
+  // Given a value, returns the leaf of the ROBDD with this value. If
+  // there is no node such node (empty or full ROBDD), then returns NULL
+  //
+  Vertex * get_leaf (bool);
+
+  // Updates a subset value
+  //
+  void change_subset_value (ElementSubset *, bool);
 
   // Defines the structure used to save vertice on the reducing procedure
   //
@@ -140,7 +152,7 @@ public:
   // Makes the union of the subtrees passed by argument
   //
   Vertex * union_step (Vertex * v1, Vertex * v2, 
-    map<pair<Vertex *, Vertex *>, Vertex *> *, unsigned int *, Vertex *, Vertex *);
+      map<pair<Vertex *, Vertex *>, Vertex *> *, unsigned int *, Vertex *, Vertex *);
 
   // Adds to the ROBDD all the subsets covered (if bool false) or that covers (if bool
   // true) by ElementSubset *

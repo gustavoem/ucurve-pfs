@@ -202,8 +202,6 @@ void ROBDD::reduce ()
       sizeof (Vertex *));
   list<Vertex *> ** vlists = (list<Vertex *> **) calloc (set_card + 2, 
       sizeof (list<Vertex *> *));  
-  for (int i = 0; i < cardinality + 1; i++)
-    subgraph[i] = NULL;
   for (unsigned int i = 1; i <= set_card + 1; i++) 
     vlists[i] = new list<Vertex *>();
   set<Vertex *> trash_can;
@@ -431,48 +429,13 @@ void ROBDD::add_interval (ElementSubset * subset, bool orientation)
 
 void ROBDD::add_subset (ElementSubset * subset) 
 {
-  bool current_edge, last_edge;
-  unsigned int set_card = elm_set->get_set_cardinality ();
-  unsigned int idx = 0;
-  Vertex * aux, * new_current;
-  Vertex * current = root;
-  Vertex * last = NULL;
-  while (idx < set_card)
-  {
-    current_edge = subset->has_element (idx);
-    if ((current->get_index () - 1) != idx)
-    {
-      if (last == NULL) 
-      {
-        Vertex * new_root;
-        new_root = new Vertex (elm_set->get_element (idx), idx + 1);
-        cardinality++;
-        new_root->set_child (root, current_edge);
-        new_root->set_child (copy_subtree (root), !current_edge);
-        current = root = new_root;
-      }
-      else
-      {
-        last_edge = subset->has_element (idx - 1);
-        current = new Vertex (elm_set->get_element (idx), idx + 1);
-        cardinality++;
-        aux = last->get_child (last_edge);
-        last->set_child (current, last_edge);
-        current->set_child (aux, current_edge);
-        current->set_child (copy_subtree (aux), !current_edge);
-      }
-    }
-    if (idx == set_card - 1)
-    {
-      Vertex * one = new Vertex (true, set_card + 1);
-      cardinality++;
-      current->set_child (one, current_edge);
-    }
-    last = current;
-    current = current->get_child (current_edge);
-    idx++;
-  }
-  reduce ();
+  change_subset_value (subset, true);
+}
+
+
+void ROBDD::remove_subset (ElementSubset * subset) 
+{
+  change_subset_value (subset, false);
 }
 
 
@@ -503,8 +466,8 @@ Vertex * ROBDD::build_interval (unsigned int index, unsigned int * card,
 }
 
 
-
-Vertex * ROBDD::copy_subtree (Vertex * r) {
+Vertex * ROBDD::copy_subtree (Vertex * r) 
+{
   Vertex * root_cpy = new Vertex (*r);
   if (root_cpy->get_child (false) != NULL) 
   {
@@ -517,6 +480,96 @@ Vertex * ROBDD::copy_subtree (Vertex * r) {
     root_cpy->set_child (hi_cpy, true);
   }
   return root_cpy;
+}
+
+
+Vertex * ROBDD::get_leaf (bool value) 
+{
+  Vertex * v = root;
+  while (!v->is_terminal ())
+  {
+    Vertex * hi_child = v->get_child (true);
+    Vertex * lo_child = v->get_child (false);
+    if (hi_child->get_value () == value) 
+      v = hi_child;
+    else if (lo_child->get_value () == value) 
+      v = lo_child;
+    else if (hi_child->get_value () == !value)
+      v = lo_child;
+    else if (lo_child->get_value () == !value)
+      v = hi_child;
+    else
+      v = v->get_child ((int) rand() % 2);
+  }
+  if (v->get_value () == value)
+    return v;
+  else
+    return NULL;
+}
+
+
+void ROBDD::change_subset_value (ElementSubset * subset, bool new_value) 
+{
+  bool current_edge, last_edge;
+  unsigned int set_card = elm_set->get_set_cardinality ();
+  unsigned int idx = 0;
+  Vertex * aux;
+  Vertex * current = root;
+  Vertex * last = NULL;
+  Vertex * new_value_leaf, * old_value_leaf;
+
+  if ((contains (subset) && new_value == true) ||
+      (!contains (subset) && new_value == false))
+    return;
+
+  new_value_leaf = get_leaf (new_value);
+  old_value_leaf = get_leaf (!new_value);
+  if (new_value_leaf == NULL) 
+  {
+    new_value_leaf = new Vertex (new_value, set_card + 1);
+    cardinality++;
+  }
+
+  while (idx < set_card)
+  {
+    current_edge = subset->has_element (idx);
+    if ((current->get_index () - 1) != idx)
+    {
+      if (last == NULL) 
+      {
+        Vertex * new_root;
+        new_root = new Vertex (elm_set->get_element (idx), idx + 1);
+        cardinality++;
+        new_root->set_child (root, current_edge);
+        new_root->set_child (copy_subtree (root), !current_edge);
+        current = root = new_root;
+      }
+      else
+      {
+        last_edge = subset->has_element (idx - 1);
+        current = new Vertex (elm_set->get_element (idx), idx + 1);
+        cardinality++;
+        aux = last->get_child (last_edge);
+        last->set_child (current, last_edge);
+        current->set_child (aux, current_edge);
+        current->set_child (copy_subtree (aux), !current_edge);
+      }
+    }
+    if (idx == set_card - 1)
+      current->set_child (new_value_leaf, current_edge);
+    last = current;
+    current = current->get_child (current_edge);
+    idx++;
+  }
+  reduce ();
+
+  if (old_value_leaf != NULL)
+  {
+    old_value_leaf->mark = true;
+    unmark_all_vertex ();
+    if (old_value_leaf->mark)
+      delete old_value_leaf;
+  }
 }
 
 
