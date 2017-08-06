@@ -197,9 +197,13 @@ bool ROBDD::VerticeEntry::operator < (const VerticeEntry& y)
 
 void ROBDD::reduce ()
 {
-  Vertex ** subgraph = (Vertex **) calloc (cardinality + 1, sizeof (Vertex *));
   unsigned int set_card = elm_set->get_set_cardinality ();
-  list<Vertex *> ** vlists = (list<Vertex *> **) calloc (set_card + 2, sizeof (list<Vertex *> *));
+  Vertex ** subgraph = (Vertex **) calloc (cardinality + 1, 
+      sizeof (Vertex *));
+  list<Vertex *> ** vlists = (list<Vertex *> **) calloc (set_card + 2, 
+      sizeof (list<Vertex *> *));  
+  for (int i = 0; i < cardinality + 1; i++)
+    subgraph[i] = NULL;
   for (unsigned int i = 1; i <= set_card + 1; i++) 
     vlists[i] = new list<Vertex *>();
   set<Vertex *> trash_can;
@@ -212,7 +216,8 @@ void ROBDD::reduce ()
   {
     list<MyVerticeEntry> Q;
     list<Vertex *> * l = vlists[i];
-    for (list<Vertex*>::iterator it = l->begin (); it != l->end (); it++)
+    for (list<Vertex*>::iterator it = l->begin (); it != l->end (); 
+        it++)
     {
       Vertex * u = *it;
       Vertex * u_lo = u->get_child (false);
@@ -248,7 +253,8 @@ void ROBDD::reduce ()
     pair<int, int> oldkey (-1, -1);
     // sort Q by id
     Q.sort ();
-    for (list<VerticeEntry>::iterator it = Q.begin(); it != Q.end(); it++)
+    for (list<VerticeEntry>::iterator it = Q.begin(); it != Q.end(); 
+        it++)
     {
       VerticeEntry ve = *it;
       Vertex * u = ve.v;
@@ -431,12 +437,8 @@ void ROBDD::add_subset (ElementSubset * subset)
   Vertex * aux, * new_current;
   Vertex * current = root;
   Vertex * last = NULL;
-
   while (idx < set_card)
   {
-    cout << "\n\n Iteration " << idx << "\n";
-    cout << "current = " << current << endl;
-    print ();
     current_edge = subset->has_element (idx);
     if ((current->get_index () - 1) != idx)
     {
@@ -444,6 +446,7 @@ void ROBDD::add_subset (ElementSubset * subset)
       {
         Vertex * new_root;
         new_root = new Vertex (elm_set->get_element (idx), idx + 1);
+        cardinality++;
         new_root->set_child (root, current_edge);
         new_root->set_child (copy_subtree (root), !current_edge);
         current = root = new_root;
@@ -452,6 +455,7 @@ void ROBDD::add_subset (ElementSubset * subset)
       {
         last_edge = subset->has_element (idx - 1);
         current = new Vertex (elm_set->get_element (idx), idx + 1);
+        cardinality++;
         aux = last->get_child (last_edge);
         last->set_child (current, last_edge);
         current->set_child (aux, current_edge);
@@ -461,19 +465,14 @@ void ROBDD::add_subset (ElementSubset * subset)
     if (idx == set_card - 1)
     {
       Vertex * one = new Vertex (true, set_card + 1);
+      cardinality++;
       current->set_child (one, current_edge);
     }
     last = current;
     current = current->get_child (current_edge);
     idx++;
   }
-
-
-  cout << "\nROBDD before reduce: " << endl;
-  print ();
   reduce ();
-  cout << "ROBDD after: " << endl;
-  print ();
 }
 
 
