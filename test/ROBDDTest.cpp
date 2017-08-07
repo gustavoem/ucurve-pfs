@@ -217,17 +217,42 @@ namespace ROBDDTest
     subset->add_element (2);
     ROBDD * robdd = new ROBDD (elm_set);
     robdd->add_subset (subset);
-
     subset->remove_element (0);
     robdd->add_subset (subset);
-
     bool answ = robdd->contains (subset);
+
     delete robdd;
     delete subset;
     delete elm_set;
     return answ;
   }
 
+
+  bool it_should_be_able_to_remove_a_subset ()
+  {
+    ElementSet * elm_set = new ElementSet ("", 3, 3);
+    ElementSubset * subset1 = new ElementSubset ("", elm_set);
+    ElementSubset * subset2 = new ElementSubset ("", elm_set);
+    subset1->add_element (0);
+    subset1->add_element (1);
+    subset1->add_element (2);
+    subset2->copy (subset1);
+    ROBDD * robdd = new ROBDD (elm_set);
+    robdd->add_subset (subset1);
+    subset1->remove_element (0);
+    robdd->add_subset (subset1);
+    robdd->remove_subset (subset2);
+    bool answ = !robdd->contains (subset2);
+    subset2->copy (subset1);
+    robdd->remove_subset (subset2);
+    answ = answ && !robdd->contains (subset2);
+
+    delete robdd;
+    delete subset1;
+    delete subset2;
+    delete elm_set;
+    return answ; 
+  }
 
 } // end of namespace
 

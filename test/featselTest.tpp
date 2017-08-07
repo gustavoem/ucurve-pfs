@@ -188,6 +188,8 @@ int main (void)
     ROBDDTest::it_should_be_able_to_reduce_an_obdd ());
   result ("ROBDDTest::it_should_be_able_to_add_a_subset",
     ROBDDTest::it_should_be_able_to_add_a_subset ());
+  result ("ROBDDTest::it_should_be_able_to_remove_a_subset",
+    ROBDDTest::it_should_be_able_to_remove_a_subset ());
   cout << endl;
 
   // Testing Class Partition

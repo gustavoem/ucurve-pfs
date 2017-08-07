@@ -46,6 +46,8 @@ namespace ROBDDTest
   bool it_should_be_able_to_reduce_an_obdd ();
 
   bool it_should_be_able_to_add_a_subset ();
+  
+  bool it_should_be_able_to_remove_a_subset ();
 
 }
 
