@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "Element.h"
+#include <list>
 
 class Vertex 
 {
@@ -15,6 +16,7 @@ private:
   bool value;
   unsigned int id;      // just an integer for identification
   unsigned int index;   // the index of *var at the ordering plus one
+  list<Vertex *> parents;
   
 public:
 
@@ -33,7 +35,6 @@ public:
   //
   Vertex (bool, unsigned int);
 
-
   // Default destructor.
   //
   virtual ~Vertex ();
@@ -50,16 +51,21 @@ public:
   //
   Vertex * get_child (bool);
 
-
   // Sets the child. True for high (right) and False for low (left)
   //
   void set_child (Vertex *, bool);
 
+  // Returns the list of parents of this vertex
+  //
+  list<Vertex *> get_parents ();
+
+  // Adds a Vertex to the list of Vertice
+  //
+  void add_parent (Vertex *);
 
   // Returns the value of a vertex
   //
   int get_value (); 
-
 
   // Sets the value of a vertex
   //
@@ -69,7 +75,6 @@ public:
   //
   unsigned int get_id ();
 
-
   // Sets the id of a vertex
   //
   void set_id (unsigned int);
@@ -78,11 +83,9 @@ public:
   //
   unsigned int get_index ();
 
-
   // Sets the index of a vertex
   //
   void set_index (unsigned int);  
-
 
   // Says if the vertex is terminal
   //

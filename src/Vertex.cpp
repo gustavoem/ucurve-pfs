@@ -66,6 +66,18 @@ void Vertex::set_child (Vertex * vertex, bool side)
 }
 
 
+list<Vertex *> Vertex::get_parents () 
+{
+	return parents;
+}
+
+
+void Vertex::add_parent (Vertex * v)
+{
+	parents.push_back (v);
+}
+
+
 int Vertex::get_value ()
 {
 	if (var != NULL)

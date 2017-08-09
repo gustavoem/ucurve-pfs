@@ -38,6 +38,7 @@
 #include "ElementSubsetTest.h"
 #include "CollectionTest.h"
 #include "ROBDDTest.h"
+#include "VertexTest.h"
 #include "PartitionTest.h"
 #include "PartitionNodeTest.h"
 
@@ -191,6 +192,21 @@ int main (void)
   result ("ROBDDTest::it_should_be_able_to_remove_a_subset",
     ROBDDTest::it_should_be_able_to_remove_a_subset ());
   cout << endl;
+
+
+  // Testing Class "Vertex"
+  //
+  current_class = "Vertex";
+  result ("VertexTest::a_new_vertex_should_have_no_child", 
+    VertexTest::a_new_vertex_should_have_no_child ());
+  result ("VertexTest::a_terminal_vertex_should_have_no_var", 
+    VertexTest::a_terminal_vertex_should_have_no_var ());
+  result ("VertexTest::a_nonterminal_vertex_should_have_no_value", 
+    VertexTest::a_nonterminal_vertex_should_have_no_value ());
+  result ("VertexTest::it_should_keep_parents", 
+    VertexTest::it_should_keep_parents ());
+  cout << endl;
+
 
   // Testing Class Partition
   //
