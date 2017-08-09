@@ -32,6 +32,8 @@ namespace VertexTest {
   bool a_nonterminal_vertex_should_have_no_value ();
 
   bool it_should_keep_parents ();
+
+  bool an_added_child_should_have_parents_updated ();
 }
 
 #endif /* VERTEXTEST_H_ */

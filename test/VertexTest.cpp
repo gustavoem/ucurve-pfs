@@ -75,5 +75,21 @@ namespace VertexTest {
     return parents.empty ();
   }
 
+
+  bool an_added_child_should_have_parents_updated ()
+  {
+    Vertex a ((Element *) NULL, 1);
+    Vertex b ((Element *) NULL, 1);
+    Vertex c ((Element *) NULL, 1);
+    list<Vertex *> l;
+
+    a.set_child (&b, true);
+    c.set_child (&b, true);
+
+    l = b.get_parents ();
+    return l.size () == 2;
+  }
+
+
 } // end of namespace
 

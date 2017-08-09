@@ -205,6 +205,8 @@ int main (void)
     VertexTest::a_nonterminal_vertex_should_have_no_value ());
   result ("VertexTest::it_should_keep_parents", 
     VertexTest::it_should_keep_parents ());
+  result ("VertexTest::an_added_child_should_have_parents_updated", 
+    VertexTest::an_added_child_should_have_parents_updated ());
   cout << endl;
 
 
