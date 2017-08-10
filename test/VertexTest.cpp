@@ -90,6 +90,20 @@ namespace VertexTest {
     return l.size () == 2;
   }
 
+  bool a_removed_child_should_have_parents_updated ()
+  {
+    Vertex a ((Element *) NULL, 1);
+    Vertex b ((Element *) NULL, 1);
+    Vertex c ((Element *) NULL, 1);
+    list<Vertex *> l;
+
+    a.set_child (&b, true);
+    c.set_child (&b, true);
+    a.set_child (&c, true);
+
+    l = b.get_parents ();
+    return l.size () == 1;
+  }
 
 } // end of namespace
 

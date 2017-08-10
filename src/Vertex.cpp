@@ -59,11 +59,21 @@ Vertex * Vertex::get_child (bool side)
 
 void Vertex::set_child (Vertex * vertex, bool side)
 {
+  Vertex * old_child;
   if (side == true)
+  {
+    old_child = hi;
     hi = vertex;
+  }
   else 
+  {
+    old_child = lo;
     lo = vertex;
+  }
   vertex->add_parent (this);
+
+  if (old_child != NULL)
+    old_child->remove_parent (this);
 }
 
 
@@ -78,6 +88,11 @@ void Vertex::add_parent (Vertex * v)
   parents.push_back (v);
 }
 
+
+void Vertex::remove_parent (Vertex * v)
+{
+  parents.remove (v);
+}
 
 int Vertex::get_value ()
 {

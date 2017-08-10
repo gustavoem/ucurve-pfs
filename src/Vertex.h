@@ -63,6 +63,10 @@ public:
   //
   void add_parent (Vertex *);
 
+  // Removes a vertex parent 
+  //
+  void remove_parent (Vertex *);
+
   // Returns the value of a vertex
   //
   int get_value (); 

@@ -34,6 +34,8 @@ namespace VertexTest {
   bool it_should_keep_parents ();
 
   bool an_added_child_should_have_parents_updated ();
+
+  bool a_removed_child_should_have_parents_updated ();
 }
 
 #endif /* VERTEXTEST_H_ */

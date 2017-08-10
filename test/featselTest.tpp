@@ -207,6 +207,8 @@ int main (void)
     VertexTest::it_should_keep_parents ());
   result ("VertexTest::an_added_child_should_have_parents_updated", 
     VertexTest::an_added_child_should_have_parents_updated ());
+  result ("VertexTest::a_removed_child_should_have_parents_updated", 
+    VertexTest::a_removed_child_should_have_parents_updated ());
   cout << endl;
 
 
