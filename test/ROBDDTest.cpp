@@ -254,5 +254,25 @@ namespace ROBDDTest
     return answ; 
   }
 
+
+  bool it_should_be_full_when_powerset_is_added ()
+  {
+    ElementSet elm_set ("", 3, 3);
+    ROBDD r (&elm_set);
+    for (unsigned int i = 0; i < 8; i++)
+    {
+      ElementSubset * subset = new ElementSubset ("", &elm_set);
+      if (i % 2)
+        subset->add_element (0);
+      if ((i / 2) % 2)
+        subset->add_element (1);
+      if ((i / 4) % 2)
+        subset->add_element (2);
+      r.add_subset (subset);
+      delete subset;
+    }
+    return r.is_full ();
+  }
+
 } // end of namespace
 

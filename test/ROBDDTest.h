@@ -49,6 +49,9 @@ namespace ROBDDTest
   
   bool it_should_be_able_to_remove_a_subset ();
 
+  bool it_should_be_full_when_powerset_is_added ();
+
+
 }
 
 #endif /* ROBDDTEST_H_ */

@@ -185,6 +185,10 @@ public:
   //
   unsigned int get_cardinality ();
 
+  // Returns true if ROBDD is full
+  //
+  bool is_full ();
+
 };
 
 #endif /* ROBDD_H_ */

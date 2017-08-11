@@ -30,6 +30,9 @@ public:
   //
   Vertex (Element *, unsigned int);
 
+  // Copy Constructor
+  //
+  Vertex (const Vertex&);
 
   // Constructor for terminal vertices
   //
@@ -93,7 +96,11 @@ public:
 
   // Says if the vertex is terminal
   //
-  bool is_terminal();
+  bool is_terminal ();
+
+  // Clears the list of parents
+  //
+  void clean_parents ();
 
 };
 

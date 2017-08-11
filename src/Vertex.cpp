@@ -9,6 +9,16 @@ Vertex::Vertex ()
 }
 
 
+Vertex::Vertex (const Vertex& v)
+{
+  var = v.var;
+  lo = v.lo;
+  hi = v.hi;
+  value = v.value;
+  index = v.index;
+  id = v.id;
+}
+
 Vertex::Vertex (Element * elm, unsigned int index) 
 {
   var = elm;
@@ -135,4 +145,9 @@ void Vertex::set_index (unsigned int index)
 bool Vertex::is_terminal ()
 {
   return var == NULL;
+}
+
+void Vertex::clean_parents () 
+{
+  parents.clear ();
 }

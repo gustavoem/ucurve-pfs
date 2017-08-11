@@ -268,6 +268,7 @@ void ROBDD::reduce ()
         next_id++;
         u->set_id (next_id);
         subgraph[next_id] = u;
+        u->clean_parents ();
         if (u_lo != NULL)
         {
           Vertex * actual_lo_child = subgraph[u_lo->get_id ()];
@@ -469,6 +470,7 @@ Vertex * ROBDD::build_interval (unsigned int index, unsigned int * card,
 Vertex * ROBDD::copy_subtree (Vertex * r) 
 {
   Vertex * root_cpy = new Vertex (*r);
+  cardinality += 1;
   if (root_cpy->get_child (false) != NULL) 
   {
     Vertex * lo_cpy = copy_subtree (r->get_child (false));
@@ -555,21 +557,31 @@ void ROBDD::change_subset_value (ElementSubset * subset, bool new_value)
         current->set_child (copy_subtree (aux), !current_edge);
       }
     }
-    if (idx == set_card - 1)
+
+    // Actual change of values
+    if (idx == set_card - 1) 
+    {
       current->set_child (new_value_leaf, current_edge);
+      if (old_value_leaf->get_parents ().size () < 1) 
+      {
+        cardinality--;
+        delete old_value_leaf;
+      }
+
+    }
+
     last = current;
     current = current->get_child (current_edge);
     idx++;
   }
-  reduce ();
 
-  if (old_value_leaf != NULL)
-  {
-    old_value_leaf->mark = true;
-    unmark_all_vertex ();
-    if (old_value_leaf->mark)
-      delete old_value_leaf;
-  }
+  reduce ();
+}
+
+
+void get_subtree_cardinality (Vertex *) 
+{
+
 }
 
 
@@ -620,4 +632,10 @@ ElementSet * ROBDD::get_element_set ()
 unsigned int ROBDD::get_cardinality ()
 {
   return cardinality;
+}
+
+
+bool ROBDD::is_full ()
+{
+  return root->is_terminal () && root->get_value () == 1;
 }
