@@ -189,6 +189,14 @@ public:
   //
   bool is_full ();
 
+  // Inserts a vertex V as a child of a ROBDD vertex U. This method will
+  // replace the current child W of U by V. V will have as child W and a 
+  // copy of the subtree started in W. This method may make the ROBDD 
+  // not reduced
+  //
+  void insert_vertex (Vertex *, Vertex *, bool);
+
+
 };
 
 #endif /* ROBDD_H_ */

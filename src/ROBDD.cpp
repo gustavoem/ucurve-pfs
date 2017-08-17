@@ -1,3 +1,4 @@
+
 //
 // ROBDD.cpp -- implementation of the class "ROBDD".
 //
@@ -525,7 +526,6 @@ void ROBDD::change_subset_value (ElementSubset * subset, bool new_value)
     return;
 
   new_value_leaf = get_leaf (new_value);
-  old_value_leaf = get_leaf (!new_value);
   if (new_value_leaf == NULL) 
   {
     new_value_leaf = new Vertex (new_value, set_card + 1);
@@ -550,17 +550,19 @@ void ROBDD::change_subset_value (ElementSubset * subset, bool new_value)
       {
         last_edge = subset->has_element (idx - 1);
         current = new Vertex (elm_set->get_element (idx), idx + 1);
-        cardinality++;
-        aux = last->get_child (last_edge);
-        last->set_child (current, last_edge);
-        current->set_child (aux, current_edge);
-        current->set_child (copy_subtree (aux), !current_edge);
+        insert_vertex (last, current, last_edge);
+        // cardinality++;
+        // aux = last->get_child (last_edge);
+        // last->set_child (current, last_edge);
+        // current->set_child (aux, current_edge);
+        // current->set_child (copy_subtree (aux), !current_edge);
       }
     }
 
     // Actual change of values
     if (idx == set_card - 1) 
     {
+      old_value_leaf = current->get_child (current_edge);
       current->set_child (new_value_leaf, current_edge);
       if (old_value_leaf->get_parents ().size () < 1) 
       {
@@ -575,13 +577,8 @@ void ROBDD::change_subset_value (ElementSubset * subset, bool new_value)
     idx++;
   }
 
+  print ();
   reduce ();
-}
-
-
-void get_subtree_cardinality (Vertex *) 
-{
-
 }
 
 
@@ -638,4 +635,15 @@ unsigned int ROBDD::get_cardinality ()
 bool ROBDD::is_full ()
 {
   return root->is_terminal () && root->get_value () == 1;
+}
+
+
+void ROBDD::insert_vertex (Vertex * u, Vertex * v, bool side)
+{
+  Vertex * w;
+  cardinality++;
+  w = u->get_child (side);
+  u->set_child (v, side);
+  v->set_child (w, false);
+  v->set_child (copy_subtree (w), true);
 }
