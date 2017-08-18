@@ -20,17 +20,24 @@
 
 #include "ExpandableOBDD.h"
 
-ExpandableOBDD::ExpandableOBDD (ElementSet * elm_set) :
-   ROBDD (elm_set) 
+ExpandableOBDD::ExpandableOBDD (ElementSet * set, ROBDD * R)
 {
-  current_node = root;
+  elm_set = set;
+  obdd = R;
+  current_node = R->get_root ();
   current_subset = NULL;
+}
+
+
+ExpandableOBDD::~ExpandableOBDD ()
+{
+  return;
 }
 
 
 ElementSubset * ExpandableOBDD::next_subset ()
 {
-  if (this->is_full ())
+  if (obdd->is_full ())
     return NULL;
 
   expand ();
@@ -40,11 +47,49 @@ ElementSubset * ExpandableOBDD::next_subset ()
 
 void ExpandableOBDD::expand ()
 {
-  return;
+  unsigned int set_card = elm_set->get_set_cardinality ();
+  unsigned int elm_idx = current_node->get_index () - 1;
+  while (elm_idx != set_card - 1) 
+  {
+    Vertex * lo = current_node->get_child (false);
+    Vertex * hi = current_node->get_child (true);
+    Vertex * next;
+    if (lo->get_value () != 1)
+    {
+      next = lo;
+      if (lo->get_index () != current_node->get_index () + 1)
+      {
+        lo = new Vertex (elm_set->get_element (elm_idx - 1), elm_idx);
+        obdd->insert_vertex (current_node, v, false);
+      }
+      current_node = lo;
+    }
+    else if (hi->get_value () != 1)
+    {
+      next = hi;
+      if (hi->get_index () != current_node->get_index () + 1)
+      {
+        hi = new Vertex (elm_set->get_element (elm_idx - 1), elm_idx);
+        obdd->insert_vertex (current_node, v, true);
+      }
+      current_subset->add_element (current_node->get_index () - 1)
+      current_node = hi;
+    }
+    else
+    {
+      next = current_node->get_parents ()[0];
+      bool side = next->get_child (true) == current_node;
+      robdd->simplify (current_node);
+      current_node = next;
+      if (side)
+        current_subset->remove_element (current_node->get_index () - 1);
+    }
+    elm_idx = current_node->get_index () - 1;
+  }
 }
 
 
-ExpandableOBDD::reduce () 
-{
-  return;
-}
+// void ExpandableOBDD::reduce () 
+// {
+//   return;
+// }

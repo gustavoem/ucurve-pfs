@@ -147,7 +147,14 @@ bool Vertex::is_terminal ()
   return var == NULL;
 }
 
+
 void Vertex::clean_parents () 
 {
   parents.clear ();
+}
+
+
+bool Vertex::has_parent ()
+{
+  return parents.size () > 0;
 }

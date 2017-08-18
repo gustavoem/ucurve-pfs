@@ -196,7 +196,11 @@ public:
   //
   void insert_vertex (Vertex *, Vertex *, bool);
 
-
+  // Simplifies a node. This method receives a node with both children 
+  // having value 1 and updates itself to be the value one.
+  //
+  void simplify (Vertex *);
+  
 };
 
 #endif /* ROBDD_H_ */

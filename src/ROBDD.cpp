@@ -516,7 +516,6 @@ void ROBDD::change_subset_value (ElementSubset * subset, bool new_value)
   bool current_edge, last_edge;
   unsigned int set_card = elm_set->get_set_cardinality ();
   unsigned int idx = 0;
-  Vertex * aux;
   Vertex * current = root;
   Vertex * last = NULL;
   Vertex * new_value_leaf, * old_value_leaf;
@@ -551,11 +550,6 @@ void ROBDD::change_subset_value (ElementSubset * subset, bool new_value)
         last_edge = subset->has_element (idx - 1);
         current = new Vertex (elm_set->get_element (idx), idx + 1);
         insert_vertex (last, current, last_edge);
-        // cardinality++;
-        // aux = last->get_child (last_edge);
-        // last->set_child (current, last_edge);
-        // current->set_child (aux, current_edge);
-        // current->set_child (copy_subtree (aux), !current_edge);
       }
     }
 
@@ -569,15 +563,13 @@ void ROBDD::change_subset_value (ElementSubset * subset, bool new_value)
         cardinality--;
         delete old_value_leaf;
       }
-
     }
 
     last = current;
     current = current->get_child (current_edge);
     idx++;
   }
-
-  print ();
+  
   reduce ();
 }
 
@@ -646,4 +638,33 @@ void ROBDD::insert_vertex (Vertex * u, Vertex * v, bool side)
   u->set_child (v, side);
   v->set_child (w, false);
   v->set_child (copy_subtree (w), true);
+}
+
+
+void ROBDD::simplify (Vertex * v)
+{
+  Vertex * parent = v->get_parents ()[0];
+  Vertex * lo = v->get_child (false);
+  Vertex * hi = v->get_child (true);
+
+  if (lo->get_value () != hi->get_value () || !lo->is_terminal () ||
+   !hi->is_terminal ())
+  {
+    return;
+  }
+
+  v->set_child (NULL, false);
+  v->set_child (NULL, true);
+  if (!lo->has_parent ())
+  {
+    cardinality--;
+    delete lo;
+  }
+  cardinality--;
+  delete v;
+  
+  if (parent != NULL)
+    parent->set_child (hi, parent->get_child (true) == v);
+  else
+    root = hi;
 }

@@ -70,7 +70,8 @@ public:
   //
   void remove_parent (Vertex *);
 
-  // Returns the value of a vertex
+  // Returns the value of a vertex. If vertex is not terminal, returns
+  // -1
   //
   int get_value (); 
 
@@ -102,6 +103,10 @@ public:
   //
   void clean_parents ();
 
+  // Returns true if vertex has parent
+  //
+  bool has_parent ();
+  
 };
 
 #endif /* VERTEX_H_ */

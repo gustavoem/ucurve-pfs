@@ -26,8 +26,9 @@
 #include "Vertex.h"
 #include "ElementSubset.h"
 #include "CostFunction.h"
+#include "ROBDD.h"
 
-class ExpandableOBDD : public ROBDD
+class ExpandableOBDD
 {
   protected:
 
@@ -39,11 +40,23 @@ class ExpandableOBDD : public ROBDD
     //
     ElementSubset * current_subset;
 
+    // Stores the OBDD being expanded
+    //
+    ROBDD * obdd;
+
+    // Stores the element set
+    //
+    ElementSet * elm_set;
+
+    // Expands the OBDD to the next subset
+    //
+    void expand ();
+
   public:
 
     // Default constructor
     //
-    ExpandableOBDD (ElementSet *);
+    ExpandableOBDD (ElementSet *, ROBDD *);
 
 
     // Default destructor
