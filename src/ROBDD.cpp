@@ -570,7 +570,7 @@ void ROBDD::change_subset_value (ElementSubset * subset, bool new_value)
     idx++;
   }
   
-  reduce ();
+  // reduce ();
 }
 
 
@@ -655,16 +655,17 @@ void ROBDD::simplify (Vertex * v)
 
   v->set_child (NULL, false);
   v->set_child (NULL, true);
-  if (!lo->has_parent ())
+  if (!lo->has_parent () && lo != hi)
   {
     cardinality--;
     delete lo;
   }
-  cardinality--;
-  delete v;
   
   if (parent != NULL)
     parent->set_child (hi, parent->get_child (true) == v);
   else
     root = hi;
+
+  cardinality--;
+  delete v;
 }

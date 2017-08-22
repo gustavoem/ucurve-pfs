@@ -202,6 +202,8 @@ int main (void)
   current_class = "ExpandableOBDD";
   result ("ExpandableOBDDTest::it_should_return_empty_subset_first",
     ExpandableOBDDTest::it_should_return_empty_subset_first ());
+  result ("ExpandableOBDDTest::it_should_return_subsets_in_a_particular_order",
+    ExpandableOBDDTest::it_should_return_subsets_in_a_particular_order ());
   cout << endl;
 
 

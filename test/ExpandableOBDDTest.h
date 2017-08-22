@@ -28,6 +28,8 @@ namespace ExpandableOBDDTest
 {
 
   bool it_should_return_empty_subset_first ();
+
+  bool it_should_return_subsets_in_a_particular_order ();
   
 }
 

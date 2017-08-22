@@ -45,7 +45,7 @@ ElementSubset * ExpandableOBDD::next_subset ()
   else
     expand ();
 
-  ElementSubset * answer_subset = current_subset;
+  ElementSubset * answer_subset = new ElementSubset (current_subset);
   return answer_subset;
 }
 
@@ -54,6 +54,7 @@ void ExpandableOBDD::start_expansion ()
 {
   current_subset = new ElementSubset ("", elm_set);
   obdd->add_subset (current_subset);
+  current_node = obdd->get_root ();
 }
 
 
@@ -71,6 +72,7 @@ void ExpandableOBDD::reduce_node ()
 {
   Vertex * next = current_node->get_parents ().front ();
   bool side = next->get_child (true) == current_node;
+  current_subset->remove_element (current_node->get_index () - 1);
   obdd->simplify (current_node);
   current_node = next;
   if (side)
@@ -85,14 +87,10 @@ void ExpandableOBDD::expand ()
   Vertex * lo = current_node->get_child (false);
   Vertex * hi = current_node->get_child (true);
 
-  if (elm_idx == set_card)
-    start_expansion ();
-
   while (elm_idx != set_card - 1 || hi->get_value () == 1)
   {
     Vertex * next_node;
     bool next_side;
-
     if (hi->get_value () == 1)
     {
       next_node = current_node->get_parents ().front ();
@@ -113,8 +111,8 @@ void ExpandableOBDD::expand ()
       }
       if (next_node->get_index () != current_node->get_index () + 1)
       {
-        next_node = new Vertex (elm_set->get_element (elm_idx),
-         elm_idx + 1);
+        next_node = new Vertex (elm_set->get_element (elm_idx + 1),
+         elm_idx + 2);
         obdd->insert_vertex (current_node, next_node, next_side);
       }
     }

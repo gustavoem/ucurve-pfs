@@ -80,7 +80,9 @@ void Vertex::set_child (Vertex * vertex, bool side)
     old_child = lo;
     lo = vertex;
   }
-  vertex->add_parent (this);
+
+  if (vertex != NULL)
+    vertex->add_parent (this);
 
   if (old_child != NULL)
     old_child->remove_parent (this);
