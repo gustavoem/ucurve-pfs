@@ -48,9 +48,24 @@ class ExpandableOBDD
     //
     ElementSet * elm_set;
 
+    // Does the first step on expansion
+    //
+    void start_expansion ();
+
+    // Completes an expansion by setting the current subset
+    //
+    void set_current_subset ();
+
+    // Reduces an OBDD node that is redundant and has value 1, i.e. 
+    // is in the OBDD
+    //
+    void reduce_node ();
+
     // Expands the OBDD to the next subset
     //
     void expand ();
+
+
 
   public:
 

@@ -643,7 +643,7 @@ void ROBDD::insert_vertex (Vertex * u, Vertex * v, bool side)
 
 void ROBDD::simplify (Vertex * v)
 {
-  Vertex * parent = v->get_parents ()[0];
+  Vertex * parent = v->get_parents ().front ();
   Vertex * lo = v->get_child (false);
   Vertex * hi = v->get_child (true);
 

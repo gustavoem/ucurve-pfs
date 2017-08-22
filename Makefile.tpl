@@ -42,6 +42,7 @@ OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
 TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/ROBDDTest.o test/VertexTest.o test/PartitionTest.o \
       test/PartitionNodeTest.o test/functions/PartCostTest.o \
+      test/ExpandableOBDDTest.o \
       test/algorithms/UCurveToolBoxTest.o \
 # %template_test%
       test/ElementSubsetTest.o test/CollectionTest.o \

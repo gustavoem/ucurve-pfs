@@ -38,6 +38,7 @@
 #include "ElementSubsetTest.h"
 #include "CollectionTest.h"
 #include "ROBDDTest.h"
+#include "ExpandableOBDDTest.h"
 #include "VertexTest.h"
 #include "PartitionTest.h"
 #include "PartitionNodeTest.h"
@@ -193,6 +194,14 @@ int main (void)
     ROBDDTest::it_should_be_able_to_remove_a_subset ());
   result ("ROBDDTest::it_should_be_full_when_powerset_is_added",
     ROBDDTest::it_should_be_full_when_powerset_is_added ());
+  cout << endl;
+
+
+  // Testing Class "ExpandableOBDD"
+  //
+  current_class = "ExpandableOBDD";
+  result ("ExpandableOBDDTest::it_should_return_empty_subset_first",
+    ExpandableOBDDTest::it_should_return_empty_subset_first ());
   cout << endl;
 
 
