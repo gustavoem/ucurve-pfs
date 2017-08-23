@@ -26,88 +26,20 @@
 #include "Vertex.h"
 #include "ElementSubset.h"
 #include "CostFunction.h"
+#include "OBDD.h"
 
-class ROBDD
+class ROBDD : public OBDD
 {
 
 protected:
-
-  // The set of elements this ROBDD will represent
-  //
-  ElementSet * elm_set;
-  // ROBDD cardinality
-  //
-  unsigned int cardinality;
-
-  // The root of the ROBDD
-  //
-  Vertex * root;  
-
-  // Prints the sub-tree that has the parameter Vertex as root
-  //
-  void print(Vertex *);
-
-  // Auxiliar function to ROBDD (ElementSet *, ElementSubset*)
-  //
-  void build (Vertex *, unsigned int, unsigned int, ElementSubset *, 
-      Vertex *, Vertex *);
 
   // Auxiliar function to ROBDD::reduce ()
   //
   void fill_vlist (Vertex *, list<Vertex *> **);
 
-  // Unmarks all the vertices from the robdd
-  //
-  void unmark_all_vertex ();
-
-  // Unmarks all the vertices from the subtree with root Vertex *
-  //
-  void unmark_all_vertex (Vertex *);
-
-  // Deletes the subtree with root Vertex *
-  //
-  void delete_subtree (Vertex **, unsigned int *);
-
-  // Returns a list with all vertex of the ROBDD with root Vertex *
-  //
-  Vertex ** get_all_vertex (Vertex *, unsigned int);
-
-  // Auxiliar function to get_all_vertex that traverse the robdd assgning
-  // pointers of the vertex to the vector vertice
-  //
-  void fill_vertice (Vertex **, int *, Vertex *);
-
-  // Auxiliar function to add_lower_interval (). This method builds a 
-  // tree of a ROBDD that has ones for subsets covered by the subset 
-  // passed by argument.
-  //
-  Vertex * build_interval (unsigned int, unsigned int *, 
-      ElementSubset *, Vertex *, Vertex *, bool);
-
-  // Given a vertex, returns a copy of the subtree with that vertex as 
-  // root
-  //
-  Vertex * copy_subtree (Vertex *);
-
-  // Given a value, returns the leaf of the ROBDD with this value. If
-  // there is no node such node (empty or full ROBDD), then returns NULL
-  //
-  Vertex * get_leaf (bool);
-
   // Updates a subset value
   //
   void change_subset_value (ElementSubset *, bool);
-
-  // Defines the structure used to save vertice on the reducing procedure
-  //
-  typedef struct MyVerticeEntry
-  {
-    int lo_id;
-    int hi_id;
-    Vertex * v;
-    bool operator < (const MyVerticeEntry& y);
-  } VerticeEntry;
-
 
 public:
 
@@ -133,14 +65,6 @@ public:
   //
   virtual ~ROBDD ();  
 
-  // Returns the root vertex
-  //
-  Vertex * get_root ();
-
-  // Prints the entire ROBDD
-  //
-  void print ();
-
   // Reduces the OBDD
   //
   void reduce ();
@@ -148,16 +72,6 @@ public:
   // Makes the union of this ROBDD and the one passed by argument
   //
   void union_to (Vertex *);
-
-  // Makes the union of the subtrees passed by argument
-  //
-  Vertex * union_step (Vertex * v1, Vertex * v2, 
-      map<pair<Vertex *, Vertex *>, Vertex *> *, unsigned int *, Vertex *, Vertex *);
-
-  // Adds to the ROBDD all the subsets covered (if bool false) or that covers (if bool
-  // true) by ElementSubset *
-  //
-  void add_interval (ElementSubset *, bool);
 
   // Adds to the ROBDD a subset. Does nothing if subset already in the
   // ROBDD
@@ -169,26 +83,6 @@ public:
   //
   void remove_subset (ElementSubset *);
 
-  // Returns true if the ElementSubset * path of the robdds leads to a 1
-  //
-  bool contains (ElementSubset *);
-
-  // Returns a random subset that is evaluated by zero.
-  //
-  ElementSubset * get_random_zero_evaluated_element ();
-
-  // Returns the ElementSet used to build the ROBDD
-  //
-  ElementSet * get_element_set ();
-
-  // Returns the number of vertice of the ROBDD
-  //
-  unsigned int get_cardinality ();
-
-  // Returns true if ROBDD is full
-  //
-  bool is_full ();
-
   // Inserts a vertex V as a child of a ROBDD vertex U. This method will
   // replace the current child W of U by V. V will have as child W and a 
   // copy of the subtree started in W. This method may make the ROBDD 
@@ -196,11 +90,11 @@ public:
   //
   void insert_vertex (Vertex *, Vertex *, bool);
 
-  // Simplifies a node. This method receives a node with both children 
-  // having value 1 and updates itself to be the value one.
-  //
-  void simplify (Vertex *);
-  
+  // Adds to the ROBDD all the subsets covered (if bool false) or that 
+  // covers (if bool true) by ElementSubset *
+  //  
+  void add_interval (ElementSubset *, bool);
+
 };
 
 #endif /* ROBDD_H_ */

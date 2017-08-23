@@ -33,11 +33,11 @@ CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/ROBDD.o src/Vertex.o src/Partition.o \
+      src/OBDD.o src/ExpandableOBDD.o \
       src/PartitionNode.o src/functions/PartCost.o \
 # %template_class%
       src/Collection.o src/Solver.o src/CostFunction.o \
       src/algorithms/UCurveToolBox.o \
-      src/ExpandableOBDD.o \
 
 TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/ROBDDTest.o test/VertexTest.o test/PartitionTest.o \
