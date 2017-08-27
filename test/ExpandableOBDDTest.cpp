@@ -28,7 +28,7 @@ namespace ExpandableOBDDTest
   {
     bool answ;
     ElementSet elm_set ("", 3, 100);
-    ROBDD R (&elm_set);
+    OBDD R (&elm_set);
     ExpandableOBDD eobdd (&elm_set, &R);
     ElementSubset X ("", &elm_set);
     ElementSubset * Y = eobdd.next_subset ();
@@ -42,7 +42,7 @@ namespace ExpandableOBDDTest
   {
     bool answ;
     ElementSet elm_set ("", 3, 100);
-    ROBDD R (&elm_set);
+    OBDD R (&elm_set);
     ExpandableOBDD eobdd (&elm_set, &R);
     ElementSubset X ("", &elm_set);
 

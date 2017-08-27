@@ -42,7 +42,7 @@ class ExpandableOBDD
 
     // Stores the OBDD being expanded
     //
-    ROBDD * obdd;
+    OBDD * obdd;
 
     // Stores the element set
     //
@@ -71,7 +71,7 @@ class ExpandableOBDD
 
     // Default constructor
     //
-    ExpandableOBDD (ElementSet *, ROBDD *);
+    ExpandableOBDD (ElementSet *, OBDD *);
 
 
     // Default destructor
