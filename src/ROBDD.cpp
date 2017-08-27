@@ -39,14 +39,7 @@ ROBDD::ROBDD (ElementSet * set, Vertex * root, int card)
 ROBDD::ROBDD (ElementSet * set, ElementSubset * subset) 
   : OBDD (set, subset)
 {
-  unsigned int set_card = set->get_set_cardinality ();
-  elm_set = set;
-  Vertex * zero = new Vertex (false, set_card + 1);
-  Vertex * one = new Vertex (true, set_card + 1);
-  Element * root_elm = elm_set->get_element (0);
-  root = new Vertex (root_elm, 1);
-  cardinality = 3;
-  build (root, 1, set_card, subset, zero, one);
+  return;
 }
 
 ROBDD::~ROBDD ()
@@ -185,7 +178,8 @@ void ROBDD::union_to (Vertex * root2)
 }
 
 
-void ROBDD::change_subset_value (ElementSubset * subset, bool new_value) 
+void ROBDD::change_subset_value (ElementSubset * subset, 
+  bool new_value) 
 {
   OBDD::change_subset_value (subset, new_value);
   reduce ();

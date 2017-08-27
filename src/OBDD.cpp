@@ -53,8 +53,9 @@ OBDD::OBDD (ElementSet * set, ElementSubset * subset)
 }
 
 
-void OBDD::build (Vertex * v, unsigned int elm_index, unsigned int set_card, \
-  ElementSubset * subset, Vertex * zero, Vertex * one)
+void OBDD::build (Vertex * v, unsigned int elm_index, 
+  unsigned int set_card, ElementSubset * subset, Vertex * zero, 
+  Vertex * one)
 {
   bool zeroside;
   zeroside = !subset->has_element (elm_index - 1);
@@ -67,7 +68,8 @@ void OBDD::build (Vertex * v, unsigned int elm_index, unsigned int set_card, \
   }
 
   unsigned int child_index = elm_index + 1;
-  Vertex * next_vertice = new Vertex (elm_set->get_element (child_index - 1), ++elm_index);
+  Vertex * next_vertice = 
+    new Vertex (elm_set->get_element (child_index - 1), ++elm_index);
   v->set_child (next_vertice, !zeroside);
   cardinality++;
   build (next_vertice, elm_index, set_card, subset, zero, one);   

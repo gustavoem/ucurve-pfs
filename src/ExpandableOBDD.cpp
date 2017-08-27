@@ -31,7 +31,7 @@ ExpandableOBDD::ExpandableOBDD (ElementSet * set, OBDD * R)
 
 ExpandableOBDD::~ExpandableOBDD ()
 {
-  return;
+  delete current_subset;
 }
 
 
