@@ -1,8 +1,8 @@
 //
-// ExpandableOBDD.cpp -- implementation of the class "ExpandableOBDD".
+// OBDDTree.cpp -- implementation of the class "OBDDTree".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis, Gustavo Estrela
+//    Copyright (C) 2017  Marcelo S. Reis, Gustavo Estrela
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "ExpandableOBDD.h"
+#include "OBDDTree.h"
 
-ExpandableOBDD::ExpandableOBDD (ElementSet * set, OBDD * R)
+OBDDTree::OBDDTree (ElementSet * set, OBDD * R)
 {
   elm_set = set;
   obdd = R;
@@ -29,13 +29,13 @@ ExpandableOBDD::ExpandableOBDD (ElementSet * set, OBDD * R)
 }
 
 
-ExpandableOBDD::~ExpandableOBDD ()
+OBDDTree::~OBDDTree ()
 {
   delete current_subset;
 }
 
 
-ElementSubset * ExpandableOBDD::next_subset ()
+ElementSubset * OBDDTree::next_subset ()
 {
   if (obdd->is_full ())
     return NULL;
@@ -50,7 +50,7 @@ ElementSubset * ExpandableOBDD::next_subset ()
 }
 
 
-void ExpandableOBDD::start_expansion ()
+void OBDDTree::start_expansion ()
 {
   current_subset = new ElementSubset ("", elm_set);
   obdd->add_subset (current_subset);
@@ -58,7 +58,7 @@ void ExpandableOBDD::start_expansion ()
 }
 
 
-void ExpandableOBDD::set_current_subset ()
+void OBDDTree::set_current_subset ()
 {
   // cout << "Setting current subset " << endl;
   // cout << "  current node: " << current_node << endl;
@@ -72,7 +72,7 @@ void ExpandableOBDD::set_current_subset ()
 }
 
 
-void ExpandableOBDD::reduce_node ()
+void OBDDTree::reduce_node ()
 {
   // cout << "  Reducing: " << current_node << endl;
   Vertex * next = current_node->get_parents ().front ();
@@ -86,7 +86,7 @@ void ExpandableOBDD::reduce_node ()
 }
 
 
-void ExpandableOBDD::expand ()
+void OBDDTree::expand ()
 {
   unsigned int set_card = elm_set->get_set_cardinality ();
   unsigned int elm_idx = current_node->get_index () - 1;
@@ -132,4 +132,25 @@ void ExpandableOBDD::expand ()
     elm_idx = current_node->get_index () - 1;
   }
   set_current_subset ();
+}
+
+
+void OBDDTree::restrict_branch ()
+{
+  unsigned int leftmost, elm_idx;
+  unsigned int set_card = elm_set->get_set_cardinality ();
+
+  leftmost = 0;
+  for (unsigned int i = 0; i < set_card; i++)
+    if (current_subset->has_element (i))
+      leftmost = i;
+
+  elm_idx = current_node->get_index () - 1;
+  while (elm_idx != leftmost)
+  {
+    Vertex * next_node = current_node->get_parents ().front ();
+    reduce_node ();
+    current_node = next_node;
+    elm_idx = current_node->get_index () - 1;
+  }
 }

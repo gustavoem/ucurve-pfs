@@ -100,7 +100,7 @@ OBDD::~OBDD ()
 
 void OBDD::delete_subtree (Vertex ** v, unsigned int * n)
 {
-  Vertex ** vertice = get_all_vertex (*v, *n);
+  Vertex ** vertice = get_all_vertex (*v, n);
   for (unsigned int i = 0; i < *n; i++)
   {
     delete vertice[i];
@@ -112,14 +112,14 @@ void OBDD::delete_subtree (Vertex ** v, unsigned int * n)
 }
 
 
-Vertex ** OBDD::get_all_vertex (Vertex * root, unsigned int n)
+Vertex ** OBDD::get_all_vertex (Vertex * root, unsigned int * n)
 {
-  Vertex ** v = (Vertex **) malloc (sizeof (Vertex *) * n + 1);
+  Vertex ** v = (Vertex **) malloc (sizeof (Vertex *) * (*n) + 1);
   int * last_index = (int *) malloc (sizeof (int));
   *last_index = 0;
   unmark_all_vertice (root);
   fill_vertice (v, last_index, root);
-
+  *n = *last_index;
   free (last_index);
   return v;
 }
@@ -516,31 +516,62 @@ void OBDD::insert_vertex (Vertex * u, Vertex * v, bool side)
 }
 
 
-void OBDD::simplify (Vertex * v)
+void OBDD::replace_subtree (Vertex * u, Vertex * v)
 {
-  Vertex * parent = v->get_parents ().front ();
-  Vertex * lo = v->get_child (false);
-  Vertex * hi = v->get_child (true);
-
-  if (lo->get_value () != hi->get_value () || !lo->is_terminal () ||
-   !hi->is_terminal ())
-  {
-    return;
-  }
-
-  v->set_child (NULL, false);
-  v->set_child (NULL, true);
-  if (!lo->has_parent () && lo != hi)
-  {
-    cardinality--;
-    delete lo;
-  }
+  unsigned int n1, n2;
+  Vertex * parent = u->get_parents ().front ();
+  Vertex * lo = u->get_child (false);
+  Vertex * hi = u->get_child (true);
+  u->set_child (NULL, false);
+  u->set_child (NULL, true);
+  n1 = cardinality;
+  n2 = cardinality;
   
   if (parent != NULL)
-    parent->set_child (hi, parent->get_child (true) == v);
+    parent->set_child (v, parent->get_child (true) == u);
   else
-    root = hi;
+    root = v;
+
+  if (lo == hi)
+  {
+    if (!lo->has_parent ())
+      delete_subtree (&lo, &n1);
+  }
+  else
+  {
+    if (!lo->has_parent ())
+      delete_subtree (&lo, &n1);
+    if (!hi->has_parent ())
+      delete_subtree (&hi, &n2);
+  }
 
   cardinality--;
-  delete v;
+  delete u;
+}
+
+void OBDD::simplify (Vertex * v)
+{
+  // cout << "Simplifying OBDD = " << endl;
+  // print ();
+  Vertex * lo = v->get_child (false);
+  Vertex * hi = v->get_child (true);
+  if (lo->get_value () != hi->get_value () || !lo->is_terminal () ||
+   !hi->is_terminal ())
+    return;
+
+  replace_subtree (v, v->get_child (true));
+}
+
+
+void OBDD::restrict_subtree (Vertex * v)
+{
+  unsigned int set_card = elm_set->get_set_cardinality ();
+  Vertex * one = get_leaf (true);
+  
+  if (one == NULL) {
+    one = new Vertex (true, set_card + 1);
+    cardinality++;
+  }
+
+  replace_subtree (v, one);
 }

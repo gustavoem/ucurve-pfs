@@ -66,7 +66,7 @@ protected:
 
   // Returns a list with all vertex of the OBDD with root Vertex *
   //
-  Vertex ** get_all_vertex (Vertex *, unsigned int);
+  Vertex ** get_all_vertex (Vertex *, unsigned int *);
 
   // Auxiliar function to get_all_vertex that traverse the obdd assgning
   // pointers of the vertex to the vector vertice
@@ -93,6 +93,11 @@ protected:
   // Updates a subset value
   //
   void change_subset_value (ElementSubset *, bool);
+
+  // Replaces a subtree of the OBDD with root U by a subtree with 
+  // root V.
+  //
+  void replace_subtree (Vertex *, Vertex *);
 
   // Defines the structure used to save vertice on the reducing procedure
   //
@@ -192,6 +197,11 @@ public:
   // having value 1 and updates itself to be the value one.
   //
   void simplify (Vertex *);
+
+
+  // Replaces a node by a terminal value of 1
+  //
+  void restrict_subtree (Vertex *);
   
 };
 

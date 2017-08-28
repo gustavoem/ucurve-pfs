@@ -1,5 +1,5 @@
 //
-// ExpandableOBDDTest.h -- definition of the namespace "ExpandableOBDDTest".
+// OBDDTreeTest.h -- definition of the namespace "OBDDTreeTest".
 //
 //    This file is part of the featsel program
 //    Copyright (C) 2017  Marcelo S. Reis, Gustavo Estrela
@@ -21,10 +21,10 @@
 #ifndef EXPANDABLEOBDDTEST_H_
 #define EXPANDABLEOBDDTEST_H_
 
-#include "../src/ExpandableOBDD.h"
+#include "../src/OBDDTree.h"
 #include "../src/global.h"
 
-namespace ExpandableOBDDTest
+namespace OBDDTreeTest
 {
 
   bool it_should_return_empty_subset_first ();

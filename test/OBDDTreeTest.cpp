@@ -1,5 +1,5 @@
 //
-// ExpandableOBDDTest.cpp -- implementation of the namespace "ExpandableOBDDTest".
+// OBDDTreeTest.cpp -- implementation of the namespace "OBDDTreeTest".
 //
 //    This file is part of the featsel program
 //    Copyright (C) 2017  Marcelo S. Reis, Gustavo Estrela
@@ -19,9 +19,9 @@
 //
 
 
-#include "ExpandableOBDDTest.h"
+#include "OBDDTreeTest.h"
 
-namespace ExpandableOBDDTest 
+namespace OBDDTreeTest 
 {
 
   bool it_should_return_empty_subset_first ()
@@ -29,9 +29,9 @@ namespace ExpandableOBDDTest
     bool answ;
     ElementSet elm_set ("", 3, 100);
     OBDD R (&elm_set);
-    ExpandableOBDD eobdd (&elm_set, &R);
+    OBDDTree T (&elm_set, &R);
     ElementSubset X ("", &elm_set);
-    ElementSubset * Y = eobdd.next_subset ();
+    ElementSubset * Y = T.next_subset ();
     answ = X.is_equal (Y);
     delete Y;
     return answ;
@@ -43,45 +43,45 @@ namespace ExpandableOBDDTest
     bool answ;
     ElementSet elm_set ("", 3, 100);
     OBDD R (&elm_set);
-    ExpandableOBDD eobdd (&elm_set, &R);
+    OBDDTree T (&elm_set, &R);
     ElementSubset X ("", &elm_set);
 
-    ElementSubset * Y = eobdd.next_subset ();
+    ElementSubset * Y = T.next_subset ();
     answ = X.is_equal (Y);
     delete Y;
 
     X.add_element (2);
-    Y = eobdd.next_subset ();
+    Y = T.next_subset ();
     answ = answ && X.is_equal (Y);
     delete Y;
     X.remove_element (2);
 
     X.add_element (1);
-    Y = eobdd.next_subset ();
+    Y = T.next_subset ();
     answ = answ && X.is_equal (Y);
     delete Y;
     X.add_element (2);
-    Y = eobdd.next_subset ();
+    Y = T.next_subset ();
     answ = answ && X.is_equal (Y);
     delete Y;
     X.remove_element (1);
     X.remove_element (2);
 
     X.add_element (0);
-    Y = eobdd.next_subset ();
+    Y = T.next_subset ();
     answ = answ && X.is_equal (Y);
     delete Y;
     X.add_element (2);
-    Y = eobdd.next_subset ();
+    Y = T.next_subset ();
     answ = answ && X.is_equal (Y);
     delete Y;
     X.remove_element (2);
     X.add_element (1);
-    Y = eobdd.next_subset ();
+    Y = T.next_subset ();
     answ = answ && X.is_equal (Y);
     delete Y;
     X.add_element (2);
-    Y = eobdd.next_subset ();
+    Y = T.next_subset ();
     answ = answ && X.is_equal (Y);
     delete Y;
     
