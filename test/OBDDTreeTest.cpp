@@ -88,5 +88,38 @@ namespace OBDDTreeTest
     return answ;
   }
 
+
+  bool it_should_restrict_a_branch ()
+  {
+    bool answ;
+    ElementSet elm_set ("", 3, 100);
+    OBDD R (&elm_set);
+    OBDDTree T (&elm_set, &R);
+    
+    ElementSubset * X;
+    ElementSubset Y ("", &elm_set);
+    Y.add_element (0);
+    Y.add_element (1);
+
+    // 000
+    X = T.next_subset ();
+    delete X;
+
+    // 001
+    X = T.next_subset ();
+    delete X;
+
+    // 010
+    X = T.next_subset ();
+    T.restrict_branch ();
+    delete X;
+
+    X = T.next_subset ();
+    answ = Y.is_equal (X);
+
+    delete X;
+    return answ;
+  }
+
 } // end of namespace
 

@@ -31,6 +31,7 @@ namespace OBDDTreeTest
 
   bool it_should_return_subsets_in_a_particular_order ();
   
+  bool it_should_restrict_a_branch ();
 }
 
 #endif /* EXPANDABLEOBDDTEST */
