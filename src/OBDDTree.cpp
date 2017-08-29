@@ -60,27 +60,21 @@ void OBDDTree::start_expansion ()
 
 void OBDDTree::set_current_subset ()
 {
-  // cout << "Setting current subset " << endl;
-  // cout << "  current node: " << current_node << endl;
   unsigned int set_card = elm_set->get_set_cardinality ();
   Vertex * lo = current_node->get_child (false);
   if (!lo->get_value () == 0)
     current_subset->add_element (set_card - 1);
   obdd->add_subset (current_subset);
-  // cout << " after setting the current subset: " << endl;
-  // obdd->print ();
 }
 
 
-void OBDDTree::reduce_node ()
+void OBDDTree::restrict_node ()
 {
-  // cout << "  Reducing: " << current_node << endl;
   Vertex * next = current_node->get_parents ().front ();
   bool side = next->get_child (true) == current_node;
   current_subset->remove_element (current_node->get_index () - 1);
-  obdd->simplify (current_node);
+  obdd->restrict_subtree (current_node);
   current_node = next;
-  // cout << " current node after reducing: " << current_node << endl;
   if (side)
     current_subset->remove_element (current_node->get_index () - 1);
 }
@@ -93,18 +87,14 @@ void OBDDTree::expand ()
   Vertex * lo = current_node->get_child (false);
   Vertex * hi = current_node->get_child (true);
 
-  // cout << endl << "Expanding... " << endl;
-  // obdd->print ();
-
   while (elm_idx != set_card - 1 || hi->get_value () == 1)
   {
-    // cout << "Iteration current node = " << current_node << endl;
     Vertex * next_node;
     bool next_side;
     if (hi->get_value () == 1)
     {
       next_node = current_node->get_parents ().front ();
-      reduce_node ();
+      restrict_node ();
     }
     else
     {
@@ -149,7 +139,7 @@ void OBDDTree::restrict_branch ()
   while (elm_idx != leftmost)
   {
     Vertex * next_node = current_node->get_parents ().front ();
-    reduce_node ();
+    restrict_node ();
     current_node = next_node;
     elm_idx = current_node->get_index () - 1;
   }

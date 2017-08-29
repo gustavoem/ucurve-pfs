@@ -56,10 +56,9 @@ class OBDDTree
   //
   void set_current_subset ();
 
-  // Reduces an OBDD node that is redundant and has value 1, i.e. 
-  // is in the OBDD
+  // Reduces an OBDD node transforming it into a 1 valued leaf
   //
-  void reduce_node ();
+  void restrict_node ();
 
   // Expands the OBDD to the next subset
   //
