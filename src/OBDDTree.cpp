@@ -37,15 +37,19 @@ OBDDTree::~OBDDTree ()
 
 ElementSubset * OBDDTree::next_subset ()
 {
-  if (obdd->is_full ())
-    return NULL;
+  ElementSubset * answer_subset;
+  // if (obdd->is_full ())
+  //   return NULL;
 
   if (current_subset == NULL)
     start_expansion ();
   else
     expand ();
 
-  ElementSubset * answer_subset = new ElementSubset (current_subset);
+  if (current_subset != NULL)
+    answer_subset = new ElementSubset (current_subset);
+  else
+    answer_subset = NULL;
   return answer_subset;
 }
 
@@ -70,13 +74,26 @@ void OBDDTree::set_current_subset ()
 
 void OBDDTree::restrict_node ()
 {
+  // cout << "Restricting Node: " << current_node << endl;
+  // cout << "Current tree = " << endl;
+  // obdd->print ();
+
   Vertex * next = current_node->get_parents ().front ();
-  bool side = next->get_child (true) == current_node;
+  
+  // todo: maybe this is not necessary
   current_subset->remove_element (current_node->get_index () - 1);
   obdd->restrict_subtree (current_node);
-  current_node = next;
-  if (side)
-    current_subset->remove_element (current_node->get_index () - 1);
+  if (next != NULL)
+  {
+    current_node = next;
+    bool side = next->get_child (true) == current_node;
+    if (side)
+      current_subset->remove_element (current_node->get_index () - 1);
+  }
+  else 
+  {
+    current_node = obdd->get_root ();
+  }
 }
 
 
@@ -87,7 +104,12 @@ void OBDDTree::expand ()
   Vertex * lo = current_node->get_child (false);
   Vertex * hi = current_node->get_child (true);
 
-  while (elm_idx != set_card - 1 || hi->get_value () == 1)
+  cout << "\nExpanding tree: " << endl;
+  obdd->print ();
+
+  cout << "Setcard = " << set_card << endl;
+
+  while (elm_idx < set_card - 1 || hi->get_value () == 1)
   {
     Vertex * next_node;
     bool next_side;
@@ -95,6 +117,13 @@ void OBDDTree::expand ()
     {
       next_node = current_node->get_parents ().front ();
       restrict_node ();
+
+      if (next_node == NULL)
+      {
+        delete current_subset;
+        current_subset = NULL;
+        return;
+      }
     }
     else
     {
@@ -121,7 +150,12 @@ void OBDDTree::expand ()
     hi = current_node->get_child (true);
     elm_idx = current_node->get_index () - 1;
   }
-  set_current_subset ();
+
+  if (!current_node->is_terminal ())
+    set_current_subset ();
+
+  cout << "\nResulting tree: " << endl;
+  obdd->print ();
 }
 
 
@@ -129,6 +163,9 @@ void OBDDTree::restrict_branch ()
 {
   unsigned int leftmost, elm_idx;
   unsigned int set_card = elm_set->get_set_cardinality ();
+
+  cout << "Restricting subset " << current_subset->print_subset () << endl;
+  obdd->print ();
 
   leftmost = 0;
   for (unsigned int i = 0; i < set_card; i++)
@@ -143,4 +180,7 @@ void OBDDTree::restrict_branch ()
     current_node = next_node;
     elm_idx = current_node->get_index () - 1;
   }
+
+  cout << "Resulting in: " << endl;
+  obdd->print ();
 }
