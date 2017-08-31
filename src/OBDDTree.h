@@ -36,9 +36,14 @@ class OBDDTree
   //
   Vertex * current_node;
 
-  // Stores the last returned subset on expansion
+  // Stores the next subset to return
   //
   ElementSubset * current_subset;
+
+  // Auxiliar to current_subset. Keeps track of where we are
+  // on the OBDD and the correspondant subset
+  //
+  ElementSubset * building_subset;
 
   // Stores the OBDD being expanded
   //
@@ -51,6 +56,10 @@ class OBDDTree
   // Does the first step on expansion
   //
   void start_expansion ();
+
+  // Updates the current subset
+  //
+  void update_current_subset ();
 
   // Completes an expansion by setting the current subset
   //

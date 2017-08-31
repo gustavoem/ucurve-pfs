@@ -138,6 +138,10 @@ public:
   //
   Vertex * get_root ();
 
+  // Changes OBDD root stacking a new root on top of the old root
+  //
+  void stack_root (Vertex *);
+
   // Prints the entire OBDD
   //
   void print ();

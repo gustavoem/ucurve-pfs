@@ -103,7 +103,20 @@ void Vertex::add_parent (Vertex * v)
 
 void Vertex::remove_parent (Vertex * v)
 {
-  parents.remove (v);
+  cout << "Parents size = " << parents.size () << endl;
+  list<Vertex *>::iterator it;
+  for (it = parents.begin (); it != parents.end (); )
+  {
+    if (*it == v)
+    {
+      parents.erase (it);
+      it = parents.end ();
+    }
+    else 
+      ++it;
+  }
+
+  cout << "Parents size = " << parents.size () << endl;
 }
 
 int Vertex::get_value ()

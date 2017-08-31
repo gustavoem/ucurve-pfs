@@ -33,7 +33,7 @@ namespace OBDDTreeTest
     ElementSubset X ("", &elm_set);
     ElementSubset * Y = T.next_subset ();
     answ = X.is_equal (Y);
-    delete Y;
+    // delete Y;
     return answ;
   }
 
@@ -85,6 +85,8 @@ namespace OBDDTreeTest
     answ = answ && X.is_equal (Y);
     delete Y;
     
+    answ = answ && T.next_subset () == NULL;
+
     return answ;
   }
 
@@ -98,26 +100,26 @@ namespace OBDDTreeTest
     
     ElementSubset * X;
 
-    // // 000
-    // X = T.next_subset ();
-    // delete X;
+    // 000
+    X = T.next_subset ();
+    delete X;
 
-    // // 001
-    // X = T.next_subset ();
-    // delete X;
+    // 001
+    X = T.next_subset ();
+    delete X;
 
-    // // 010
-    // X = T.next_subset ();
-    // T.restrict_branch ();
-    // delete X;
+    // 010
+    X = T.next_subset ();
+    T.restrict_branch ();
+    delete X;
 
-    // // 011 got restricted, next should be 100
-    // ElementSubset Y ("", &elm_set);
-    // Y.add_element (0);
+    // 011 got restricted, next should be 100
+    ElementSubset Y ("", &elm_set);
+    Y.add_element (0);
 
-    // // 100
-    // X = T.next_subset ();
-    // answ = Y.is_equal (X);
+    // 100
+    X = T.next_subset ();
+    answ = Y.is_equal (X);
     delete X;
 
     ElementSet elm_set2 ("", 4, 100);
@@ -131,8 +133,6 @@ namespace OBDDTreeTest
       delete X;
     }
     X = T2.next_subset ();
-    cout << "X = " << X->print_subset () << endl;
-    R2.print ();
 
     // Restricting 0100 should also
     // restrict 0101, 0110 and 0111
@@ -147,6 +147,7 @@ namespace OBDDTreeTest
     answ = answ && R2.contains (&E1);
     answ = answ && R2.contains (&E2);
     answ = answ && R2.contains (&E3);
+    delete X;
     return answ;
   }
 
