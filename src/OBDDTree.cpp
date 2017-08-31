@@ -39,10 +39,12 @@ OBDDTree::~OBDDTree ()
 
 ElementSubset * OBDDTree::next_subset ()
 {
-  ElementSubset * answer_subset = NULL;
+  if (obdd->is_full ())
+    return NULL;
+
+  ElementSubset * answer_subset;
   expand ();
-  if (current_subset != NULL)
-    answer_subset = new ElementSubset (current_subset);
+  answer_subset = new ElementSubset (current_subset);
   return answer_subset;
 }
 
@@ -64,20 +66,30 @@ void OBDDTree::set_current_subset ()
 {
   unsigned int set_card = elm_set->get_set_cardinality ();
   Vertex * lo = current_node->get_child (false);
-  Vertex * hi = current_node->get_child (true);
+  Vertex * hi;
   
+  // cout << "\n\n\nSetting current subset of ..." << endl;
+  // obdd->print ();
+  // cout << "curent node = " << current_node << endl;
+
   if (!lo->get_value () == 0)
     building_subset->add_element (set_card - 1);
   update_current_subset ();
   obdd->add_subset (building_subset);
 
   // Makes OBDD reduction if necessary
+  lo = current_node->get_child (false);
+  hi = current_node->get_child (true);
   while (hi != NULL && hi->get_value () == 1)
   {
     restrict_node ();
+    // cout << "Current node = " << current_node << endl;
     lo = current_node->get_child (false);
     hi = current_node->get_child (true);
   }
+
+  // cout << "After setting current subset..."<< endl;
+  // obdd->print ();
 }
 
 
@@ -101,10 +113,7 @@ void OBDDTree::restrict_node ()
   }
   else 
   {
-    // when OBDD is full
     current_node = obdd->get_root ();
-    delete current_subset;
-    current_subset = NULL;
   }
 }
 
@@ -128,18 +137,18 @@ void OBDDTree::expand ()
   hi = current_node->get_child (true);
   elm_idx = current_node->get_index () - 1;
 
-  cout << "\nExpanding tree: " << endl;
-  obdd->print ();
+  // cout << "\nExpanding tree: " << endl;
+  // obdd->print ();
 
   while (elm_idx != set_card - 1)
   {
     Vertex * next_node;
     bool next_side;
 
-    cout << "\n\nExpansion iteration "<< endl;
-    cout << "tree = " << endl;
-    obdd->print ();
-    cout << "    current node = " << current_node << endl;
+    // cout << "\n\nExpansion iteration "<< endl;
+    // cout << "tree = " << endl;
+    // obdd->print ();
+    // cout << "    current node = " << current_node << endl;
 
     // unsignedsing the reduction we removed the case where both lo and hi
     // evaluates to one
@@ -160,7 +169,7 @@ void OBDDTree::expand ()
        elm_idx + 2);
       obdd->insert_vertex (current_node, next_node, next_side);
     }
-    cout << "Next node = " << next_node << endl;
+    // cout << "Next node = " << next_node << endl;
 
     current_node = next_node;
     lo = current_node->get_child (false);
@@ -171,8 +180,8 @@ void OBDDTree::expand ()
   // if (!current_node->is_terminal ())
   set_current_subset ();
 
-  cout << "\nResulting tree: " << endl;
-  obdd->print ();
+  // cout << "\nResulting tree: " << endl;
+  // obdd->print ();
 }
 
 

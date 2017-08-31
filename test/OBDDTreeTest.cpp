@@ -33,7 +33,7 @@ namespace OBDDTreeTest
     ElementSubset X ("", &elm_set);
     ElementSubset * Y = T.next_subset ();
     answ = X.is_equal (Y);
-    // delete Y;
+    delete Y;
     return answ;
   }
 
@@ -82,6 +82,7 @@ namespace OBDDTreeTest
     delete Y;
     X.add_element (2);
     Y = T.next_subset ();
+    // cout << "Y = " << Y->print_subset () << endl;
     answ = answ && X.is_equal (Y);
     delete Y;
     

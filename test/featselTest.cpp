@@ -225,8 +225,8 @@ int main (void)
   current_class = "OBDDTree";
   result ("it_should_return_empty_subset_first",
     OBDDTreeTest::it_should_return_empty_subset_first ());
-  // result ("it_should_return_subsets_in_a_particular_order",
-  //   OBDDTreeTest::it_should_return_subsets_in_a_particular_order ());
+  result ("it_should_return_subsets_in_a_particular_order",
+    OBDDTreeTest::it_should_return_subsets_in_a_particular_order ());
   // result ("it_should_restrict_a_branch",
   //   OBDDTreeTest::it_should_restrict_a_branch ());
   cout << endl;

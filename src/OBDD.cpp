@@ -150,6 +150,7 @@ void OBDD::stack_root (Vertex * new_root)
   new_root->set_child (root, false);
   new_root->set_child (root, true);
   root = new_root;
+  cardinality++;
 }
 
 void OBDD::print ()
@@ -315,11 +316,7 @@ void OBDD::add_interval (ElementSubset * subset, bool orientation)
 
 void OBDD::add_subset (ElementSubset * subset) 
 {
-  cout << "\nChanging " << subset->print_subset () << "value" << endl;
-  print ();
   change_subset_value (subset, true);
-  cout << "\nAfter Changing " << subset->print_subset () << "value" << endl;
-  print ();
 }
 
 
@@ -449,7 +446,6 @@ void OBDD::change_subset_value (ElementSubset * subset, bool new_value)
       if (old_value_leaf->get_parents ().size () < 1) 
       {
         cardinality--;
-        cout << "Deleting " << old_value_leaf << endl;
         delete old_value_leaf;
       }
     }
@@ -546,15 +542,27 @@ void OBDD::replace_subtree (Vertex * u, Vertex * v)
 
   if (lo == hi)
   {
-    if (!lo->has_parent ())
+    if (!lo->has_parent () && lo != root)
+    {
+      cout << "deleting subtre: " << endl;
+      print (lo);
       delete_subtree (&lo, &n1);
+    }
   }
   else
   {
-    if (!lo->has_parent ())
+    if (!lo->has_parent () && lo != root)
+    {
+      cout << "deleting subtre: " << endl;
+      print (lo);
       delete_subtree (&lo, &n1);
-    if (!hi->has_parent ())
+    }
+    if (!hi->has_parent () && hi != root)
+    {
+      cout << "deleting subtre: " << endl;
+      print (hi);
       delete_subtree (&hi, &n2);
+    }
   }
 
   cardinality--;
