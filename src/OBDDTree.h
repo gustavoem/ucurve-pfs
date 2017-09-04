@@ -73,7 +73,9 @@ class OBDDTree
   //
   void expand ();
 
-
+  // Returns true if node is redundant
+  //
+  bool is_redundant (Vertex *);
 
  public:
 

@@ -10,3 +10,4 @@
                  bfs BFS
             pfsrobdd PFSROBDD
                  pfs PosetForestSearch
+                rubb RUBB

@@ -201,12 +201,28 @@ void OBDDTree::restrict_branch ()
   elm_idx = current_node->get_index () - 1;
   while (elm_idx != leftmost)
   {
-    Vertex * next_node = current_node->get_parents ().front ();
     restrict_node ();
-    current_node = next_node;
     elm_idx = current_node->get_index () - 1;
   }
+  
+  if (is_redundant (current_node))
+    restrict_node ();
 
   // cout << "Resulting in: " << endl;
   // obdd->print ();
+}
+
+
+bool OBDDTree::is_redundant (Vertex * v) 
+{
+  Vertex * lo = v->get_child (false);
+  Vertex * hi = v->get_child (true);
+
+  if (lo == NULL || hi == NULL)
+    return false;
+
+  if (lo->get_value () == hi->get_value () && lo->is_terminal ())
+    return true;
+  else
+    return false;
 }

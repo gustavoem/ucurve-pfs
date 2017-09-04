@@ -544,8 +544,6 @@ void OBDD::replace_subtree (Vertex * u, Vertex * v)
   {
     if (!lo->has_parent () && lo != root)
     {
-      cout << "deleting subtre: " << endl;
-      print (lo);
       delete_subtree (&lo, &n1);
     }
   }
@@ -553,14 +551,10 @@ void OBDD::replace_subtree (Vertex * u, Vertex * v)
   {
     if (!lo->has_parent () && lo != root)
     {
-      cout << "deleting subtre: " << endl;
-      print (lo);
       delete_subtree (&lo, &n1);
     }
     if (!hi->has_parent () && hi != root)
     {
-      cout << "deleting subtre: " << endl;
-      print (hi);
       delete_subtree (&hi, &n2);
     }
   }
