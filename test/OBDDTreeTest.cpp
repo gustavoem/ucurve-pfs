@@ -99,7 +99,7 @@ namespace OBDDTreeTest
     OBDD R (&elm_set);
     OBDDTree T (&elm_set, &R);
     
-    ElementSubset * X;
+    ElementSubset * X, * Z;
 
     // 000
     X = T.next_subset ();
@@ -111,8 +111,12 @@ namespace OBDDTreeTest
 
     // 010
     X = T.next_subset ();
-    T.restrict_branch ();
     delete X;
+    
+    // 011
+    X = T.next_subset ();
+    delete X;
+    T.restrict_branch ();
 
     // 011 got restricted, next should be 100
     ElementSubset Y ("", &elm_set);
@@ -144,11 +148,16 @@ namespace OBDDTreeTest
     E2.add_element (2);
     ElementSubset E3 (&E1);
     E3.add_element (2);
+    ElementSubset E4 ("", &elm_set2);
+    E4.add_element (0);
     T2.restrict_branch ();
+    Z = T2.next_subset ();
+    answ = answ && E4.is_equal (Z);
     answ = answ && R2.contains (&E1);
     answ = answ && R2.contains (&E2);
     answ = answ && R2.contains (&E3);
     delete X;
+    delete Z;
     return answ;
   }
 
