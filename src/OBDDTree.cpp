@@ -190,8 +190,8 @@ void OBDDTree::restrict_branch ()
   unsigned int leftmost, elm_idx;
   unsigned int set_card = elm_set->get_set_cardinality ();
 
-  // cout << "Restricting subset " << current_subset->print_subset () << endl;
-  // obdd->print ();
+  cout << "Restricting subset " << current_subset->print_subset () << endl;
+  obdd->print ();
 
   leftmost = 0;
   for (unsigned int i = 0; i < set_card; i++)
@@ -199,7 +199,7 @@ void OBDDTree::restrict_branch ()
       leftmost = i;
 
   elm_idx = current_node->get_index () - 1;
-  while (elm_idx != leftmost)
+  while (elm_idx > leftmost)
   {
     restrict_node ();
     elm_idx = current_node->get_index () - 1;
@@ -208,8 +208,8 @@ void OBDDTree::restrict_branch ()
   if (is_redundant (current_node))
     restrict_node ();
 
-  // cout << "Resulting in: " << endl;
-  // obdd->print ();
+  cout << "Resulting in: " << endl;
+  obdd->print ();
 }
 
 

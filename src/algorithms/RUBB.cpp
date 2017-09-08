@@ -28,8 +28,8 @@ RUBB::RUBB ()
 {
   list_of_visited_subsets = new Collection ();
   cost_function = NULL;
-  obdd = new OBDD (set);
-  obdd_tree = new OBDDTree (set, obdd);
+  obdd = NULL;
+  obdd_tree = NULL;
 }
 
 
@@ -46,34 +46,67 @@ void RUBB::get_minima_list (unsigned int max_size_of_minima_list)
 {
   timeval begin_program, end_program;
   gettimeofday (& begin_program, NULL);
-  list<Vertex *> Q;
+  list<ElementSubset *> Q;
+  ElementSubset * X, * Y;
 
-  // while (!obdd->is_full ())
-  // {
-  //   ElementSubset * Y = Q->back ();
-  //   ElementSubset * X = obdd_tree->next_subset ();
-  //   double costX, costY;
-  //   while (Q->size () > 0 && !X->contains (Y)
-  //   {
-  //     list_of_minima.push_back (Y);
-  //     Q->pop_back ();
-  //     Y = Q->back ();
-  //   }
-  //   costX = cost_function->cost (X);
-  //   costY = Y->cost;
+  obdd = new OBDD (set);
+  obdd_tree = new OBDDTree (set, obdd);
 
-  //   if (costX > costY)
-  //   {
+  X = obdd_tree->next_subset ();
+  if (store_visited_subsets)
+    list_of_visited_subsets->add_subset (X);
+  Q.push_back (X);
 
-  //   }
-  //   Q->push_back (X);
-  // }
-  ElementSubset * X;
-   X = new ElementSubset ("X", set);    
-   X->cost = cost_function->cost (X);   // A template algorithm returns the
-   X->set_complete_subset ();           // complete subset as best one, since it
-  list_of_minima.push_back (X);  // does not perform any search yet!
-  //
+  while (!obdd->is_full ())
+  {
+    X = Q.back ();
+    Y = obdd_tree->next_subset ();
+
+    cout << "\n\nRUBB Iteration: " << endl;
+    cout << "X = " << X->print_subset () << " Y = " << Y->print_subset () << endl;
+
+    if (store_visited_subsets)
+      list_of_visited_subsets->add_subset (Y);
+    double costX, costY;
+
+    cout << "Queue before: " << endl;
+    list<ElementSubset *>::iterator it = Q.begin ();
+    while (it != Q.end ())
+    {
+      cout << "  " << (*it)->print_subset () << endl;
+      it++;
+    }
+
+
+    while (Q.size () > 0 && !Y->contains (X))
+    {
+      list_of_minima.push_back (X);
+      Q.pop_back ();
+      X = Q.back ();
+    }
+
+    cout << "Queue after: " << endl;
+    it = Q.begin ();
+    while (it != Q.end ())
+    {
+      cout << "  " << (*it)->print_subset () << endl;
+      it++;
+    }
+
+    costX = X->cost;
+    costY = cost_function->cost (Y);
+    Y->cost = costY;
+
+    cout << "c (X) = " << costX << ", c (Y) = "  << costY << endl;
+
+    if (costY > costX)
+    {
+      obdd_tree->restrict_branch ();
+      delete Y;
+    }
+    else
+      Q.push_back (Y);
+  }
 
   number_of_visited_subsets =
   cost_function->get_number_of_calls_of_cost_function ();

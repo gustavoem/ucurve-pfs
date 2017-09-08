@@ -543,14 +543,14 @@ int main (void)
   //   PosetForestSearchTest::it_should_give_the_number_of_the_visited_subsets ());
   // cout << endl;
 
-  // //Testing class "RUBB"
-  // //
-  // current_class = "RUBBTest";
-  // result ("it_should_store_all_the_visited_subsets",
-  //   RUBBTest::it_should_store_all_the_visited_subsets ());
-  // result ("it_should_give_the_number_of_the_visited_subsets",
-  //   RUBBTest::it_should_give_the_number_of_the_visited_subsets ());
-  // cout << endl;
+  //Testing class "RUBB"
+  //
+  current_class = "RUBBTest";
+  result ("it_should_store_all_the_visited_subsets",
+    RUBBTest::it_should_store_all_the_visited_subsets ());
+  result ("it_should_give_the_number_of_the_visited_subsets",
+    RUBBTest::it_should_give_the_number_of_the_visited_subsets ());
+  cout << endl;
 
 
   // Summary of the executed tests
