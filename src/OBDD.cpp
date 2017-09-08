@@ -542,26 +542,30 @@ void OBDD::replace_subtree (Vertex * u, Vertex * v)
 
   if (lo == hi)
   {
-    if (!lo->has_parent () && lo != root)
+    if (lo && !lo->has_parent () && lo != root)
     {
       delete_subtree (&lo, &n1);
     }
   }
   else
   {
-    if (!lo->has_parent () && lo != root)
+    if (lo && !lo->has_parent () && lo != root)
     {
       delete_subtree (&lo, &n1);
     }
-    if (!hi->has_parent () && hi != root)
+    if (hi && !hi->has_parent () && hi != root)
     {
       delete_subtree (&hi, &n2);
     }
   }
 
-  cardinality--;
-  delete u;
+  if (u != root)
+  {
+    cardinality--;
+    delete u;
+  }
 }
+
 
 void OBDD::simplify (Vertex * v)
 {

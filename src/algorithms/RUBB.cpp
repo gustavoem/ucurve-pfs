@@ -55,6 +55,7 @@ void RUBB::get_minima_list (unsigned int max_size_of_minima_list)
   X = obdd_tree->next_subset ();
   if (store_visited_subsets)
     list_of_visited_subsets->add_subset (X);
+  X->cost = cost_function->cost (X);
   Q.push_back (X);
 
   while (!obdd->is_full ())
@@ -62,20 +63,20 @@ void RUBB::get_minima_list (unsigned int max_size_of_minima_list)
     X = Q.back ();
     Y = obdd_tree->next_subset ();
 
-    cout << "\n\nRUBB Iteration: " << endl;
-    cout << "X = " << X->print_subset () << " Y = " << Y->print_subset () << endl;
+    // cout << "\n\nRUBB Iteration: " << endl;
+    // cout << "X = " << X->print_subset () << " Y = " << Y->print_subset () << endl;
 
     if (store_visited_subsets)
       list_of_visited_subsets->add_subset (Y);
     double costX, costY;
 
-    cout << "Queue before: " << endl;
-    list<ElementSubset *>::iterator it = Q.begin ();
-    while (it != Q.end ())
-    {
-      cout << "  " << (*it)->print_subset () << endl;
-      it++;
-    }
+    // cout << "Queue before: " << endl;
+    // list<ElementSubset *>::iterator it = Q.begin ();
+    // while (it != Q.end ())
+    // {
+    //   cout << "  " << (*it)->print_subset () << endl;
+    //   it++;
+    // }
 
 
     while (Q.size () > 0 && !Y->contains (X))
@@ -85,19 +86,19 @@ void RUBB::get_minima_list (unsigned int max_size_of_minima_list)
       X = Q.back ();
     }
 
-    cout << "Queue after: " << endl;
-    it = Q.begin ();
-    while (it != Q.end ())
-    {
-      cout << "  " << (*it)->print_subset () << endl;
-      it++;
-    }
+    // cout << "Queue after: " << endl;
+    // it = Q.begin ();
+    // while (it != Q.end ())
+    // {
+    //   cout << "  " << (*it)->print_subset () << endl;
+    //   it++;
+    // }
 
     costX = X->cost;
     costY = cost_function->cost (Y);
     Y->cost = costY;
 
-    cout << "c (X) = " << costX << ", c (Y) = "  << costY << endl;
+    // cout << "c (X) = " << costX << ", c (Y) = "  << costY << endl;
 
     if (costY > costX)
     {
@@ -106,6 +107,12 @@ void RUBB::get_minima_list (unsigned int max_size_of_minima_list)
     }
     else
       Q.push_back (Y);
+  }
+
+  while (Q.size () > 0)
+  {
+    list_of_minima.push_back (Q.back ());
+    Q.pop_back ();
   }
 
   number_of_visited_subsets =
