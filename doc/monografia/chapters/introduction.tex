@@ -2,9 +2,9 @@
 %    problema: falta de amostras
 %    solução: simplificar o modelo de aprendizado -> seleção de 
 %             características    
-% - aplicações: w-operadores, construção de modelos funcionais
 % - problema de otimização
 % - funções de custo
+% - aplicações: w-operadores, construção de modelos funcionais
 % - algoritmos de seleção de características
 % - trabalhos antigos
 
@@ -18,3 +18,44 @@ grande, o que pode fazer o modelo ser muito caro computacionalmente; ou
 quando a quantidade de amostras é pequena comparada a complexidade do 
 modelo original, em outras palavras, quando ocorre sobreajuste (do 
 inglês, \foreignword{overfitting}).
+
+Mais formalmente, o problema de seleção de características consiste em
+um problema de otimização combinatória em que, dado um conjunto $S$ de 
+características, procuramos por um subconjunto $X \in \powerset (S)$
+ótimo de acordo com uma função de custo $c : \mathcal{P}(S) \to 
+\fieldR_{+}$. É comum nas abordagens do problema explorar o fato de que
+o espaço de busca $\powerset(S)$ junto a relação $\subseteq$ define um
+reticulado booleano. No geral, a função de custo $c$ deve ser capaz de
+medir quão informativas as características $X$ são em respeito ao rótulo
+$Y$ do problema de aprendizado, portanto essa função costuma depender da
+estimação da distribuição de probabilidade de $(X, Y)$.
+
+Quando ocorre a estimação da distribuição de probabilidade conjunta de 
+$(X, Y)$, o custo das cadeias do reticulado booleano reproduzem um
+fenômeno conhecido em aprendizado de máquina, ``curvas em u''. Para 
+entender intuitivamente esse fenômeno, devemos observar que conforme 
+subimos uma cadeia do reticulado estamos aumentando o número de 
+características sendo consideradas, portanto existem mais possíveis
+valores de $X$, permitindo descrever melhor os valores de $Y$; por outro
+lado, também precisaríamos de mais amostras para estimar bem 
+$\probability (X, Y)$, e quando isso não é possível erros de estimação
+fazem com que o custo de $X$ suba.
+
+%TODO: add references
+Podemos então considerar um caso particular do problema de seleção de
+características em que a função de custo descreve ``curvas em u''
+em todas as cadeias do reticulado booleano. Esse caso particular é 
+conhecido como problema U-curve e existe na literatura algoritmos ótimos
+para esse problema como o \algname {U-Curve Branch and Bound (UBB), 
+U-Curve-Search (UCS) e Poset Forest Search (PFS)}. A solução do problema
+U-Curve tem aplicações em problemas de aprendizado como projeto de 
+W-operadores \cite{MJCJJB} e preditores na estimação de Redes Gênicas 
+Probabilísticas \cite{BCJMJ07}.
+
+
+%A complexidade do algoritmo de seleção de características
+%depende da complexidade da função de custo e do algoritmo de busca
+%utilizados, mas em termos práticos esse problema costuma ser NP-difícil. 
+
+
+\section{Objetivos do Trabalho}

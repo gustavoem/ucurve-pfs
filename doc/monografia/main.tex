@@ -1,14 +1,29 @@
 \documentclass[12pt, twoside]{report}
 \usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
 \usepackage[a4paper, top=30mm, left=20mm, bottom=20mm,
     right=20mm]{geometry}
 \usepackage{graphicx}
-\graphicspath{ {img/} }
 \usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage{csquotes}
+\usepackage[backend=biber, 
+            maxbibnames=10,
+            style=alphabetic]{biblatex}
+
 \pagestyle{fancy}
+
+% Images path
+\graphicspath{ {img/} }
 
 % ABNT foreign words should be in italic
 \newcommand{\foreignword}[1]{\textit{#1}}
+\newcommand{\fieldR}{\mathbb{R}}
+\newcommand{\powerset}{\mathcal{P}}
+\newcommand{\probability}{\mathbb{P}}
+\newcommand{\algname}[1]{{\tt #1}}
+
+\addbibresource{references.bib}
 
 \title{
     {Projeto de Algoritmos Baseados em Florestas de Posets para o 
@@ -47,11 +62,18 @@ comparativos entre diferentes algoritmos de seleção de características.
 
 \tableofcontents
 
-\chapter{Introduction}
+\nocite{*}
+\chapter{Introdução}
 \input{chapters/introduction}
 
-\chapter{Conclusion}
+\chapter{Conceitos Fundamentais}
+\input{chapters/fundamental_concepts}
+
+\chapter{Conclusão}
 \input{chapters/conclusion}
+
+\newpage
+\printbibliography
 
 \end{document}
 

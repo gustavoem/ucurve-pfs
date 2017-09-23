@@ -10,3 +10,9 @@
 *.fot
 *.cb
 *.cb2
+
+## Biblatex files
+*.blg
+*.bcf
+*.bbl
+*.run.xml
