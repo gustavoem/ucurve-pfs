@@ -161,5 +161,61 @@ namespace OBDDTreeTest
     return answ;
   }
 
+
+  bool it_should_be_able_to_expand_upside_down ()
+  {
+    bool answ;
+    ElementSet elm_set ("", 3, 100);
+    OBDD R (&elm_set);
+    OBDDTree T (&elm_set, &R, DOWN);
+    ElementSubset X ("", &elm_set);
+    X.set_complete_subset ();
+
+    ElementSubset * Y = T.next_subset ();
+    answ = X.is_equal (Y);
+    delete Y;
+
+    X.remove_element (2);
+    Y = T.next_subset ();
+    answ = answ && X.is_equal (Y);
+    delete Y;
+    X.add_element (2);
+
+    X.remove_element (1);
+    Y = T.next_subset ();
+    answ = answ && X.is_equal (Y);
+    delete Y;
+    X.remove_element (2);
+    Y = T.next_subset ();
+    answ = answ && X.is_equal (Y);
+    delete Y;
+    X.add_element (1);
+    X.add_element (2);
+
+    X.remove_element (0);
+    Y = T.next_subset ();
+    answ = answ && X.is_equal (Y);
+    delete Y;
+    X.remove_element (2);
+    Y = T.next_subset ();
+    answ = answ && X.is_equal (Y);
+    delete Y;
+    X.add_element (2);
+    X.remove_element (1);
+    Y = T.next_subset ();
+    answ = answ && X.is_equal (Y);
+    delete Y;
+    X.remove_element (2);
+    Y = T.next_subset ();
+    // cout << "Y = " << Y->print_subset () << endl;
+    answ = answ && X.is_equal (Y);
+    delete Y;
+    
+    answ = answ && T.next_subset () == NULL;
+
+    return answ;
+  }
+
+
 } // end of namespace
 

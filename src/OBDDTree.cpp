@@ -27,6 +27,18 @@ OBDDTree::OBDDTree (ElementSet * set, OBDD * R)
   current_node = obdd->get_root ();
   current_subset = new ElementSubset ("", elm_set);
   building_subset = new ElementSubset ("", elm_set);
+  orientation = UP;
+}
+
+
+OBDDTree::OBDDTree (ElementSet * set, OBDD * R, bool orientation)
+{
+  elm_set = set;
+  obdd = R;
+  current_node = obdd->get_root ();
+  current_subset = new ElementSubset ("", elm_set);
+  building_subset = new ElementSubset ("", elm_set);
+  this->orientation = orientation;
 }
 
 
@@ -66,27 +78,30 @@ void OBDDTree::set_current_subset ()
 {
   unsigned int set_card = elm_set->get_set_cardinality ();
   Vertex * lo = current_node->get_child (false);
-  Vertex * hi;
+  Vertex * hi = current_node->get_child (true);
   
   // cout << "\n\n\nSetting current subset of ..." << endl;
   // obdd->print ();
   // cout << "curent node = " << current_node << endl;
 
-  if (!lo->get_value () == 0)
-    building_subset->add_element (set_card - 1);
+  if (orientation == UP)
+  {
+    if (!lo->get_value () == 0)
+      building_subset->add_element (set_card - 1);
+  }
+  else
+  {
+    if (hi->get_value () == 0)
+      building_subset->add_element (set_card - 1);
+    else
+      building_subset->remove_element (set_card - 1);
+  }
+
   update_current_subset ();
   obdd->add_subset (building_subset);
 
-  // Makes OBDD reduction if necessary
-  lo = current_node->get_child (false);
-  hi = current_node->get_child (true);
-  while (hi != NULL && hi->get_value () == 1)
-  {
-    restrict_node ();
-    // cout << "Current node = " << current_node << endl;
-    lo = current_node->get_child (false);
-    hi = current_node->get_child (true);
-  }
+  // Makes OBDD reduction
+  reduce_tree ();
 
   // cout << "After setting current subset..."<< endl;
   // obdd->print ();
@@ -150,18 +165,36 @@ void OBDDTree::expand ()
     // obdd->print ();
     // cout << "    current node = " << current_node << endl;
 
-    // unsignedsing the reduction we removed the case where both lo and hi
+    // using the reduction we removed the case where both lo and hi
     // evaluates to one
-    if (lo->get_value () != 1)
+    if (orientation)
     {
-      next_node = lo;
-      next_side = false;
+      if (lo->get_value () != 1)
+      {
+        next_node = lo;
+        next_side = false;
+      }
+      else
+      {
+        next_node = hi;
+        next_side = true;
+        building_subset->add_element (current_node->get_index () - 1);
+      }
     }
     else
     {
-      next_node = hi;
-      next_side = true;
-      building_subset->add_element (current_node->get_index () - 1);
+      if (hi->get_value () != 1)
+      {
+        next_node = hi;
+        next_side = true;
+        building_subset->add_element (current_node->get_index () - 1);
+      }
+      else
+      {
+        next_node = lo;
+        next_side = false;
+        building_subset->remove_element (current_node->get_index () - 1);
+      } 
     }
     if (next_node->get_index () != current_node->get_index () + 1)
     {
@@ -231,4 +264,18 @@ bool OBDDTree::is_redundant (Vertex * v)
     return true;
   else
     return false;
+}
+
+void OBDDTree::reduce_tree ()
+{
+  Vertex * lo = current_node->get_child (false);
+  Vertex * hi = current_node->get_child (true);
+
+  while (hi != NULL && hi->get_value () && lo->get_value ())
+  {
+    restrict_node ();
+    // cout << "Current node = " << current_node << endl;
+    lo = current_node->get_child (false);
+    hi = current_node->get_child (true);
+  }
 }

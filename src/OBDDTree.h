@@ -28,6 +28,9 @@
 #include "CostFunction.h"
 #include "ROBDD.h"
 
+#define UP true
+#define DOWN false
+
 class OBDDTree
 {
  protected:
@@ -53,6 +56,11 @@ class OBDDTree
   //
   ElementSet * elm_set;
 
+  // Stores the orientation of the tree. If UP (DOWN) then returns
+  // subsets from bottom (top) to the top (bottom) of the lattice.
+  //
+  bool orientation;
+
   // Does the first step on expansion
   //
   void start_expansion ();
@@ -77,23 +85,28 @@ class OBDDTree
   //
   bool is_redundant (Vertex *);
 
+  // Reduces the tree
+  //
+  void reduce_tree ();
+
  public:
 
   // Default constructor
   //
   OBDDTree (ElementSet *, OBDD *);
 
+  // Constructor with orientation
+  //
+  OBDDTree (ElementSet *, OBDD *, bool);
 
   // Default destructor
   //
   virtual ~OBDDTree ();
 
-
   // Expandes the OBDD and returns the next unrestricted
   // element subset
   //
   ElementSubset * next_subset ();
-
 
   // Restricts all nodes that are reachable from the current node on
   // the Tree

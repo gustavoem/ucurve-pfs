@@ -206,6 +206,8 @@ int main (void)
     OBDDTreeTest::it_should_return_subsets_in_a_particular_order ());
   result ("it_should_restrict_a_branch",
     OBDDTreeTest::it_should_restrict_a_branch ());
+  result ("it_should_be_able_to_expand_upside_down",
+    OBDDTreeTest::it_should_be_able_to_expand_upside_down ());
   cout << endl;
 
 

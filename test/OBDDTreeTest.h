@@ -32,6 +32,8 @@ namespace OBDDTreeTest
   bool it_should_return_subsets_in_a_particular_order ();
   
   bool it_should_restrict_a_branch ();
+
+  bool it_should_be_able_to_expand_upside_down ();
 }
 
 #endif /* EXPANDABLEOBDDTEST */
