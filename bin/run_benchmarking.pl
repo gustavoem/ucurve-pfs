@@ -56,7 +56,7 @@ use ABD;
 # benchmarking experiment. If you want to use all valid algorithm codes, leave
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
-my @LIST_OF_ALGORITHMS = ('SFS', 'UBB', 'RUBB');
+my @LIST_OF_ALGORITHMS = ('SFS', 'UBB', 'PFS', 'PFS_RAND', 'PFS_LEFTMOST');
 
 
 # Constant that works as an upper bound limit for cost function values.

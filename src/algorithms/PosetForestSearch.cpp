@@ -46,21 +46,21 @@ void PosetForestSearch::get_minima_list (unsigned int max_size_of_minima_list)
 
   //
   unsigned int direction;
-  map<string, Node *> Forest_A, Forest_B;
-  Node * N;
+  map<string, PFSNode *> Forest_A, Forest_B;
+  PFSNode * N;
 
   // the spanning tree T
-  N = new Node;
+  N = new PFSNode;
   N->vertex = new ElementSubset ("", set);
   store_visited_subset (N->vertex);
   N->adjacent = new ElementSubset ("", set);
   N->adjacent->set_complete_subset ();
   N->leftmost = 0;  // the first index is zero
   N->cost = FLT_MAX;
-  Forest_A.insert (pair<string, Node *> (N->vertex->print_subset (), N));
+  Forest_A.insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
 
   // the spanning tree T'
-  N = new Node;
+  N = new PFSNode;
   N->vertex = new ElementSubset ("", set);
   N->vertex->set_complete_subset ();
   store_visited_subset (N->vertex);
@@ -68,12 +68,12 @@ void PosetForestSearch::get_minima_list (unsigned int max_size_of_minima_list)
   N->adjacent->set_complete_subset ();
   N->leftmost = 0;  // the first index is zero
   N->cost = FLT_MAX;
-  Forest_B.insert (pair<string, Node *> (N->vertex->print_subset (), N));
+  Forest_B.insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
 
+  srand ( (unsigned) time (NULL) );
   while ( ( (Forest_A.size () > 0) && (Forest_B.size () > 0) ) &&
         (! cost_function->has_reached_threshold ()) )
   {
-    srand ( (unsigned) time (NULL) );
     direction = rand () % 2;
 
     number_of_iterations++;
@@ -117,11 +117,11 @@ void PosetForestSearch::get_minima_list (unsigned int max_size_of_minima_list)
 }
 
 
-PosetForestSearch::Node * PosetForestSearch::lower_forest_branch
-     (map<string, Node *> * Forest_A, map<string, Node *> * Forest_B)
+PFSNode * PosetForestSearch::lower_forest_branch
+     (map<string, PFSNode *> * Forest_A, map<string, PFSNode *> * Forest_B)
 {
-  map<string, Node *>::iterator it;
-  Node * R, * M, * N;
+  map<string, PFSNode *>::iterator it;
+  PFSNode * R, * M, * N;
   unsigned int i, m;
 
   // TODO: actual random selection of a tree
@@ -165,10 +165,10 @@ PosetForestSearch::Node * PosetForestSearch::lower_forest_branch
   //
   while ((! N->adjacent->is_empty () ) && (N->cost <= M->cost) )
   {
-    Forest_A->insert (pair<string, Node *> (N->vertex->print_subset (), N));
+    Forest_A->insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
     M = N;
     m = M->adjacent->remove_random_element ();
-    N = new Node;
+    N = new PFSNode;
     N->vertex = new ElementSubset ("", set);
     N->vertex->copy (M->vertex);
     N->vertex->add_element (m);
@@ -208,11 +208,11 @@ PosetForestSearch::Node * PosetForestSearch::lower_forest_branch
 }
 
 
-PosetForestSearch::Node * PosetForestSearch::upper_forest_branch
-     (map<string, Node *> * Forest_A, map<string, Node *> * Forest_B)
+PFSNode * PosetForestSearch::upper_forest_branch
+     (map<string, PFSNode *> * Forest_A, map<string, PFSNode *> * Forest_B)
 {
-  map<string, Node *>::iterator it;
-  Node * R, * M, * N;
+  map<string, PFSNode *>::iterator it;
+  PFSNode * R, * M, * N;
   unsigned int i, m;
 
     // TODO: actual random selection of a tree
@@ -256,10 +256,10 @@ PosetForestSearch::Node * PosetForestSearch::upper_forest_branch
   //
   while ((! N->adjacent->is_empty ()) && (N->cost <= M->cost))
   {
-    Forest_B->insert (pair<string, Node *> (N->vertex->print_subset (), N));
+    Forest_B->insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
     M = N;
     m = M->adjacent->remove_random_element ();
-    N = new Node;
+    N = new PFSNode;
     N->vertex = new ElementSubset ("", set);
     N->vertex->copy (M->vertex);
     N->vertex->remove_element (m);
@@ -300,10 +300,10 @@ PosetForestSearch::Node * PosetForestSearch::upper_forest_branch
 
 
 void PosetForestSearch::search_upper_root
-     (map<string, Node *> * Forest_B, ElementSubset * M)
+     (map<string, PFSNode *> * Forest_B, ElementSubset * M)
 {
-  map<string, Node *>::iterator it;
-  Node * N;
+  map<string, PFSNode *>::iterator it;
+  PFSNode * N;
   unsigned int i;
   int m, k = set->get_set_cardinality () - 1;
 
@@ -321,7 +321,7 @@ void PosetForestSearch::search_upper_root
     }
     else
     {
-      N = new Node;
+      N = new PFSNode;
       N->vertex = new ElementSubset ("", set);
       N->vertex->copy (M);
       store_visited_subset (N->vertex);
@@ -338,7 +338,7 @@ void PosetForestSearch::search_upper_root
 
       N->cost = FLT_MAX; // infinity
 
-      Forest_B->insert (pair<string, Node *> (N->vertex->print_subset (), N));
+      Forest_B->insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
 
       // if the algorithm is working under heuristic mode 1 or 2
       // and has reached threshold, then the search is stopped.
@@ -353,10 +353,10 @@ void PosetForestSearch::search_upper_root
 
 
 void PosetForestSearch::search_lower_root
-     (map<string, Node *> * Forest_A, ElementSubset * M)
+     (map<string, PFSNode *> * Forest_A, ElementSubset * M)
 {
-  map<string, Node *>::iterator it;
-  Node * N;
+  map<string, PFSNode *>::iterator it;
+  PFSNode * N;
   unsigned int i;
   int m, k = set->get_set_cardinality () - 1;
 
@@ -374,7 +374,7 @@ void PosetForestSearch::search_lower_root
     }
     else
     {
-      N = new Node;
+      N = new PFSNode;
       N->vertex = new ElementSubset ("", set);
       N->vertex->copy (M);
       store_visited_subset (N->vertex);
@@ -391,7 +391,7 @@ void PosetForestSearch::search_lower_root
 
       N->cost = FLT_MAX; // infinity
 
-      Forest_A->insert (pair<string, Node *> (N->vertex->print_subset (), N));
+      Forest_A->insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
 
       // if the algorithm is working under heuristic mode 1 or 2
       // and has reached threshold, then the search is stopped.
@@ -406,12 +406,12 @@ void PosetForestSearch::search_lower_root
 
 
 void PosetForestSearch::search_lower_children
-  (map<string, Node *> * Forest_B,
-   Node * N, ElementSubset * M, ElementSubset * Y)
+  (map<string, PFSNode *> * Forest_B,
+   PFSNode * N, ElementSubset * M, ElementSubset * Y)
 {
-  map<string, Node *>::iterator it;
+  map<string, PFSNode *>::iterator it;
   int i;
-  Node * B;
+  PFSNode * B;
   unsigned int j;
 
   i = set->get_set_cardinality () - 1;  // i = n
@@ -434,7 +434,7 @@ void PosetForestSearch::search_lower_children
     {
       if (((N == NULL) || (N->adjacent->has_element (i)) ) )
       {
-        B = new Node;
+        B = new PFSNode;
         B->vertex = new ElementSubset ("", set);
         B->vertex->copy (M);
         store_visited_subset (B->vertex);
@@ -446,7 +446,7 @@ void PosetForestSearch::search_lower_children
 
         B->cost = FLT_MAX; // infinity
 
-        Forest_B->insert(pair<string, Node *> (B->vertex->print_subset (), B));
+        Forest_B->insert(pair<string, PFSNode *> (B->vertex->print_subset (), B));
 
         // if the algorithm is working under heuristic mode 1 or 2
         // and has reached threshold, then the search is stopped.
@@ -466,12 +466,12 @@ void PosetForestSearch::search_lower_children
 
 
 void PosetForestSearch::search_upper_children
-     (map<string, Node *> * Forest_A,
-      Node * N, ElementSubset * M, ElementSubset * Y)
+     (map<string, PFSNode *> * Forest_A,
+      PFSNode * N, ElementSubset * M, ElementSubset * Y)
 {
-  map<string, Node *>::iterator it;
+  map<string, PFSNode *>::iterator it;
   int i;
-  Node * A;
+  PFSNode * A;
   unsigned int j;
 
   i = set->get_set_cardinality () - 1;  // i = n
@@ -494,7 +494,7 @@ void PosetForestSearch::search_upper_children
     {
       if (( (N == NULL) || (N->adjacent->has_element (i)) ) )
       {
-        A = new Node;
+        A = new PFSNode;
         A->vertex = new ElementSubset ("", set);
         A->vertex->copy (M);
         store_visited_subset (A->vertex);
@@ -506,7 +506,7 @@ void PosetForestSearch::search_upper_children
 
         A->cost = FLT_MAX; // infinity
 
-        Forest_A->insert(pair<string, Node *> (A->vertex->print_subset (), A));
+        Forest_A->insert(pair<string, PFSNode *> (A->vertex->print_subset (), A));
 
         // if the algorithm is working under heuristic mode 1 or 2
         // and has reached threshold, then the search is stopped.
@@ -526,10 +526,10 @@ void PosetForestSearch::search_upper_children
 
 
 void PosetForestSearch::upper_forest_pruning
-     (map<string, Node *> * Forest_B, Node * N)
+     (map<string, PFSNode *> * Forest_B, PFSNode * N)
 {
-  map<string, Node *>::iterator it;
-  Node * _M;
+  map<string, PFSNode *>::iterator it;
+  PFSNode * _M;
   ElementSubset M ("", set);
   int k;
 
@@ -605,10 +605,10 @@ void PosetForestSearch::upper_forest_pruning
 
 
 void PosetForestSearch::lower_forest_pruning
-     (map<string, Node *> * Forest_A, Node * N)
+     (map<string, PFSNode *> * Forest_A, PFSNode * N)
 {
-  map<string, Node *>::iterator it;
-  Node * _M;
+  map<string, PFSNode *>::iterator it;
+  PFSNode * _M;
   ElementSubset M ("", set);
   int k;
 

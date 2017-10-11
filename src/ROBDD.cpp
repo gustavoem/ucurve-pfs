@@ -188,14 +188,12 @@ void ROBDD::change_subset_value (ElementSubset * subset,
 
 void ROBDD::add_subset (ElementSubset * subset) 
 {
-  OBDD::add_subset (subset);
   change_subset_value (subset, true);
 }
 
 
 void ROBDD::remove_subset (ElementSubset * subset) 
 {
-  OBDD::remove_subset (subset);
   change_subset_value (subset, false);
 }
 

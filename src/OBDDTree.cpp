@@ -234,7 +234,8 @@ void OBDDTree::restrict_branch ()
 
   leftmost = 0;
   for (unsigned int i = 0; i < set_card; i++)
-    if (current_subset->has_element (i))
+    if ((current_subset->has_element (i) && orientation == UP) ||
+        (!current_subset->has_element (i) && orientation == DOWN))
       leftmost = i;
 
   elm_idx = current_node->get_index () - 1;

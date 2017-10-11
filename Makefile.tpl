@@ -32,7 +32,7 @@ IDIR = ../
 CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
-      src/ROBDD.o src/Vertex.o src/Partition.o \
+      src/ROBDD.o src/Vertex.o src/Partition.o src/ForestOBDDVertex.o \
       src/OBDD.o src/OBDDTree.o \
       src/PartitionNode.o src/functions/PartCost.o \
 # %template_class%

@@ -5,7 +5,7 @@
 // PosetForestSearch.h -- definition of the class "PosetForestSearch".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2016  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis, Gustavo Estrela
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include "../global.h"
 #include "../Solver.h"
 #include "../ElementSubset.h"
+#include "../PFSNode.h"
 
 
 class PosetForestSearch : public Solver
@@ -34,34 +35,26 @@ class PosetForestSearch : public Solver
 
 protected:
 
-  typedef struct MyNode
-  {
-    ElementSubset * vertex,
-                  * adjacent;
-    unsigned int leftmost;
-    float cost;
-  } Node;
-
   // a threshold to keep the list of minima small
   float bound;  
 
-  Node * lower_forest_branch (map<string, Node *> *, map<string, Node *> *);
+  PFSNode * lower_forest_branch (map<string, PFSNode *> *, map<string, PFSNode *> *);
 
-  Node * upper_forest_branch (map<string, Node *> *, map<string, Node *> *);
+  PFSNode * upper_forest_branch (map<string, PFSNode *> *, map<string, PFSNode *> *);
 
   void search_upper_children
-       (map<string, Node *> *, Node *, ElementSubset *, ElementSubset *);
+       (map<string, PFSNode *> *, PFSNode *, ElementSubset *, ElementSubset *);
 
   void search_lower_children
-       (map<string, Node *> *, Node *, ElementSubset *, ElementSubset *);
+       (map<string, PFSNode *> *, PFSNode *, ElementSubset *, ElementSubset *);
 
-  void search_upper_root (map<string, Node *> *, ElementSubset *);
+  void search_upper_root (map<string, PFSNode *> *, ElementSubset *);
 
-  void search_lower_root (map<string, Node *> *, ElementSubset *);
+  void search_lower_root (map<string, PFSNode *> *, ElementSubset *);
 
-  void upper_forest_pruning (map<string, Node *> *, Node *);
+  void upper_forest_pruning (map<string, PFSNode *> *, PFSNode *);
 
-  void lower_forest_pruning (map<string, Node *> *, Node *);
+  void lower_forest_pruning (map<string, PFSNode *> *, PFSNode *);
 
 
 public:

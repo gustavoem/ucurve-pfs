@@ -3,12 +3,13 @@
 
 #include "global.h"
 #include "Element.h"
+#include "PFSNode.h"
 #include <list>
 
 class Vertex 
 {
 
-private:
+protected:
   
   Vertex * lo;
   Vertex * hi;
@@ -16,6 +17,7 @@ private:
   bool value;
   unsigned int id;      // just an integer for identification
   unsigned int index;   // the index of *var at the ordering plus one
+  PFSNode * node;       // stores a PFS node. Only valid for leafs
   list<Vertex *> parents;
   
 public:
@@ -106,7 +108,14 @@ public:
   // Returns true if vertex has parent
   //
   bool has_parent ();
-  
+
+  // Returns the node associated to this vertex
+  //
+  PFSNode * get_node ();
+
+  // Sets the node of this vertex
+  //
+  void set_node (PFSNode * node)
 };
 
 #endif /* VERTEX_H_ */

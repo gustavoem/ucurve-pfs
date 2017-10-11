@@ -11,3 +11,6 @@
             pfsrobdd PFSROBDD
                  pfs PosetForestSearch
                 rubb RUBB
+               rubb2 RUBB2
+            pfs_rand PFS_RAND
+        pfs_leftmost PFS_LEFTMOST
