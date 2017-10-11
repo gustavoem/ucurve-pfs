@@ -39,6 +39,7 @@
 #include "CollectionTest.h"
 #include "ROBDDTest.h"
 #include "OBDDTreeTest.h"
+#include "ForestOBDDTest.h"
 #include "VertexTest.h"
 #include "PartitionTest.h"
 #include "PartitionNodeTest.h"
@@ -209,6 +210,13 @@ int main (void)
   result ("it_should_be_able_to_expand_upside_down",
     OBDDTreeTest::it_should_be_able_to_expand_upside_down ());
   cout << endl;
+
+
+  // Testing Class "ForestOBDD"
+  //
+  current_class = "ForestOBDD";
+  result ("it_should_add_a_node",
+    ForestOBDDTest::it_should_add_a_node ());
 
 
   // Testing Class "Vertex"

@@ -34,13 +34,23 @@ class ForestOBDD : public OBDD
 
 protected:
 
-  // Auxiliar function to ForestOBDD::reduce ()
-  //
-  void fill_vlist (ForestOBDDVertex *, list<ForestOBDDVertex *> **);
-
   // Updates a subset value
   //
   void change_subset_value (ElementSubset *, bool);
+
+  // Finds the vertex that represents the subset in the OBDD
+  //
+  Vertex * get_subset_leaf (ElementSubset *);
+
+  // Reduces the tree. This is only done after removing a node
+  // from the OBDD
+  //
+  void reduce_from_vertex (Vertex *);
+
+  // Overrides super method by returning NULL always. This is done
+  // to avoid leaf sharing between subsets.
+  //
+  Vertex * get_leaf (bool);
 
 public:
 
@@ -76,6 +86,9 @@ public:
   //
   void remove_node (PFSNode *);
 
+  // Returns the PFSNode of a subset
+  //
+  PFSNode * get_node (string);
 };
 
 #endif /* FOREST_OBDD_H_ */

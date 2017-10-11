@@ -115,7 +115,7 @@ public:
 
   // Sets the node of this vertex
   //
-  void set_node (PFSNode * node)
+  void set_node (PFSNode *);
 };
 
 #endif /* VERTEX_H_ */
