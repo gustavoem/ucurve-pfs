@@ -29,6 +29,8 @@ namespace ForestOBDDTest
 
   bool it_should_add_a_node ();
 
+  bool it_should_reduce_the_tree ();
+
 }
 
 #endif /* FOREST_OBDD_TEST_H_ */

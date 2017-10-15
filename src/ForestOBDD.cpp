@@ -84,23 +84,81 @@ void ForestOBDD::reduce_from_vertex (Vertex * v)
 }
 
 
+Vertex * ForestOBDD::change_subset_value (ElementSubset * subset, 
+  bool new_value) 
+{
+  bool current_edge, last_edge;
+  unsigned int set_card = elm_set->get_set_cardinality ();
+  unsigned int idx = 0;
+  Vertex * current = root;
+  Vertex * last = NULL;
+  Vertex * new_value_leaf, * old_value_leaf;
+
+  if ((contains (subset) && new_value == true) ||
+      (!contains (subset) && new_value == false))
+    return NULL;
+
+  new_value_leaf = new Vertex (new_value, set_card + 1);
+  cardinality++;
+
+  while (idx < set_card)
+  {
+    current_edge = subset->has_element (idx);
+    if ((current->get_index () - 1) != idx)
+    {
+      if (last == NULL) 
+      {
+        Vertex * new_root;
+        new_root = new Vertex (elm_set->get_element (idx), idx + 1);
+        cardinality++;
+        new_root->set_child (root, current_edge);
+        new_root->set_child (copy_subtree (root), !current_edge);
+        current = root = new_root;
+      }
+      else
+      {
+        last_edge = subset->has_element (idx - 1);
+        current = new Vertex (elm_set->get_element (idx), idx + 1);
+        insert_vertex (last, current, last_edge);
+      }
+    }
+
+    // Actual change of values
+    if (idx == set_card - 1) 
+    {
+      old_value_leaf = current->get_child (current_edge);
+      current->set_child (new_value_leaf, current_edge);
+      cardinality--;
+      delete old_value_leaf;
+    }
+
+    last = current;
+    current = current->get_child (current_edge);
+    idx++;
+  }
+  return new_value_leaf;
+}
+
+
 void ForestOBDD::add_node (PFSNode * node) 
 {
   ElementSubset * subset = node->vertex;
-  OBDD::change_subset_value (subset, true);
-  Vertex * v = get_subset_leaf (subset);
-  v->set_node (node);
-
-  print ();
+  Vertex * v = change_subset_value (subset, true);
+  if (v == NULL)
+    return;
+  else
+    v->set_node (node);
 }
 
 
 void ForestOBDD::remove_node (PFSNode * node) 
 {
   ElementSubset * subset = node->vertex;
-  OBDD::change_subset_value (subset, false);
-  Vertex * v = get_subset_leaf (subset);
-  reduce_from_vertex (v);
+  Vertex * v = change_subset_value (subset, false);
+  if (v == NULL)
+    return;
+  else
+    reduce_from_vertex (v);
 }
 
 

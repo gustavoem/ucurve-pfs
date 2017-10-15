@@ -217,6 +217,8 @@ int main (void)
   current_class = "ForestOBDD";
   result ("it_should_add_a_node",
     ForestOBDDTest::it_should_add_a_node ());
+  result ("it_should_reduce_the_tree",
+    ForestOBDDTest::it_should_reduce_the_tree ());
 
 
   // Testing Class "Vertex"

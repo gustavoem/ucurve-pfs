@@ -34,9 +34,11 @@ class ForestOBDD : public OBDD
 
 protected:
 
-  // Updates a subset value
+  // Updates a subset value. 
+  // Returns the address of the new leaf that represents the value
+  // of the subset that has been changed
   //
-  void change_subset_value (ElementSubset *, bool);
+  Vertex * change_subset_value (ElementSubset *, bool);
 
   // Finds the vertex that represents the subset in the OBDD
   //
@@ -51,6 +53,9 @@ protected:
   // to avoid leaf sharing between subsets.
   //
   Vertex * get_leaf (bool);
+
+
+
 
 public:
 

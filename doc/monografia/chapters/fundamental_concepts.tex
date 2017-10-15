@@ -1,16 +1,53 @@
 % Contextualização e conceitos fundamentais
 % .1 O problema de seleção de características
-% - definição formal
-% - poset
-% -  
-%
+% .2 Funções de custo para esse problema
+% .3 Redução para o problema de curvas em U
 
 \section{O problema de seleção de características}
 A seleção de características é um problema de otimização combinatória 
 em que procuramos o melhor subconjunto de um conjunto de características
-$S$. O espaço de busca desse problema é o cojunto potência de $S$, 
+$S$. O espaço de busca desse problema é o conjunto potência de $S$, 
 $\powerset (S)$, que é uma coleção de todos os subconjuntos possíveis de
  $S$. A função de custo desse problema é uma função $c : \powerset (S) 
 \to \fieldR_{+}$.
 
+\begin{mydefinition}[Problema de seleção de características] Seja $S$
+um conjunto finito não vazio de características e $c$ uma função de 
+custo. Encontrar $X \in \powerset (S)$ tal que $c (X) \leq c (Y)$,
+$\forall Y \in \powerset (S)$.
+\end{mydefinition}
 
+O espaço de busca do problema de seleção de características possui uma
+relação de ordem parcial definida pela relação $\subseteq$, portanto
+este conjunto é {\bf parcialmente ordenado (poset)}.
+
+\begin{mydefinition}
+Uma {\bf \em cadeia} do reticulado booleano é uma sequência $X_1$, 
+$X_2$, ..., $X_l$ tal que $X_1 \subset X_2 \subset \dots \subset X_l$.
+\end{mydefinition}
+
+\begin{mydefinition}
+Uma cadeia é dita {\bf \em maximal} se não existe outra cadeia no 
+reticulado que contenha propriamente esta cadeia.
+\end{mydefinition}
+
+\begin{mydefinition}
+Uma função de custo $c$ é dita decomponível em curvas u se para toda 
+cadeia maximal $X_1, ..., X_l$, $c(X_j) \leq min \{c (X_i),
+c (X_k)\}$ sempre que $X_i \subset X_j \subset X_k$, $i, j, k \in 
+\{1, ..., l\}$.
+\end{mydefinition}
+
+\section{Funções de custo para o problema de seleção de características}
+A função de custo utilizada na solução do problema de seleção de 
+características deve, de alguma forma, refletir a qualidade do conjunto 
+avaliado. Por isso, diferentes aplicações de seleção de características
+podem ter diferentes funções de custo. No contexto de aprendizado de 
+máquina, uma possível função de custo é a entropia média condicional
+(MCE), que já foi utilizada por exemplo na construção de W-operadores
+~\cite{MJCJB06}.
+
+\begin{mydefinition}
+Dado um conjunto de treinamento com $m$ amostras 
+
+\end{mydefinition}

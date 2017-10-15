@@ -3,3 +3,5 @@ all: main.tex chapters/*.tex references.bib
 	biber main
 	pdflatex main.tex
 
+clean:
+	rm *.aux *.toc *.bbl *.bcf *.blg *.log *.pdf

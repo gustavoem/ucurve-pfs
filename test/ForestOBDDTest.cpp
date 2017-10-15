@@ -43,4 +43,41 @@ namespace ForestOBDDTest
     return answ;
   }
 
+
+  bool it_should_reduce_the_tree ()
+  {
+    bool answ;
+    ElementSet set ("", 4, 10);
+    ForestOBDD obdd (&set);
+    unsigned int size_before, size_after;
+    
+    ElementSubset subset1 ("", &set);
+    subset1.add_element (1);
+    subset1.add_element (3);
+    PFSNode node1;
+    node1.vertex = &subset1;
+    obdd.add_node (&node1);
+
+    ElementSubset subset2 ("", &set);
+    subset2.add_element (1);
+    PFSNode node2;
+    node2.vertex = &subset2;
+    obdd.add_node (&node2);
+
+    ElementSubset subset3 ("", &set);
+    PFSNode node3;
+    node3.vertex = &subset3;
+    obdd.add_node (&node3);
+
+    size_before = obdd.get_cardinality ();
+    obdd.remove_node (&node3);
+    size_after = obdd.get_cardinality ();
+    answ = size_after < size_before;
+
+    size_before = obdd.get_cardinality ();
+    obdd.remove_node (&node1);
+    size_after = obdd.get_cardinality ();
+    answ = answ && size_after == size_before;
+    return answ;
+  }
 }

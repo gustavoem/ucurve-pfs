@@ -7,6 +7,7 @@
 \usepackage{fancyhdr}
 \usepackage{amssymb}
 \usepackage{csquotes}
+\usepackage{amsmath}
 \usepackage[backend=biber, 
             maxbibnames=10,
             style=alphabetic]{biblatex}
@@ -24,6 +25,9 @@
 \newcommand{\algname}[1]{{\tt #1}}
 
 \addbibresource{references.bib}
+
+\newtheorem{mydefinition}{Definição}
+\numberwithin{mydefinition}{section}
 
 \title{
     {Projeto de Algoritmos Baseados em Florestas de Posets para o 
