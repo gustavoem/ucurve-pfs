@@ -54,8 +54,9 @@ protected:
   //
   Vertex * get_leaf (bool);
 
-
-
+  // Stores the number of nodes added to the Forest.
+  //
+  unsigned int forest_size;
 
 public:
 
@@ -94,6 +95,10 @@ public:
   // Returns the PFSNode of a subset
   //
   PFSNode * get_node (string);
+
+  // Returns the number of nodes contained by the OBDD
+  //
+  unsigned int size ();
 };
 
 #endif /* FOREST_OBDD_H_ */

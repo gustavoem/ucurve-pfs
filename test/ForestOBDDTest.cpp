@@ -31,15 +31,15 @@ namespace ForestOBDDTest
   {
     bool answ;
     ElementSet set ("", 4, 10);
-    ForestOBDD obdd (&set);
+    ForestOBDD fobdd (&set);
     ElementSubset subset ("", &set);
     subset.add_element (1);
     subset.add_element (2);
     PFSNode node;
     node.vertex = &subset;
 
-    obdd.add_node (&node);
-    answ = obdd.get_node (subset.print_subset ()) == &node;
+    fobdd.add_node (&node);
+    answ = fobdd.get_node (subset.print_subset ()) == &node;
     return answ;
   }
 
@@ -48,7 +48,7 @@ namespace ForestOBDDTest
   {
     bool answ;
     ElementSet set ("", 4, 10);
-    ForestOBDD obdd (&set);
+    ForestOBDD fobdd (&set);
     unsigned int size_before, size_after;
     
     ElementSubset subset1 ("", &set);
@@ -56,28 +56,57 @@ namespace ForestOBDDTest
     subset1.add_element (3);
     PFSNode node1;
     node1.vertex = &subset1;
-    obdd.add_node (&node1);
+    fobdd.add_node (&node1);
 
     ElementSubset subset2 ("", &set);
     subset2.add_element (1);
     PFSNode node2;
     node2.vertex = &subset2;
-    obdd.add_node (&node2);
+    fobdd.add_node (&node2);
 
     ElementSubset subset3 ("", &set);
     PFSNode node3;
     node3.vertex = &subset3;
-    obdd.add_node (&node3);
+    fobdd.add_node (&node3);
 
-    size_before = obdd.get_cardinality ();
-    obdd.remove_node (&node3);
-    size_after = obdd.get_cardinality ();
+    size_before = fobdd.get_cardinality ();
+    fobdd.remove_node (&node3);
+    size_after = fobdd.get_cardinality ();
     answ = size_after < size_before;
 
-    size_before = obdd.get_cardinality ();
-    obdd.remove_node (&node1);
-    size_after = obdd.get_cardinality ();
+    size_before = fobdd.get_cardinality ();
+    fobdd.remove_node (&node1);
+    size_after = fobdd.get_cardinality ();
     answ = answ && size_after == size_before;
+    return answ;
+  }
+
+
+  bool it_should_store_the_number_of_nodes ()
+  {
+    bool answ;
+    ElementSet set ("", 4, 10);
+    ForestOBDD fobdd (&set);
+    
+    ElementSubset subset1 ("", &set);
+    subset1.add_element (0);
+    PFSNode node1;
+    node1.vertex = &subset1;
+    ElementSubset subset2 ("", &set);
+    subset2.add_element (1);
+    PFSNode node2;
+    node2.vertex = &subset2;
+    ElementSubset subset3 ("", &set);
+    PFSNode node3;
+    node3.vertex = &subset3;
+
+    fobdd.add_node (&node1);
+    fobdd.add_node (&node2);
+    fobdd.add_node (&node3);
+    answ = (fobdd.size () == 3); 
+
+    fobdd.remove_node (&node3);
+    answ = answ && (fobdd.size () == 2);
     return answ;
   }
 }

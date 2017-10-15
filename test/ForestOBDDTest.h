@@ -31,6 +31,8 @@ namespace ForestOBDDTest
 
   bool it_should_reduce_the_tree ();
 
+  bool it_should_store_the_number_of_nodes ();
+
 }
 
 #endif /* FOREST_OBDD_TEST_H_ */

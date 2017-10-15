@@ -25,6 +25,7 @@
 
 ForestOBDD::ForestOBDD (ElementSet * set) : OBDD (set)
 {
+  forest_size = 0;
   return;
 }
 
@@ -147,7 +148,10 @@ void ForestOBDD::add_node (PFSNode * node)
   if (v == NULL)
     return;
   else
+  {
     v->set_node (node);
+    forest_size++;
+  }
 }
 
 
@@ -158,7 +162,10 @@ void ForestOBDD::remove_node (PFSNode * node)
   if (v == NULL)
     return;
   else
+  {
     reduce_from_vertex (v);
+    forest_size--;
+  }
 }
 
 
@@ -187,4 +194,10 @@ PFSNode * ForestOBDD::get_node (string s)
   node = v->get_node ();
   delete subset;
   return node;
+}
+
+
+unsigned int ForestOBDD::size ()
+{
+  return forest_size;
 }
