@@ -136,6 +136,7 @@ PFSNode * RPFS::lower_forest_branch (ForestOBDD * Forest_A,
 
     N->leftmost = m + 1;  // the index starts with zero
     N->adjacent = new ElementSubset ("", set);
+    N->cost = FLT_MAX;
     for (i = N->leftmost; i < set->get_set_cardinality (); i++)
       N->adjacent->add_element (i);
     calculate_node_cost (N, Forest_B);
@@ -183,6 +184,7 @@ PFSNode * RPFS::upper_forest_branch (ForestOBDD * Forest_A,
 
     N->leftmost = m + 1;  // the index starts with zero
     N->adjacent = new ElementSubset ("", set);
+    N->cost = FLT_MAX;
     for (i = N->leftmost; i < set->get_set_cardinality (); i++)
       N->adjacent->add_element (i);
     calculate_node_cost (N, Forest_A);
@@ -444,10 +446,10 @@ void RPFS::upper_forest_pruning (ForestOBDD * Forest_B,
     if (cost_function->has_reached_threshold ())
       return;
 
+    Forest_B->remove_node (_M);
     delete _M->vertex;
     delete _M->adjacent;
     delete _M;
-    Forest_B->remove_node (_M);
   }
   else
   {
@@ -513,10 +515,10 @@ void RPFS::lower_forest_pruning (ForestOBDD * Forest_A,
     if (cost_function->has_reached_threshold ())
       return;
 
+    Forest_A->remove_node (_M);
     delete _M->vertex;
     delete _M->adjacent;
     delete _M;
-    Forest_A->remove_node (_M);
   }
   else
   {

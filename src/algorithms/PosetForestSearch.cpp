@@ -70,10 +70,10 @@ void PosetForestSearch::get_minima_list (unsigned int max_size_of_minima_list)
   N->cost = FLT_MAX;
   Forest_B.insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
 
+  srand ( (unsigned) time (NULL) );
   while ( ( (Forest_A.size () > 0) && (Forest_B.size () > 0) ) &&
         (! cost_function->has_reached_threshold ()) )
   {
-  srand ( (unsigned) time (NULL) );
     direction = rand () % 2;
 
     number_of_iterations++;
@@ -118,7 +118,6 @@ PFSNode * PosetForestSearch::lower_forest_branch
   unsigned int i, m;
 
   // TODO: actual random selection of a tree
-  srand ( (unsigned) time (NULL) );
   i = rand () % 2;
   if (i == 0)
     it = Forest_A->begin ();
@@ -209,7 +208,6 @@ PFSNode * PosetForestSearch::upper_forest_branch
   unsigned int i, m;
 
     // TODO: actual random selection of a tree
-  srand ( (unsigned) time (NULL) );
   i = rand () % 2;
   if (i == 0)
     it = Forest_B->begin ();
