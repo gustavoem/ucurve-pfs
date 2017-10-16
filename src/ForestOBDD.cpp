@@ -61,26 +61,35 @@ void ForestOBDD::reduce_from_vertex (Vertex * v)
   Vertex * u = v->get_parents ().front ();
   Vertex * lo = u->get_child (false);
   Vertex * hi = u->get_child (true);
-
+    
   while (lo != NULL && lo->get_value () == 0 && hi->get_value () == 0)
   {
-    Vertex * next_u = u->get_parents ().front ();
-    if (next_u != NULL)
-      next_u->set_child (lo, u == next_u->get_child (true));
-    else
+    Vertex * next_u;
+    if (u->get_parents ().empty ())
     {
       root = lo;
       next_u = root;
     }
+    else
+    {
+      next_u = u->get_parents ().front ();
+      next_u->set_child (lo, u == next_u->get_child (true));
+    }
+
+    // cout << "next_u = " << next_u << endl;
     u->set_child (NULL, true);
     u->set_child (NULL, false);
     delete hi;
     delete u;
     cardinality -= 2;
 
+    // cout << endl <<  "After reducing step: " << endl;
+    // this->print ();
+
     u = next_u;
     lo = u->get_child (false);
     hi = u->get_child (true);    
+    // cout << "lo = " << lo << "; hi = " << hi << "; u = " << u << endl;
   }
 }
 
