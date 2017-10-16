@@ -197,6 +197,26 @@ PFSNode * ForestOBDD::get_node (string s)
 }
 
 
+PFSNode * ForestOBDD::get_best_pruning_potential_node1 ()
+{
+  Vertex * v = root;
+  while (!v->is_terminal ())
+  {
+    Vertex * next_v;
+    if (v->get_child (true)->is_terminal () && 
+        !v->get_child (true)->get_value ())
+      next_v = v->get_child (false);
+    else if (v->get_child (false)->is_terminal () &&
+             v->get_child (!false)->get_value ())
+      next_v = v->get_child (true);
+    else
+      next_v = v->get_child ((int) rand() % 2);
+    v = next_v;
+  }
+  return v->get_node ();
+}
+
+
 unsigned int ForestOBDD::size ()
 {
   return forest_size;

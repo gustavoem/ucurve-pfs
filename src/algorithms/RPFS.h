@@ -28,6 +28,7 @@
 #include "../Solver.h"
 #include "../ElementSubset.h"
 #include "../PFSNode.h"
+#include "../ForestOBDD.h"
 
 
 class RPFS : public Solver
@@ -41,26 +42,26 @@ protected:
 
   // Branches on the lower forest
   //
-  PFSNode * lower_forest_branch (map<string, PFSNode *> *, 
-    map<string, PFSNode *> *);
+  PFSNode * lower_forest_branch (ForestOBDD *, 
+    ForestOBDD *);
 
   // Branches on the upper forest
   // 
-  PFSNode * upper_forest_branch (map<string, PFSNode *> *, 
-    map<string, PFSNode *> *);
+  PFSNode * upper_forest_branch (ForestOBDD *, 
+    ForestOBDD *);
 
   // Given an ElementSubset that is going to be removed from the lower
-  // forest, finds and add to the lower forest all ElementSubsets 
+  // forest, finds and add to the lower forest ElementSubsets 
   // adjacents to it.
   //
-  void search_upper_children (map<string, PFSNode *> *, 
+  void search_upper_children (ForestOBDD *, 
     PFSNode *, ElementSubset *, ElementSubset *);
 
   // Given an ElementSubset that is going to be removed from the upper
-  // forest, finds and add to the lower forest all ElementSubsets 
+  // forest, finds and add to the lower forest ElementSubsets 
   // adjacents to it as roots.
   //
-  void search_lower_children (map<string, PFSNode *> *, 
+  void search_lower_children (ForestOBDD *, 
     PFSNode *, ElementSubset *, ElementSubset *);
 
   // Given an ElementSubset X that is being removed from the upper
@@ -68,22 +69,27 @@ protected:
   // contains X until we find a root that contains X or we reach S
   // ElementSubset.
   //
-  void search_upper_root (map<string, PFSNode *> *, ElementSubset *);
+  void search_upper_root (ForestOBDD *, ElementSubset *);
 
   // Given an ElementSubset X that is being removed from the lower
   // forest, updates the forest creating roots with elements that are
   // contained by X until we find a root that is contained by X or we
   // reach the empty set ElementSubset.
   //
-  void search_lower_root (map<string, PFSNode *> *, ElementSubset *);
+  void search_lower_root (ForestOBDD *, ElementSubset *);
 
   // Updates the upper forest after branching on the lower forest.
   //
-  void upper_forest_pruning (map<string, PFSNode *> *, PFSNode *);
+  void upper_forest_pruning (ForestOBDD *, PFSNode *);
 
   // Updates the lower forest after branching on the upper forest
   //
-  void lower_forest_pruning (map<string, PFSNode *> *, PFSNode *);
+  void lower_forest_pruning (ForestOBDD *, PFSNode *);
+
+  // Calculates the cost of a PFSNode, trying to use the dual forest
+  // to fetch the already calculated cost if possible.
+  //
+  void calculate_node_cost (PFSNode *, ForestOBDD *);
 
 public:
 
