@@ -26,12 +26,12 @@
 #include "Vertex.h"
 #include "ElementSubset.h"
 #include "CostFunction.h"
-#include "ROBDD.h"
+#include "OBDD.h"
 
 #define UP true
 #define DOWN false
 
-class OBDDTree
+class OBDDTree 
 {
  protected:
 
@@ -51,6 +51,14 @@ class OBDDTree
   // Stores the OBDD being expanded
   //
   OBDD * obdd;
+
+  // Storest OBDD element ordering
+  //
+  unsigned int * elm_order;
+
+  // Stores inverse of OBDD element ordering
+  //
+  unsigned int * rev_elm_order;
 
   // Stores the element set
   //

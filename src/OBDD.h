@@ -218,11 +218,18 @@ public:
   //
   void simplify (Vertex *);
 
-
   // Replaces a node by a terminal value of 1
   //
   void restrict_subtree (Vertex *);
-  
+
+  // Returns the element order
+  //
+  unsigned int * get_elm_order ();
+
+  // Returns the inverse of element order
+  //
+  unsigned int * get_rev_elm_order ();  
+
 };
 
 #endif /* OBDD_H_ */

@@ -44,6 +44,20 @@ OBDD::OBDD (ElementSet * set, Vertex * root, int card)
 }
 
 
+OBDD::OBDD (ElementSet * set, unsigned int * order)
+{
+  elm_set = set;
+  unsigned int n = elm_set->get_set_cardinality ();
+  root = new Vertex (false, n + 1);
+  cardinality = 1;
+  elm_order = new unsigned int [n + 1];
+  for (unsigned int i = 0; i < n; i++)
+    elm_order[i] = order[i];
+  elm_order[n] = n;
+  set_rev_elm_order ();
+}
+
+
 OBDD::OBDD (ElementSet * set, ElementSubset * subset)
 {
   unsigned int set_card = set->get_set_cardinality ();
@@ -635,4 +649,16 @@ void OBDD::restrict_subtree (Vertex * v)
   }
 
   replace_subtree (v, one);
+}
+
+
+unsigned int * OBDD::get_elm_order () 
+{
+  return elm_order;
+}
+
+
+unsigned int * OBDD::get_rev_elm_order ()
+{
+  return rev_elm_order;
 }

@@ -28,6 +28,8 @@ OBDDTree::OBDDTree (ElementSet * set, OBDD * R)
   current_subset = new ElementSubset ("", elm_set);
   building_subset = new ElementSubset ("", elm_set);
   orientation = UP;
+  elm_order = obdd->get_elm_order ();
+  rev_elm_order = obdd->get_rev_elm_order ();
 }
 
 
@@ -39,6 +41,8 @@ OBDDTree::OBDDTree (ElementSet * set, OBDD * R, bool orientation)
   current_subset = new ElementSubset ("", elm_set);
   building_subset = new ElementSubset ("", elm_set);
   this->orientation = orientation;
+  elm_order = obdd->get_elm_order ();
+  rev_elm_order = obdd->get_rev_elm_order ();
 }
 
 
@@ -63,7 +67,8 @@ ElementSubset * OBDDTree::next_subset ()
 
 void OBDDTree::start_expansion ()
 {
-  Vertex * new_root = new Vertex (elm_set->get_element (0), 1);
+  Vertex * new_root = new Vertex (elm_set->get_element (elm_order[0]), 
+    elm_order[0] + 1);
   obdd->stack_root (new_root);
   current_node = obdd->get_root ();
 }
@@ -87,14 +92,14 @@ void OBDDTree::set_current_subset ()
   if (orientation == UP)
   {
     if (!lo->get_value () == 0)
-      building_subset->add_element (set_card - 1);
+      building_subset->add_element (elm_order[set_card - 1]);
   }
   else
   {
     if (hi->get_value () == 0)
-      building_subset->add_element (set_card - 1);
+      building_subset->add_element (elm_order[set_card - 1]);
     else
-      building_subset->remove_element (set_card - 1);
+      building_subset->remove_element (elm_order[set_card - 1]);
   }
 
   update_current_subset ();
@@ -110,10 +115,6 @@ void OBDDTree::set_current_subset ()
 
 void OBDDTree::restrict_node ()
 {
-  // cout << "Restricting Node: " << current_node << endl;
-  // cout << "Current tree = " << endl;
-  // obdd->print ();
-
   Vertex * next = current_node->get_parents ().front ();
   
   // todo: maybe this is not necessary
@@ -136,7 +137,7 @@ void OBDDTree::restrict_node ()
 void OBDDTree::expand ()
 {
   unsigned int set_card = elm_set->get_set_cardinality ();
-  unsigned int elm_idx;
+  unsigned int idx;
   Vertex * lo, * hi;
   
 
@@ -150,12 +151,12 @@ void OBDDTree::expand ()
 
   lo = current_node->get_child (false);
   hi = current_node->get_child (true);
-  elm_idx = current_node->get_index () - 1;
+  idx = rev_elm_order[current_node->get_index () - 1];
 
   // cout << "\nExpanding tree: " << endl;
   // obdd->print ();
 
-  while (elm_idx != set_card - 1)
+  while (idx != set_card - 1)
   {
     Vertex * next_node;
     bool next_side;
@@ -196,10 +197,11 @@ void OBDDTree::expand ()
         building_subset->remove_element (current_node->get_index () - 1);
       } 
     }
-    if (next_node->get_index () != current_node->get_index () + 1)
+    if (rev_elm_order[next_node->get_index () - 1] != 
+        rev_elm_order[current_node->get_index () - 1] + 1)
     {
-      next_node = new Vertex (elm_set->get_element (elm_idx + 1),
-       elm_idx + 2);
+      next_node = new Vertex (elm_set->get_element (elm_order[idx + 1]),
+       elm_order[idx + 1] + 1);
       obdd->insert_vertex (current_node, next_node, next_side);
     }
     // cout << "Next node = " << next_node << endl;
@@ -207,7 +209,7 @@ void OBDDTree::expand ()
     current_node = next_node;
     lo = current_node->get_child (false);
     hi = current_node->get_child (true);
-    elm_idx = current_node->get_index () - 1;
+    idx = rev_elm_order[current_node->get_index () - 1];
   }
 
   // if (!current_node->is_terminal ())
@@ -215,12 +217,13 @@ void OBDDTree::expand ()
 
   // cout << "\nResulting tree: " << endl;
   // obdd->print ();
+  // cout << "Returned subset " << current_subset->print_subset () << endl << endl;
 }
 
 
 void OBDDTree::restrict_branch ()
 {
-  unsigned int leftmost, elm_idx;
+  unsigned int leftmost, ord_idx;
   unsigned int set_card = elm_set->get_set_cardinality ();
 
   // cout << "Restricting subset " << current_subset->print_subset () << endl;
@@ -234,15 +237,17 @@ void OBDDTree::restrict_branch ()
 
   leftmost = 0;
   for (unsigned int i = 0; i < set_card; i++)
-    if ((current_subset->has_element (i) && orientation == UP) ||
-        (!current_subset->has_element (i) && orientation == DOWN))
+    if ((current_subset->has_element (elm_order[i]) &&
+         orientation == UP) ||
+        (!current_subset->has_element (elm_order[i]) &&
+         orientation == DOWN))
       leftmost = i;
 
-  elm_idx = current_node->get_index () - 1;
-  while (elm_idx > leftmost)
+  ord_idx = rev_elm_order[current_node->get_index () - 1];
+  while (ord_idx > leftmost)
   {
     restrict_node ();
-    elm_idx = current_node->get_index () - 1;
+    ord_idx = rev_elm_order[current_node->get_index () - 1];
   }
   
   if (is_redundant (current_node))

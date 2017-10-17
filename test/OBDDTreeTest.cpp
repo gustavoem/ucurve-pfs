@@ -24,16 +24,27 @@
 namespace OBDDTreeTest 
 {
 
+  unsigned int * get_default_ordering (unsigned int n)
+  {
+    unsigned int * order = new unsigned int [n];
+    for (unsigned int i = 0; i < n; i++)
+      order[i] = i;
+    return order;
+  }  
+
   bool it_should_return_empty_subset_first ()
   {
     bool answ;
     ElementSet elm_set ("", 3, 100);
-    OBDD R (&elm_set);
+    unsigned int * order = 
+      get_default_ordering (elm_set.get_set_cardinality ());
+    OBDD R (&elm_set, order);
     OBDDTree T (&elm_set, &R);
     ElementSubset X ("", &elm_set);
     ElementSubset * Y = T.next_subset ();
     answ = X.is_equal (Y);
     delete Y;
+    delete[] order;
     return answ;
   }
 
@@ -42,7 +53,9 @@ namespace OBDDTreeTest
   {
     bool answ;
     ElementSet elm_set ("", 3, 100);
-    OBDD R (&elm_set);
+    unsigned int * order = 
+      get_default_ordering (elm_set.get_set_cardinality ());
+    OBDD R (&elm_set, order);
     OBDDTree T (&elm_set, &R);
     ElementSubset X ("", &elm_set);
 
@@ -88,6 +101,7 @@ namespace OBDDTreeTest
     
     answ = answ && T.next_subset () == NULL;
 
+    delete[] order;
     return answ;
   }
 
@@ -96,7 +110,9 @@ namespace OBDDTreeTest
   {
     bool answ = true;
     ElementSet elm_set ("", 3, 100);
-    OBDD R (&elm_set);
+    unsigned int * order = 
+      get_default_ordering (elm_set.get_set_cardinality ());
+    OBDD R (&elm_set, order);
     OBDDTree T (&elm_set, &R);
     
     ElementSubset * X, * Z;
@@ -128,7 +144,7 @@ namespace OBDDTreeTest
     delete X;
 
     ElementSet elm_set2 ("", 4, 100);
-    OBDD R2 (&elm_set2);
+    OBDD R2 (&elm_set2, order);
     OBDDTree T2 (&elm_set2, &R2);
 
     // Fast forward to 0100
@@ -158,6 +174,7 @@ namespace OBDDTreeTest
     answ = answ && R2.contains (&E3);
     delete X;
     delete Z;
+    delete[] order;
     return answ;
   }
 
@@ -166,7 +183,9 @@ namespace OBDDTreeTest
   {
     bool answ;
     ElementSet elm_set ("", 3, 100);
-    OBDD R (&elm_set);
+    unsigned int * order = 
+      get_default_ordering (elm_set.get_set_cardinality ());
+    OBDD R (&elm_set, order);
     OBDDTree T (&elm_set, &R, DOWN);
     ElementSubset X ("", &elm_set);
     X.set_complete_subset ();
@@ -213,6 +232,7 @@ namespace OBDDTreeTest
     
     answ = answ && T.next_subset () == NULL;
 
+    delete[] order;
     return answ;
   }
 
