@@ -29,6 +29,8 @@ OBDD::OBDD (ElementSet * set)
   unsigned int n = elm_set->get_set_cardinality ();
   root = new Vertex (false, n + 1);
   cardinality = 1;
+  set_default_elm_order ();
+  set_rev_elm_order ();
 }
 
 
@@ -37,6 +39,8 @@ OBDD::OBDD (ElementSet * set, Vertex * root, int card)
   this->elm_set = set;
   this->root = root;
   this->cardinality = card;
+  set_default_elm_order ();
+  set_rev_elm_order ();
 }
 
 
@@ -44,6 +48,8 @@ OBDD::OBDD (ElementSet * set, ElementSubset * subset)
 {
   unsigned int set_card = set->get_set_cardinality ();
   elm_set = set;
+  set_default_elm_order ();
+  set_rev_elm_order ();
   Vertex * zero = new Vertex (false, set_card + 1);
   Vertex * one = new Vertex (true, set_card + 1);
   Element * root_elm = elm_set->get_element (0);
@@ -53,26 +59,47 @@ OBDD::OBDD (ElementSet * set, ElementSubset * subset)
 }
 
 
-void OBDD::build (Vertex * v, unsigned int elm_index, 
+void OBDD::set_default_elm_order ()
+{
+  unsigned int set_card = elm_set->get_set_cardinality ();
+  elm_order = new unsigned int[set_card + 1];
+  for (unsigned int i = 0; i < set_card; i++)
+    elm_order[i] = set_card - i - 1;
+  elm_order[set_card] = set_card;
+}
+
+
+void OBDD::set_rev_elm_order ()
+{
+  unsigned int set_card = elm_set->get_set_cardinality ();
+  rev_elm_order = new unsigned int[set_card + 1];
+  for (unsigned int i = 0; i < set_card; i++)
+    rev_elm_order[elm_order[i]] = i;
+  rev_elm_order[set_card] = set_card;
+}
+
+
+void OBDD::build (Vertex * v, unsigned int ord_idx, 
   unsigned int set_card, ElementSubset * subset, Vertex * zero, 
   Vertex * one)
 {
   bool zeroside;
-  zeroside = !subset->has_element (elm_index - 1);
+  zeroside = !subset->has_element (elm_order[ord_idx - 1]);
   v->set_child (zero, zeroside);
 
-  if (elm_index == set_card) 
+  if (ord_idx == set_card) 
   {
     v->set_child (one, !zeroside);
     return;
   }
 
-  unsigned int child_index = elm_index + 1;
+  unsigned int child_index = elm_order[ord_idx] + 1;
   Vertex * next_vertice = 
-    new Vertex (elm_set->get_element (child_index - 1), ++elm_index);
+    new Vertex (elm_set->get_element (child_index - 1), 
+      ++ord_idx);
   v->set_child (next_vertice, !zeroside);
   cardinality++;
-  build (next_vertice, elm_index, set_card, subset, zero, one);   
+  build (next_vertice, ord_idx, set_card, subset, zero, one);   
 }
 
 
@@ -94,6 +121,8 @@ void OBDD::unmark_all_vertice (Vertex * v)
 
 OBDD::~OBDD ()
 {
+  delete[] elm_order;
+  delete[] rev_elm_order;
   delete_subtree (&root, &cardinality);
 }
 
@@ -200,6 +229,7 @@ void OBDD::union_to (Vertex * root2)
   one->mark = false;
   Vertex * zero = new Vertex (false, set_card + 1);
   zero->mark = false;
+
   Vertex * new_root = union_step (root, root2, &pairs, &new_cardinality, \
     one, zero);
 
@@ -207,7 +237,6 @@ void OBDD::union_to (Vertex * root2)
     new_cardinality++;
   else
     delete one;
-
   if (zero->mark)
     new_cardinality++;
   else
@@ -236,7 +265,7 @@ Vertex * OBDD::union_step (Vertex * v1, Vertex * v2, map<pair<Vertex *, Vertex*>
   int value1 = (v1 != NULL) && (v1->get_value () * v1->get_value () + v1->get_value ());
   int value2 = (v2 != NULL) && (v2->get_value () * v2->get_value () + v2->get_value ());
   if ((value1) || (value2) || \
-   ((value1 + value2 == 0) && (v1 != NULL && v1->is_terminal ()) \
+     ((value1 + value2 == 0) && (v1 != NULL && v1->is_terminal ()) \
      && (v2 != NULL && v2->is_terminal ())))
   {
     if (value1 + value2 == 0)
@@ -256,16 +285,18 @@ Vertex * OBDD::union_step (Vertex * v1, Vertex * v2, map<pair<Vertex *, Vertex*>
     u = new Vertex ();
     (*new_cardinality)++;
     u->mark = false;
-    pairs->insert(make_pair (key, u));
+    pairs->insert (make_pair (key, u));
 
     Vertex * vlow1 = NULL;
     Vertex * vhigh1 = NULL;
     Vertex * vlow2 = NULL;
     Vertex * vhigh2 = NULL;
-    int index = min(v1->get_index (), v2->get_index ());
-    u->set_index (index);
-    u->set_id (index);
-    u->set_var (elm_set->get_element (index - 1));
+    int v1_ord_index = rev_elm_order[v1->get_index () - 1];
+    int v2_ord_index = rev_elm_order[v2->get_index () - 1];
+    int index = min (v1_ord_index, v2_ord_index) + 1;
+    u->set_id (elm_order[index - 1] + 1);
+    u->set_index (elm_order[index - 1] + 1);
+    u->set_var (elm_set->get_element (elm_order[index - 1]));
     if (u->get_index () == v1->get_index ())
     {
       vlow1 = v1->get_child (false);
@@ -336,11 +367,11 @@ Vertex * OBDD::build_interval (unsigned int index, unsigned int * card,
     return one;
   }
 
-  if ((orientation == false && subset->has_element (index)) ||
-    (orientation == true && !subset->has_element (index)))
+  if ((orientation == false && subset->has_element (elm_order[index])) 
+    || (orientation == true && !subset->has_element (elm_order[index])))
     return build_interval (index + 1, card, subset, zero, one, orientation);
 
-  Vertex * v = new Vertex (elm_set->get_element (index), index + 1);
+  Vertex * v = new Vertex (elm_set->get_element (elm_order[index]), elm_order[index] + 1);
   (*card)++;
   v->set_child (zero, !orientation);
   if (!zero->mark)
@@ -416,15 +447,21 @@ void OBDD::change_subset_value (ElementSubset * subset, bool new_value)
     cardinality++;
   }
 
+  // cout << "Changing value of subset " << subset->print_subset () << endl;
+  // print ();
+
   while (idx < set_card)
   {
-    current_edge = subset->has_element (idx);
-    if ((current->get_index () - 1) != idx)
+    current_edge = subset->has_element (elm_order[idx]);
+    // cout << "Iteration -\nCurrent vertex = " << current << endl;
+
+    if ((current->get_index () - 1) != elm_order[idx])
     {
       if (last == NULL) 
       {
         Vertex * new_root;
-        new_root = new Vertex (elm_set->get_element (idx), idx + 1);
+        new_root = new Vertex (elm_set->get_element (elm_order[idx]), 
+          elm_order[idx] + 1);
         cardinality++;
         new_root->set_child (root, current_edge);
         new_root->set_child (copy_subtree (root), !current_edge);
@@ -432,8 +469,9 @@ void OBDD::change_subset_value (ElementSubset * subset, bool new_value)
       }
       else
       {
-        last_edge = subset->has_element (idx - 1);
-        current = new Vertex (elm_set->get_element (idx), idx + 1);
+        last_edge = subset->has_element (elm_order[idx - 1]);
+        current = new Vertex (elm_set->get_element (elm_order[idx]), 
+          elm_order[idx] + 1);
         insert_vertex (last, current, last_edge);
       }
     }
@@ -450,6 +488,9 @@ void OBDD::change_subset_value (ElementSubset * subset, bool new_value)
       }
     }
 
+    // cout << "Resulted in: " << endl;
+    // print ();
+    // cout << "\n";
     last = current;
     current = current->get_child (current_edge);
     idx++;
@@ -473,10 +514,14 @@ bool OBDD::contains (ElementSubset * subset)
 
 ElementSubset * OBDD::get_random_zero_evaluated_element ()
 {
+  // cout << "Getting a zero-element from obdd: " << endl;
+  // print ();
   Vertex * v = root;
   if (v->is_terminal () && v->get_value ())
     return NULL;
   ElementSubset * subset = new ElementSubset ("", elm_set);
+
+
   while (!v->is_terminal ())
   {
     Vertex * next_v;
@@ -488,7 +533,7 @@ ElementSubset * OBDD::get_random_zero_evaluated_element ()
       next_v = v->get_child ((int) rand() % 2);
 
     if (next_v == v->get_child (true))
-      subset->add_element (v->get_index () - 1);
+      subset->add_element (elm_order[v->get_index () - 1]);
     v = next_v;
   }
   return subset;

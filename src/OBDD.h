@@ -43,6 +43,22 @@ protected:
   //
   Vertex * root;  
 
+  // A map that allows using elements in any order on the OBDD
+  //
+  unsigned int * elm_order;
+
+  // Reverse of element ordering
+  //
+  unsigned int * rev_elm_order;
+
+  // Sets the default element order: 0, 1, 2, ..., n - 1
+  //
+  void set_default_elm_order ();
+
+  // Sets the reverse map of elm_order
+  //
+  void set_rev_elm_order ();
+
   // Prints the sub-tree that has the parameter Vertex as root
   //
   void print (Vertex *);

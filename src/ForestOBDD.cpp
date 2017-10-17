@@ -29,6 +29,7 @@ ForestOBDD::ForestOBDD (ElementSet * set) : OBDD (set)
   return;
 }
 
+
 ForestOBDD::~ForestOBDD ()
 {
   return;

@@ -90,8 +90,8 @@ public:
   //
   void insert_vertex (Vertex *, Vertex *, bool);
 
-  // Adds to the ROBDD all the subsets covered (if bool false) or that 
-  // covers (if bool true) by ElementSubset *
+  // Adds to the ROBDD all the subsets covered by (if bool false) or 
+  // that covers (if bool true) ElementSubset *
   //  
   void add_interval (ElementSubset *, bool);
 

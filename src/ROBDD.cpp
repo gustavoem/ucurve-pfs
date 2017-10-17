@@ -52,8 +52,9 @@ void ROBDD::fill_vlist (Vertex * v, list<Vertex *> ** vlists)
 {   
   if (v == NULL || v->mark)
     return;
+  // unsigned int i = elm_order[v->get_index () - 1] + 1;
   unsigned int i = v->get_index ();
-  vlists[i]->push_back (v);   
+  vlists[i]->push_back (v);
   v->mark = true;
 
   fill_vlist (v->get_child (false), vlists);
@@ -68,19 +69,22 @@ void ROBDD::reduce ()
   Vertex ** subgraph = (Vertex **) calloc (cardinality + 1, 
       sizeof (Vertex *));
   list<Vertex *> ** vlists = (list<Vertex *> **) calloc (set_card + 2, 
-      sizeof (list<Vertex *> *));  
+      sizeof (list<Vertex *> *));
   for (unsigned int i = 1; i <= set_card + 1; i++) 
-    vlists[i] = new list<Vertex *>();
+    vlists[i] = new list<Vertex *> ();
   set<Vertex *> trash_can;
   set<Vertex *>::iterator trash_it = trash_can.begin ();
   unmark_all_vertice ();
   fill_vlist (root, vlists);
 
+  // cout << "\nReducing tree: " << endl;
+  // print ();
+
   int next_id = 0;
   for (int i = set_card + 1; i > 0; i--)
   {
     list<MyVerticeEntry> Q;
-    list<Vertex *> * l = vlists[i];
+    list<Vertex *> * l = vlists[elm_order[i - 1] + 1];
     for (list<Vertex*>::iterator it = l->begin (); it != l->end (); 
         it++)
     {
@@ -88,6 +92,10 @@ void ROBDD::reduce ()
       Vertex * u_lo = u->get_child (false);
       Vertex * u_hi = u->get_child (true);
       VerticeEntry ve;
+      // cout << "1) Queue vertex candidate: " << u << endl;
+      // cout << "\tu_lo = " << u_lo;
+      // cout << " | u_hi = " << u_hi;
+      // cout << " | next_id = " << next_id << endl;
       if (u->get_index () == set_card + 1) 
       {
         // Terminal vertex
@@ -109,8 +117,8 @@ void ROBDD::reduce ()
       else
       {
         // Regular vertex
-        ve.lo_id = u_lo->get_id ();
-        ve.hi_id = u_hi->get_id ();
+        ve.lo_id = u_lo->get_id () - 1;
+        ve.hi_id = u_hi->get_id () - 1;
         ve.v = u;
         Q.push_back (ve);
       }
@@ -133,6 +141,12 @@ void ROBDD::reduce ()
         Vertex * u_lo = u->get_child (false);
         Vertex * u_hi = u->get_child (true);
         next_id++;
+        // cout << "2) From queue vertex: " << u << endl;
+        // cout << "\tu_lo = " << u_lo;
+        // cout << " | u_hi = " << u_hi;
+        // cout << " | next_id = " << next_id << endl;
+        u->set_child (NULL, false);
+        u->set_child (NULL, true);
         u->set_id (next_id);
         subgraph[next_id] = u;
         u->clean_parents ();
@@ -168,6 +182,8 @@ void ROBDD::reduce ()
     delete vlists[i];
   free (vlists);
   free (subgraph);    
+  // cout << "After reduction: " << endl;
+  // print ();
 }
 
 
@@ -181,8 +197,13 @@ void ROBDD::union_to (Vertex * root2)
 void ROBDD::change_subset_value (ElementSubset * subset, 
   bool new_value) 
 {
+  // cout << "\n\n\nBefore adding subset " << subset->print_subset () << endl;
+  // print ();
   OBDD::change_subset_value (subset, new_value);
+  // cout << "After adding subset " << endl;
+  // print ();
   reduce ();
+  
 }
 
 
@@ -207,6 +228,10 @@ void ROBDD::insert_vertex (Vertex * u, Vertex * v, bool side)
 
 void ROBDD::add_interval (ElementSubset * subset, bool orientation)
 {
+  // cout << "\n\n------------------------------------- \nBefore adding interval " << subset->print_subset () << endl;
+  // print ();
   OBDD::add_interval (subset, orientation);
+  // cout << "After adding interval " << endl;
+  // print ();
   reduce ();
 }
