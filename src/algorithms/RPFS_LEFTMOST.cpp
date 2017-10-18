@@ -55,6 +55,7 @@ void RPFS_LEFTMOST::get_minima_list (unsigned int max_size_of_minima_list)
   PFSNode * N;
   Forest_A = new ForestOBDD (set, order);
   Forest_B = new ForestOBDD (set, order);
+  delete[] order;
 
   // the spanning tree T
   N = new PFSNode;
@@ -122,7 +123,7 @@ PFSNode * RPFS_LEFTMOST::lower_forest_branch (ForestOBDD * Forest_A,
   PFSNode * R, * M, * N;
   unsigned int i, m;
 
-  R = Forest_A->get_best_pruning_potential_node1 ();
+  R = Forest_A->get_best_pruning_potential_node2 (false);
   Forest_A->remove_node (R);
   calculate_node_cost (R, Forest_B);
   M = R;
@@ -169,7 +170,7 @@ PFSNode * RPFS_LEFTMOST::upper_forest_branch (ForestOBDD * Forest_A,
   PFSNode * R, * M, * N;
   unsigned int i, m;
 
-  R = Forest_B->get_best_pruning_potential_node1 ();
+  R = Forest_B->get_best_pruning_potential_node2 (true);
   Forest_B->remove_node (R);
   calculate_node_cost (R, Forest_A);
   M = R;

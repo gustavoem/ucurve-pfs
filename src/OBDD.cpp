@@ -78,7 +78,7 @@ void OBDD::set_default_elm_order ()
   unsigned int set_card = elm_set->get_set_cardinality ();
   elm_order = new unsigned int[set_card + 1];
   for (unsigned int i = 0; i < set_card; i++)
-    elm_order[i] = set_card - i - 1;
+    elm_order[i] = i;
   elm_order[set_card] = set_card;
 }
 
