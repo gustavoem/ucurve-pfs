@@ -30,6 +30,14 @@ ForestOBDD::ForestOBDD (ElementSet * set) : OBDD (set)
 }
 
 
+ForestOBDD::ForestOBDD (ElementSet * set, unsigned int * order) : 
+  OBDD (set, order)
+{
+  forest_size = 0;
+  return;
+}
+
+
 ForestOBDD::~ForestOBDD ()
 {
   return;
@@ -220,7 +228,27 @@ PFSNode * ForestOBDD::get_best_pruning_potential_node1 ()
              v->get_child (!false)->get_value ())
       next_v = v->get_child (true);
     else
-      next_v = v->get_child ((int) rand() % 2);
+      next_v = v->get_child (false);
+    v = next_v;
+  }
+  return v->get_node ();
+}
+
+
+PFSNode * ForestOBDD::get_best_pruning_potential_node2 (bool orientation)
+{
+  Vertex * v = root;
+  while (!v->is_terminal ())
+  {
+    Vertex * next_v;
+    if (v->get_child (true)->is_terminal () && 
+        !v->get_child (true)->get_value ())
+      next_v = v->get_child (false);
+    else if (v->get_child (false)->is_terminal () &&
+             v->get_child (!false)->get_value ())
+      next_v = v->get_child (true);
+    else
+      next_v = v->get_child (orientation);
     v = next_v;
   }
   return v->get_node ();

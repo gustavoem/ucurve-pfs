@@ -100,6 +100,9 @@ public:
   // best to prune the upper forest using the leftmost approach
   PFSNode * get_best_pruning_potential_node1 ();
 
+  //
+  PFSNode * get_best_pruning_potential_node2 (bool);
+
   // Returns the number of nodes contained by the OBDD
   //
   unsigned int size ();

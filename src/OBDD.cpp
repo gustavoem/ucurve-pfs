@@ -594,7 +594,7 @@ void OBDD::replace_subtree (Vertex * u, Vertex * v)
   n1 = cardinality;
   n2 = cardinality;
   
-  if (parent != NULL)
+  if (u->get_parents ().size () > 0)
     parent->set_child (v, parent->get_child (true) == u);
   else
     root = v;
