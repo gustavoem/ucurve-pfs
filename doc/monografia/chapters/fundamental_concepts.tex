@@ -7,12 +7,12 @@
 A seleção de características é um problema de otimização combinatória 
 em que procuramos o melhor subconjunto de um conjunto de características
 $S$. O espaço de busca desse problema é o conjunto potência de $S$, 
-$\powerset (S)$, que é uma coleção de todos os subconjuntos possíveis de
+$\powerset (S)$, que é a coleção de todos os subconjuntos possíveis de
  $S$. A função de custo desse problema é uma função $c : \powerset (S) 
 \to \fieldR_{+}$.
 
 \begin{mydefinition}[Problema de seleção de características] Seja $S$
-um conjunto finito não vazio de características e $c$ uma função de 
+um conjunto de características, finito e não vazio, e $c$ uma função de 
 custo. Encontrar $X \in \powerset (S)$ tal que $c (X) \leq c (Y)$,
 $\forall Y \in \powerset (S)$.
 \end{mydefinition}
@@ -32,22 +32,115 @@ reticulado que contenha propriamente esta cadeia.
 \end{mydefinition}
 
 \begin{mydefinition}
-Uma função de custo $c$ é dita decomponível em curvas u se para toda 
-cadeia maximal $X_1, ..., X_l$, $c(X_j) \leq min \{c (X_i),
+Uma função de custo $c$ é dita {\bf \em decomponível em curvas u} se
+para toda cadeia maximal $X_1, ..., X_l$, $c(X_j) \leq min \{c (X_i),
 c (X_k)\}$ sempre que $X_i \subset X_j \subset X_k$, $i, j, k \in 
 \{1, ..., l\}$.
 \end{mydefinition}
 
-\section{Funções de custo para o problema de seleção de características}
-A função de custo utilizada na solução do problema de seleção de 
-características deve, de alguma forma, refletir a qualidade do conjunto 
-avaliado. Por isso, diferentes aplicações de seleção de características
+No contexto de aprendizado de máquina, é comum que as funções de custo
+utilizadas na seleção de característica descrevam curvas próximas do 
+formato de u nas cadeias do reticulado. Esse fenômeno é conhecido em 
+aprendizado e explicaremos como ele ocorre na seção 
+\ref{fund_concept:cost_functions}.
+
+%\section{Aprendizado de máquina}
+%Antes de entender como as funções de custo do problema de seleção de
+%características podem refletir a qualidade de um classificador de 
+%aprendizado de máquina, precisamos definir alguns conceitos sobre o 
+%último. 
+
+%Para efeito de simplicidade, sempre que usarmos o termo aprendizado de
+%máquina neste trabalho, estamos nos referindo a problemas de aprendizado
+%supervisionado. Este tipo de problema consiste em classificar um ponto
+%$\mathbf{x}$ do espaço de interesse em um rótulo $y$, sendo que existe 
+%uma distribuição de probabilidade $F (\mathbf{x}, y)$ chamada de 
+%função-alvo (\foreignword{target function}).
+
+%A primeira etapa na solução de um problema de aprendizado é a escolha de
+%um modelo. Esta escolha define qual será o espaço de hipóteses 
+
+
+\section{Funções de custo e curvas em u} 
+\label{fund_concept:cost_functions} A função de custo utilizada na 
+solução do problema de seleção de características deve, de alguma forma,
+refletir a qualidade do conjunto avaliado. Por isso, diferentes 
+aplicações de seleção de características
 podem ter diferentes funções de custo. No contexto de aprendizado de 
-máquina, uma possível função de custo é a entropia média condicional
+máquina, uma possível função de custo é a entropia condicional média
 (MCE), que já foi utilizada por exemplo na construção de W-operadores
 ~\cite{MJCJB06}.
 
-\begin{mydefinition}
-Dado um conjunto de treinamento com $m$ amostras 
+\begin{mydefinition}\label{def:conditional_entropy}
+Dado um problema de aprendizado em que $Y$ é o conjunto de possíveis
+rótulos e $W = (w_1, ..., w_n)$, com $w_i \in A_i$, é o conjunto de
+variáveis. Seja $W' = (w_{I(1)}, w_{I(2)}, ..., w_{I(k)})$ um conjunto 
+de variáveis (características) escolhidas, $\mathbf{X}$ uma vetor 
+aleatório de tamanho $k$ com ${X_j} \in A_{I(j)}$, e $log0 = 0$. Então,
+a {\bf \em entropia condicional} de $Y$ dado $\mathbf{X} = \mathbf x$ é:
 
+\begin{center}
+$
+\begin{aligned}
+H (Y | \mathbf{X = x}) = - 
+\sum_{y \in Y} \probability (Y = y | \mathbf{X = x}) log \probability (Y = y | \mathbf{X = x})
+\end{aligned}
+$
+\end{center}
 \end{mydefinition}
+
+\begin{mydefinition}
+Sob o mesmo contexto definido em \ref{def:conditional_entropy}, 
+definimos a {\bf \em entropia condicional média} como:
+\begin{center}
+$
+\begin{aligned}
+    \expectation[H (Y | \mathbf{X})] = 
+    \sum_{\mathbf{x} \in \mathbf{X}} H (Y | \mathbf{X = x}) \probability (\mathbf{X = x})
+\end{aligned}
+$
+\end{center}
+\end{mydefinition}
+
+%Vamos usar esta função como exemplo para entender intuitivamente como
+%as funções de custo no problema de seleção de características descrevem
+%curvas em u.
+
+A função $H$, em teoria da informação, mede o inverso da quantidade 
+média de informação que uma variável tem. Esta função atinge valor 
+máximo quando a distribuição de probabilidade da variável aleatória em
+questão é uniforme (todos valores que ela pode assumir são 
+equiprováveis), e tem valores baixos quando essa distribuição é 
+concentrada. 
+
+Problemas de aprendizado em que os rótulos tem uma distribuição 
+concentrada são mais fáceis do os problemas em que essa distribuição é 
+menos concentrada. Tome como exemplo o problema de
+classificar o lançamento de uma moeda $\mathbf{x}$ em $y$ (cara ou 
+coroa); se toda moeda $\mathbf{x}$ é não viciada, então a distribuição
+de $\probability (y | \mathbf{x})$ é pouco concentrada, por outro lado,
+quando a moeda é viciada, a distribuição de 
+$\probability (y | \mathbf{x})$ é concentrada e é mais fácil 
+classificar este problema. Em termos mais formais, o erro do melhor 
+classificador do problema mais fácil é menor do que o erro do melhor 
+classificador do problema mais difícil.
+
+Portanto, como a função $H$ é capaz de medir a concentração da 
+distribuição de $Y$ dado $\mathbf{X = x}$, e quanto maior esta 
+concentração melhor o modelo de aprendizado, podemos de fato dizer que a
+função de custo $\expectation[H (Y | \mathbf{X = x})]$ pode representar
+a qualidade do modelo de classificação que usa o conjunto de 
+características de $\mathbf{X}$.
+
+Agora, como já entendemos um pouco o funcionamento da função de custo
+MCE e como ela se relaciona a qualidade do conjunto de características 
+avaliado, vamos entender o que acontece no modelo de aprendizado e na 
+função de custo que usamos como exemplo quando percorremos uma cadeia
+do reticulado. 
+
+Uma cadeia do poset pode ser vista como uma sequência de possíveis
+escolhas de conjuntos de características em que, a cada passo, 
+adicionamos uma característica a escolha. Isso significa que, a cada 
+passo dado, a variável $\mathbf{x}$ ganha uma componente a mais e,
+portanto, o espaço fica mais granulado, concentrando a distribuição de 
+$\probability (Y | \mathbf{x})$.
