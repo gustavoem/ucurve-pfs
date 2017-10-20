@@ -139,8 +139,40 @@ função de custo que usamos como exemplo quando percorremos uma cadeia
 do reticulado. 
 
 Uma cadeia do poset pode ser vista como uma sequência de possíveis
-escolhas de conjuntos de características em que, a cada passo, 
-adicionamos uma característica a escolha. Isso significa que, a cada 
-passo dado, a variável $\mathbf{x}$ ganha uma componente a mais e,
-portanto, o espaço fica mais granulado, concentrando a distribuição de 
-$\probability (Y | \mathbf{x})$.
+escolhas de conjuntos de características ao qual a cada passo 
+adicionamos uma característica. Isso significa que, a cada passo dado,
+a variável $\mathbf{x}$ ganha uma componente a mais. Quando estamos no 
+início da cadeia poucas variáveis do problema são consideradas, portanto
+há um grande abstração dos objetos sendo classificados, e conforme 
+subimos uma cadeia, diminuímos a abstração dos dados e isso faz com que
+a distribuição de $Y$ dado $\mathbf{x}$ se concentre.
+
+Essa concentração da distribuição da probabilidade explica parcialmente
+a curva em u, porque indica apenas como o custo diminui conforme subimos 
+uma cadeia do reticulado. Ao mesmo tempo, este raciocínio nos leva a 
+pensar que adicionar características sempre melhora a classificação; de 
+fato, o valor de $\expectation[H (Y | \mathbf{X = x})]$ deve diminuir 
+(até algum ponto de saturação) conforme aumentamos o número de variáveis
+do problema. Mas se isso é verdade, por que fazemos seleção de 
+características? A inconsistência entre esse raciocínio e a motivação
+para seleção de característica é que essa linha de raciocínio 
+negligenciou que problemas de classificação (supervisada) dependem de 
+uma amostra da distribuição de $Y$ dado $\mathbf{X = x}$, ou seja, 
+não sabemos nem ao menos calcular $H (Y | \mathbf{X = x})$.
+
+A amostra da distribuição de $Y$ dado $\mathbf{X = x}$ é obtida do 
+conjunto de treinamento do problema de aprendizado e quando o número
+de amostras não é grande o suficiente a qualidade do classificador 
+é comprometida. Além disso, o número de amostras necessárias
+crescer conforme aumentamos a complexidade do modelo de aprendizado 
+utilizado. Considerando que quando subimos uma cadeia do reticulado 
+booleano estamos aumentando a complexidade do modelo, temos que, a
+partir de um certo ponto, a qualidade do classificador que utiliza tal 
+conjunto de características deve piorar, o que justifica junto a 
+explicação anterior a curva em u no custo das cadeias do reticulado.
+
+%Por isso, a entropia condicional média não é uma função de custo 
+%apropriada para o problema de seleção de características, pois ela não
+
+%portanto, especificamos melhor o vetor de entrada, concentrando a 
+%distribuição de $\probability (Y | \mathbf{x})$.
