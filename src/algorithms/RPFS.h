@@ -51,15 +51,15 @@ protected:
     ForestOBDD *);
 
   // Given an ElementSubset that is going to be removed from the lower
-  // forest, finds and add to the lower forest ElementSubsets 
-  // adjacents to it.
+  // forest, finds its child and, if the children is not supposed to be
+  // pruned, adds it to the Forest
   //
   void search_upper_children (ForestOBDD *, 
     PFSNode *, ElementSubset *, ElementSubset *);
 
   // Given an ElementSubset that is going to be removed from the upper
-  // forest, finds and add to the lower forest ElementSubsets 
-  // adjacents to it as roots.
+  // forest, finds its child and, if the children is not supposed to be
+  // pruned, adds it to the Forest
   //
   void search_lower_children (ForestOBDD *, 
     PFSNode *, ElementSubset *, ElementSubset *);
