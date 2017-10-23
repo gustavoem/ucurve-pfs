@@ -27,51 +27,24 @@ $X_2$, ..., $X_l$ tal que $X_1 \subseteq X_2 \subseteq \dots
 \subseteq X_l$.
 \end{mydefinition}
 
-\begin{mydefinition}
-Uma cadeia é dita {\bf \em maximal} se não existe outra cadeia no 
-reticulado que contenha propriamente esta cadeia.
-\end{mydefinition}
 
-\begin{mydefinition}
-Uma função de custo $c$ é dita {\bf \em decomponível em curvas u} se
-para toda cadeia maximal $X_1, ..., X_l$, $c(X_j) \leq max \{c (X_i),
-c (X_k)\}$ sempre que $X_i \subseteq X_j \subseteq X_k$, $i, j, k \in 
-\{1, ..., l\}$.
-\end{mydefinition}
-
-No contexto de aprendizado de máquina, é comum que as funções de custo
-utilizadas na seleção de característica descrevam curvas próximas do 
-formato de u nas cadeias do reticulado. Esse fenômeno é conhecido em 
-aprendizado e explicaremos como ele ocorre na seção 
-\ref{fund_concept:cost_functions}.
-
-%\section{Aprendizado de máquina}
-%Antes de entender como as funções de custo do problema de seleção de
-%características podem refletir a qualidade de um classificador de 
-%aprendizado de máquina, precisamos definir alguns conceitos sobre o 
-%último. 
-
-%Para efeito de simplicidade, sempre que usarmos o termo aprendizado de
-%máquina neste trabalho, estamos nos referindo a problemas de aprendizado
-%supervisionado. Este tipo de problema consiste em classificar um ponto
-%$\mathbf{x}$ do espaço de interesse em um rótulo $y$, sendo que existe 
-%uma distribuição de probabilidade $F (\mathbf{x}, y)$ chamada de 
-%função-alvo (\foreignword{target function}).
-
-%A primeira etapa na solução de um problema de aprendizado é a escolha de
-%um modelo. Esta escolha define qual será o espaço de hipóteses 
-
+%No contexto de aprendizado de máquina, é comum que as funções de custo
+%utilizadas na seleção de característica descrevam curvas próximas do 
+%formato de u nas cadeias do reticulado. Esse fenômeno é conhecido em 
+%aprendizado e explicaremos como ele ocorre na seção 
+%\ref{fund_concept:cost_functions}.
 
 \section{Funções de custo}
 Nesta seção apresentaremos as duas funções de custo mais utilizadas 
 durante este trabalho: a entropia condicional média (MCE) e a soma de 
 subconjuntos. A primeira foi utilizada na seleção de modelos de
 aprendizado, enquanto a segunda foi utilizada para criação e solução
-de instâncias artificiais. A função de soma de subconjuntos é 
-decomponível em curvas u e a MCE não, porém explicaremos como a última 
-função deve ter um formato parecido com a da curva em u.
+de instâncias artificiais. 
+%A função de soma de subconjuntos é 
+%decomponível em curvas u e a MCE não, porém explicaremos como a última 
+%função deve ter um formato parecido com a da curva em u.
 
-\subsection{A curva em u no contexto de aprendizado} 
+\subsection{Custo de modelos de aprendizado computacional} 
 \label{fund_concept:cost_functions} A função de custo utilizada na 
 solução do problema deve, de alguma forma, refletir a qualidade do 
 conjunto de características avaliado. Por isso,
@@ -142,7 +115,7 @@ que a função de custo $\expectation[H (Y | \mathbf{X = x})]$ pode
 representar a qualidade do modelo de classificação que usa o conjunto de
 características de $\mathbf{X}$.
 
-Agora, como já entendemos um pouco o funcionamento da função de custo
+Agora, como já entendemos o funcionamento da função de custo
 MCE e como ela se relaciona com a qualidade do conjunto de 
 características avaliado, vamos entender o que acontece no modelo de 
 aprendizado e na função de custo que usamos como exemplo quando 
@@ -158,19 +131,19 @@ classificados, e conforme subimos uma cadeia, diminuímos a abstração dos
 dados e isso faz com que a distribuição de $Y$ dado $\mathbf{x}$ se 
 concentre.
 
-Essa concentração da distribuição da probabilidade explica parcialmente
-a curva em u, porque indica apenas como o custo diminui conforme subimos 
-uma cadeia do reticulado. Ao mesmo tempo, este raciocínio nos leva a 
-pensar que adicionar características sempre melhora a classificação; de 
-fato, o valor de $\expectation[H (Y | \mathbf{X = x})]$ deve diminuir 
-(até algum ponto de saturação) conforme aumentamos o número de variáveis
-do problema. Mas se isso é verdade, por que fazemos seleção de 
-características? A inconsistência entre esse raciocínio e a motivação
-para seleção de característica é que essa linha de raciocínio 
-negligenciou que problemas de classificação (supervisada) dependem de 
-uma amostra da distribuição de $Y$ dado $\mathbf{X = x}$, ou seja, 
-não sabemos nem ao menos calcular $H (Y | \mathbf{X = x})$, podemos 
-apenas estimar.
+Essa concentração da distribuição da probabilidade indica que o custo 
+dos subconjuntos deve diminuir conforme subimos por uma cadeia do 
+reticulado, ou seja, este raciocínio nos leva a pensar que adicionar 
+características sempre melhora a classificação; de fato, o valor de
+$\expectation[H (Y | \mathbf{X = x})]$ deve diminuir (até algum ponto 
+de saturação) conforme aumentamos o número de variáveis do problema. 
+Mas se isso é verdade, por que fazemos seleção de características? A 
+inconsistência entre esse raciocínio e a motivação para seleção de 
+característica é que essa linha de raciocínio negligenciou que problemas
+de classificação (supervisada) dependem de uma amostra da distribuição 
+de $Y$ dado $\mathbf{X = x}$, ou seja, não sabemos nem ao menos calcular
+$H (Y | \mathbf{X = x})$, podemos apenas estimar o seu valor a partir
+da amostra.
 
 A amostra da distribuição de $Y$ dado $\mathbf{X = x}$ é obtida do 
 conjunto de treinamento do problema de aprendizado e quando o número
@@ -180,8 +153,14 @@ crescer conforme aumentamos a complexidade do modelo de aprendizado
 utilizado. Considerando que quando subimos uma cadeia do reticulado 
 booleano estamos aumentando a complexidade do modelo, temos que, a
 partir de um certo ponto, a qualidade do classificador que utiliza tal 
-conjunto de características deve piorar, o que justifica, junto a 
-explicação anterior, a curva em u no custo das cadeias do reticulado.
+conjunto de características deve piorar. 
+
+Portanto, é esperado que a função de custo descreva um formato de u nas 
+cadeias do reticulado. No começo da cadeia, o custo deve diminuir por 
+conta da maior granularidade dos dados de entrada, até algum ponto onde
+a limitação no número de amostras combinada com o aumento da 
+complexidade do modelo causem erros de estimação que aumentam o erro
+do classificador criado em tal modelo.
 
 No cálculo da entropia condicional média, o efeito do aumento da 
 complexidade de $\mathbf X$ é a estimação ruim de 
@@ -199,10 +178,6 @@ $
 $
 \end{center}
 
-Note que esta função de custo não é necessariamente decomponível em 
-curvas u, porém é provável que hajam poucas violações da regra nas 
-cadeias do reticulado.
-
 \subsection{Soma de subconjuntos}
 Para se avaliar o desempenho dos algoritmos criados neste trabalho, 
 utilizamos instâncias artificiais que são reduções do problema da soma
@@ -218,15 +193,14 @@ custo é $c$:
                                         X \in \powerset(S') \text{.}
 \end{equation*}
 
-Ao contrário da função de custo MCE, a função de custo de somas de 
-subconjuntos é decomponível em curvas em u. Vamos provar esta 
-propriedade agora.
+Assim como a função de custo MCE, a função de custo de somas de 
+subconjuntos também apresenta um formato interessante nas cadeias
+do reticulado booleano. Para toda cadeia com elementos $A \subseteq B 
+\subseteq C$ vale que $c (B) \leq max\{c (A), c (B)\}$. Vamos provar 
+esta propriedade para dois casos disjuntos, quando $|t - \sum_{b \in B}
+b| > 0$ e quando $|t - \sum_{b \in B} b| \leq 0$. Começamos a 
+demonstração definindo $D = B \setminus A$ e $E = C \setminus B$.
 
-Sejam $A$, $B$, $C$ subconjuntos de uma cadeia do reticulado, tal 
-que $A \subseteq B \subseteq C$. Vamos provar para dois casos disjuntos,
-quando $|t - \sum_{b \in B} b| > 0$ e quando 
-$|t - \sum_{b \in B} b| \leq 0$. Começamos a demonstração definindo
-$D = B \setminus A$ e $E = C \setminus B$.
 \begin{itemize}
     \item{se $|t - \sum_{b \in B} b| > 0$, então:}
     \begin{align*}
@@ -254,3 +228,41 @@ $D = B \setminus A$ e $E = C \setminus B$.
 \end{itemize}
 Como acabamos de provar para os dois casos possíveis, temos que 
 $c (B) \leq max \{c (A), c (C)\}$. \qed
+
+\section{O problema U-Curve}
+As duas funções de custo apresentadas na seção ~\ref{fund_concept:cost_functions}
+apresentam um formato em u nas cadeias do reticulado booleano. Vamos
+definir tal propriedade agora.
+
+\begin{mydefinition}
+Uma cadeia é dita {\bf \em maximal} se não existe outra cadeia no 
+reticulado que contenha propriamente esta cadeia.
+\end{mydefinition}
+
+\begin{mydefinition}\label{fund_concepts:ushape}
+Uma função de custo $c$ é dita {\bf \em decomponível em curvas u} se
+para toda cadeia maximal $X_1, ..., X_l$, $c(X_j) \leq max \{c (X_i),
+c (X_k)\}$ sempre que $X_i \subseteq X_j \subseteq X_k$, $i, j, k \in 
+\{1, ..., l\}$.
+\end{mydefinition}
+
+Vamos considerar o caso particular do problema de seleção de 
+características em que a função de custo utilizada é decomponível em 
+curvas u. Este é o problema central deste trabalho.
+
+\begin{mydefinition}[Problema U-Curve]
+Dados um conjunto finito e não-vazio $S$ e uma função de custo $c$ 
+decomponível em curvas em U, encontrar um subconjunto $X \in 
+\powerset (S)$ tal que $c(X) \leq c(Y)$,  $\forall Y \in \powerset (S)$.
+\end{mydefinition}
+
+Provamos que a função de soma de subconjuntos é decomponível em curvas 
+u, mas o mesmo não necessariamente se aplica a função de custo MCE. 
+Entretanto, é comum que o formato da curva dessa função sobre as cadeias
+maximais do reticulado seja aproximadamente um u, ou seja, existem
+poucos pontos que violam a definição \ref{fund_concepts:ushape}. Esse 
+formato da curva pode ser explorado pelo algoritmo de busca do problema
+de seleção de característica, diminuindo o número de nós visitados para
+se descobrir o subconjunto de custo mínimo.
+
+
