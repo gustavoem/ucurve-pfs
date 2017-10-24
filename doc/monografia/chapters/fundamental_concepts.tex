@@ -231,8 +231,8 @@ $c (B) \leq max \{c (A), c (C)\}$. \qed
 
 \section{O problema U-Curve}
 As duas funções de custo apresentadas na seção ~\ref{fund_concept:cost_functions}
-apresentam um formato em u nas cadeias do reticulado booleano. Vamos
-definir tal propriedade agora.
+descrevem curvas que tem um formato em U (a menos de oscilações) nas 
+cadeias do reticulado booleano, vamos definir esta propriedade agora.
 
 \begin{mydefinition}
 Uma cadeia é dita {\bf \em maximal} se não existe outra cadeia no 
@@ -240,15 +240,15 @@ reticulado que contenha propriamente esta cadeia.
 \end{mydefinition}
 
 \begin{mydefinition}\label{fund_concepts:ushape}
-Uma função de custo $c$ é dita {\bf \em decomponível em curvas u} se
+Uma função de custo $c$ é dita {\bf \em decomponível em curvas U} se
 para toda cadeia maximal $X_1, ..., X_l$, $c(X_j) \leq max \{c (X_i),
 c (X_k)\}$ sempre que $X_i \subseteq X_j \subseteq X_k$, $i, j, k \in 
 \{1, ..., l\}$.
 \end{mydefinition}
 
-Vamos considerar o caso particular do problema de seleção de 
-características em que a função de custo utilizada é decomponível em 
-curvas u. Este é o problema central deste trabalho.
+Vamos considerar então o problema de seleção de características em que a
+função de custo utilizada é decomponível em curvas U. Este é o problema 
+central deste trabalho.
 
 \begin{mydefinition}[Problema U-Curve]
 Dados um conjunto finito e não-vazio $S$ e uma função de custo $c$ 
@@ -256,13 +256,24 @@ decomponível em curvas em U, encontrar um subconjunto $X \in
 \powerset (S)$ tal que $c(X) \leq c(Y)$,  $\forall Y \in \powerset (S)$.
 \end{mydefinition}
 
-Provamos que a função de soma de subconjuntos é decomponível em curvas 
-u, mas o mesmo não necessariamente se aplica a função de custo MCE. 
-Entretanto, é comum que o formato da curva dessa função sobre as cadeias
-maximais do reticulado seja aproximadamente um u, ou seja, existem
-poucos pontos que violam a definição \ref{fund_concepts:ushape}. Esse 
-formato da curva pode ser explorado pelo algoritmo de busca do problema
-de seleção de característica, diminuindo o número de nós visitados para
-se descobrir o subconjunto de custo mínimo.
+O problema U-Curve é um caso particular do problema de seleção de 
+características com uma propriedade que nos permite achar o mínimo
+global sem a necessidade de avaliar cada ponto do reticulado booleano. 
+Isso é possível porque a propriedade U-Curve (da decomponibilidade da 
+função de custo em curvas U) nos garante que o custo dos elementos de 
+uma cadeia não podem cair uma vez que aumentaram. Sejam por exemplo
+dois elementos $A \subseteq B$ de $\powerset (S)$, então:
+\begin{itemize}
+    \item{se $c(B) > c (A)$, então $c (X) > c (A)$ para todo $X$
+        do intervalo $[B, \powerset (S)]$;}
+    \item{se $c(A) > c (B)$, então $c (X) > c (B)$ para todo $X$ 
+        do intervalo $[\emptyset, A]$;}
+\end{itemize}
 
+Desta maneira, quando um problema de seleção de características tem uma 
+função de custo decomponível em curvas U a menos de algumas oscilações,
+é vantajoso aproximar a solução deste problema pela solução encontrada
+por um algoritmo de busca do problema U-Curve. Tal abordagem não é 
+ótima, porém, como existem poucas oscilações da função de custo, é 
+provável que a solução encontrada ainda seja próxima da melhor solução.
 
