@@ -1,6 +1,6 @@
 all: main.tex chapters/*.tex references.bib
 	pdflatex main.tex
-	biber main
+	bibtex main
 	pdflatex main.tex
 
 clean:
