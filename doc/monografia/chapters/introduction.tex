@@ -32,24 +32,60 @@ estimação da distribuição de probabilidade de $(X, Y)$.
 
 Quando ocorre a estimação da distribuição de probabilidade conjunta de 
 $(X, Y)$, o custo das cadeias do reticulado booleano reproduzem um
-fenômeno conhecido em aprendizado de máquina, ``curvas em u''. Para 
+fenômeno conhecido em aprendizado de máquina, ``curvas em U''. Para 
 entender intuitivamente esse fenômeno, devemos observar que conforme 
 subimos uma cadeia do reticulado estamos aumentando o número de 
 características sendo consideradas, portanto existem mais possíveis
 valores de $X$, permitindo descrever melhor os valores de $Y$; por outro
 lado, também precisaríamos de mais amostras para estimar bem 
-$\probability (X, Y)$, e quando isso não é possível erros de estimação
-fazem com que o custo de $X$ suba.
+$\probability (X, Y)$, e, quando isso não é possível, erros de estimação
+fazem com que o custo de $X$ aumente.
 
 Podemos então considerar um caso particular do problema de seleção de
-características em que a função de custo descreve ``curvas em u''
+características em que a função de custo descreve ``curvas em U''
 em todas as cadeias do reticulado booleano. Esse caso particular é 
-conhecido como problema U-curve e existe na literatura algoritmos ótimos
-para esse problema como o \algname {U-Curve Branch and Bound (UBB), 
-U-Curve-Search (UCS) e Poset Forest Search (PFS)}. A solução do problema
-U-Curve tem aplicações em problemas de aprendizado como projeto de 
-W-operadores \cite{MJCJJB} e preditores na estimação de Redes Gênicas 
+conhecido como problema U-curve e existem na literatura algoritmos 
+ótimos para esse problema como o \algname {U-Curve Branch and Bound 
+(UBB), U-Curve-Search (UCS) e Poset Forest Search (PFS)}. A solução do 
+problema U-Curve tem aplicações em problemas de aprendizado como projeto
+de W-operadores \cite{MJCJJB} e preditores na estimação de Redes Gênicas 
 Probabilísticas \cite{BCJMJ07}.
 
+O problema U-Curve é NP-difícil \cite{REI12}, e os algoritmos 
+apresentados na literatura tem limitações, tanto do ponto de vista de
+tempo de computação quanto do uso de memória. Dentre estes algoritmos,
+destacamos o PFS, que foi criado como um melhoramento do algoritmo UBB. 
+O algoritmo PFS organiza o reticulado booleano em florestas, e essa 
+organização em árvores, que são disjuntas, indica que a paralelização 
+desse algoritmo deve trazer ganhos do ponto de vista de consumo de 
+tempo. Além disso, a escolha de árvores para etapa de ramificação no 
+algoritmo também pode ser explorada e pode trazer ganhos em respeito ao
+consumo de tempo e de memória.
 
 \section{Objetivos do Trabalho}
+Podemos dividir os objetivos deste trabalho em objetivos gerais e 
+específicos.
+{\bf Objetivos gerais}:
+\begin{itemize}
+\item{criar algoritmos para o problema U-Curve que sejam mais eficientes
+em consumo de tempo e/ou de memória do que as presentes soluções;}
+\item{verificar a qualidade das soluções econtradas no desenvolvimento
+de modelos de aprendizado computacional.}
+\end{itemize}
+{\bf Objetivos específicos}:
+\begin{itemize}
+\item{estudar o algoritmo \algname {Poset Forest Search (PFS)};}
+\item{modificar a etapa ramificação do algoritmo \algname{PFS} e avaliar
+as mudanças na dinâmica do algoritmo;}
+\item{paralelizar o algoritmo \algname{PFS}, com as modificações feitas
+na etapa de ramificação (se houver melhorias com tal mudança);}
+\item{criar um novo algoritmo, de natureza paralela, para o roblema 
+U-Curve, o \algname{PUCS};}
+\item{avaliar o consumo de recursos computacionais dos algoritmos 
+criados, comparando com os algoritmos já presentes na literatura como
+o \algname{UBB};}
+\item{avaliar os conjuntos de características selecionados por cada 
+algoritmo na seleção de modelos de aprendizado computacional, usando 
+como exemplo conjuntos de dados do repositório UCI Machine Learning 
+Repository.}
+\end{itemize}

@@ -110,8 +110,8 @@ classificador do problema mais difícil.
 
 Portanto, como a função $H$ é capaz de medir a concentração da 
 distribuição de $Y$ dado $\mathbf{X = x}$, e quanto maior esta 
-concentração mais fácil é o modelo de aprendizado, podemos  dizer
-que a função de custo $\expectation[H (Y | \mathbf{X = x})]$ pode 
+concentração mais fácil é o modelo de aprendizado, podemos dizer
+que a função de custo $\expectation[H (Y | \mathbf{X})]$ pode 
 representar a qualidade do modelo de classificação que usa o conjunto de
 características de $\mathbf{X}$.
 
@@ -135,15 +135,15 @@ Essa concentração da distribuição da probabilidade indica que o custo
 dos subconjuntos deve diminuir conforme subimos por uma cadeia do 
 reticulado, ou seja, este raciocínio nos leva a pensar que adicionar 
 características sempre melhora a classificação; de fato, o valor de
-$\expectation[H (Y | \mathbf{X = x})]$ deve diminuir (até algum ponto 
+$\expectation[H (Y | \mathbf{X})]$ deve diminuir (até algum ponto 
 de saturação) conforme aumentamos o número de variáveis do problema. 
 Mas se isso é verdade, por que fazemos seleção de características? A 
 inconsistência entre esse raciocínio e a motivação para seleção de 
-característica é que essa linha de raciocínio negligenciou que problemas
-de classificação (supervisada) dependem de uma amostra da distribuição 
-de $Y$ dado $\mathbf{X = x}$, ou seja, não sabemos nem ao menos calcular
-$H (Y | \mathbf{X = x})$, podemos apenas estimar o seu valor a partir
-da amostra.
+característica é que essa linha de raciocínio negligenciou o fato de que 
+problemas de classificação (supervisada) dependem de uma amostra da 
+distribuição de $Y$ dado $\mathbf{X = x}$, ou seja, não sabemos nem ao 
+menos calcular $H (Y | \mathbf{X = x})$, podemos apenas estimar o seu 
+valor a partir da amostra.
 
 A amostra da distribuição de $Y$ dado $\mathbf{X = x}$ é obtida do 
 conjunto de treinamento do problema de aprendizado e quando o número
@@ -155,7 +155,7 @@ booleano estamos aumentando a complexidade do modelo, temos que, a
 partir de um certo ponto, a qualidade do classificador que utiliza tal 
 conjunto de características deve piorar. 
 
-Portanto, é esperado que a função de custo descreva um formato de u nas 
+Portanto, é esperado que a função de custo descreva um formato de U nas 
 cadeias do reticulado. No começo da cadeia, o custo deve diminuir por 
 conta da maior granularidade dos dados de entrada, até algum ponto onde
 a limitação no número de amostras combinada com o aumento da 
