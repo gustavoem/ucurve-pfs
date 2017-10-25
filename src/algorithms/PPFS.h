@@ -36,61 +36,80 @@ class PPFS : public Solver
 
 protected:
 
+  typedef map<string, PFSNode *> ForestMap;
+
+  // Stores a pointer to the list of minima
+  //
+  list<ElementSubset *> * min_list_ptr; 
+
+  // Storest number of processors in the computer
+  //
+  unsigned int nof_processors;
+
   // A threshold to keep the list of minima small
   //
   float bound;  
 
+  // Performs a branch on the lower forest and updates the upper forest
+  //
+  void lower_forest_iteration (ForestMap *, ForestMap *);
+
+  // Performs a branch on the upper forest and updates the lower forest
+  //
+  void upper_forest_iteration (ForestMap *, ForestMap *);
+
   // Branches on the lower forest
   //
-  PFSNode * lower_forest_branch (map<string, PFSNode *> *,
-   map<string, PFSNode *> *);
+  PFSNode * lower_forest_branch (ForestMap *, ForestMap *);
 
   // Branches on the upper forest
   // 
-  PFSNode * upper_forest_branch (map<string, PFSNode *> *, 
-    map<string, PFSNode *> *);
+  PFSNode * upper_forest_branch (ForestMap *, ForestMap *);
 
   // Given an ElementSubset that is going to be removed from the lower
   // forest, finds its child and, if the children is not supposed to be
   // pruned, adds it to the Forest
   //
-  void search_upper_children (map<string, PFSNode *> *, 
-    PFSNode *, ElementSubset *, ElementSubset *);
+  void search_upper_children (ForestMap *, PFSNode *, ElementSubset *, 
+    ElementSubset *);
 
   // Given an ElementSubset that is going to be removed from the upper
   // forest, finds its child and, if the children is not supposed to be
   // pruned, adds it to the Forest
   //
-  void search_lower_children (map<string, PFSNode *> *, 
-    PFSNode *, ElementSubset *, ElementSubset *);
+  void search_lower_children (ForestMap *, PFSNode *, ElementSubset *, 
+    ElementSubset *);
 
   // Given an ElementSubset X that is being removed from the upper
   // forest, updates the forest creating roots with elements that
   // contains X until we find a root that contains X or we reach S
   // ElementSubset.
   //
-  void search_upper_root (map<string, PFSNode *> *, ElementSubset *);
+  void search_upper_root (ForestMap *, ElementSubset *);
 
   // Given an ElementSubset X that is being removed from the lower
   // forest, updates the forest creating roots with elements that are
   // contained by X until we find a root that is contained by X or we
   // reach the empty set ElementSubset.
   //
-  void search_lower_root (map<string, PFSNode *> *, ElementSubset *);
+  void search_lower_root (ForestMap *, ElementSubset *);
 
   // Updates the upper forest after branching on the lower forest.
   //
-  void upper_forest_pruning (map<string, PFSNode *> *, PFSNode *);
+  void upper_forest_pruning (ForestMap *, PFSNode *);
 
   // Updates the lower forest after branching on the upper forest
   //
-  void lower_forest_pruning (map<string, PFSNode *> *, PFSNode *);
+  void lower_forest_pruning (ForestMap *, PFSNode *);
 
   // Calculates the cost of a PFSNode, trying to use the dual forest
   // to fetch the already calculated cost if possible.
   //
-  void calculate_node_cost (PFSNode *, map<string, PFSNode *> *);
+  void calculate_node_cost (PFSNode *, ForestMap *);
 
+  // Modified version of store_minimum_subset that is thread safe
+  //
+  void parallel_store_minimum_subset (ElementSubset *);
 
 public:
 

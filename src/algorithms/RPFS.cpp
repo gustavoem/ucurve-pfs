@@ -69,7 +69,6 @@ void RPFS::get_minima_list (unsigned int max_size_of_minima_list)
   N->adjacent->set_complete_subset ();
   N->leftmost = 0;  // the first index is zero
   N->cost = FLT_MAX;
-  // Forest_B.insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
   Forest_B->add_node (N);
 
   srand ((unsigned) time (NULL));

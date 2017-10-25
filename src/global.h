@@ -32,6 +32,7 @@
 # include <map>
 # include <sstream>
 # include <string>
+# include <omp.h>
 
 // Infinity flag for several algorithms and cost functions.
 //
