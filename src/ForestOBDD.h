@@ -103,6 +103,9 @@ public:
   //
   PFSNode * get_best_pruning_potential_node2 (bool);
 
+  //
+  PFSNode * get_random_node ();
+
   // Returns the number of nodes contained by the OBDD
   //
   unsigned int size ();

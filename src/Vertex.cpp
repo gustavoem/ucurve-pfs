@@ -27,6 +27,7 @@ Vertex::Vertex ()
   lo = NULL;
   hi = NULL;
   node = NULL;
+  weight = 0;
 }
 
 
@@ -39,6 +40,7 @@ Vertex::Vertex (const Vertex& v)
   index = v.index;
   id = v.id;
   node = NULL;
+  weight = v.weight;
 }
 
 Vertex::Vertex (Element * elm, unsigned int index) 
@@ -49,6 +51,7 @@ Vertex::Vertex (Element * elm, unsigned int index)
   this->index = index;
   this->id = index;
   node = NULL;
+  weight = 0;
 }
 
 
@@ -61,6 +64,7 @@ Vertex::Vertex (bool value, unsigned int index)
   this->index = index;
   this->id = index;
   node = NULL;
+  weight = 0;
 }
 
 
@@ -206,4 +210,16 @@ PFSNode * Vertex::get_node ()
 void Vertex::set_node (PFSNode * node)
 {
   this->node = node;
+}
+
+
+unsigned int Vertex::get_weight ()
+{
+  return this->weight;
+}
+
+
+void Vertex::set_weight (unsigned int w)
+{
+  this->weight = w;
 }

@@ -16,3 +16,5 @@
         pfs_leftmost PFS_LEFTMOST
                 rpfs RPFS
        rpfs_leftmost RPFS_LEFTMOST
+                ppfs PPFS
+           rpfs_rand RPFS_RAND

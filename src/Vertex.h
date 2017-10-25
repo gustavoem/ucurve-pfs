@@ -18,6 +18,8 @@ protected:
   unsigned int id;      // just an integer for identification
   unsigned int index;   // the index of *var at the ordering plus one
   PFSNode * node;       // stores a PFS node. Only valid for leafs
+  unsigned int weight;  // used to store the number of subsets "below"
+                        // this vertex
   list<Vertex *> parents;
   
 public:
@@ -116,6 +118,14 @@ public:
   // Sets the node of this vertex
   //
   void set_node (PFSNode *);
+
+  // Returns the weight associated to this vertex
+  //
+  unsigned int get_weight ();
+
+  // Sets the weight of this vertex
+  //
+  void set_weight (unsigned int);
 };
 
 #endif /* VERTEX_H_ */

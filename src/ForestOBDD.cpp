@@ -122,13 +122,14 @@ Vertex * ForestOBDD::change_subset_value (ElementSubset * subset,
 
   while (idx < set_card)
   {
-    current_edge = subset->has_element (idx);
-    if ((current->get_index () - 1) != idx)
+    current_edge = subset->has_element (elm_order[idx]);
+    if ((current->get_index () - 1) != elm_order[idx])
     {
       if (last == NULL) 
       {
         Vertex * new_root;
-        new_root = new Vertex (elm_set->get_element (idx), idx + 1);
+        new_root = new Vertex (elm_set->get_element (elm_order[idx]), 
+          elm_order[idx] + 1);
         cardinality++;
         new_root->set_child (root, current_edge);
         new_root->set_child (copy_subtree (root), !current_edge);
@@ -136,11 +137,15 @@ Vertex * ForestOBDD::change_subset_value (ElementSubset * subset,
       }
       else
       {
-        last_edge = subset->has_element (idx - 1);
-        current = new Vertex (elm_set->get_element (idx), idx + 1);
+        last_edge = subset->has_element (elm_order[idx - 1]);
+        current = new Vertex (elm_set->get_element (elm_order[idx]), 
+          elm_order[idx] + 1);
         insert_vertex (last, current, last_edge);
       }
     }
+
+    unsigned int current_weight = current->get_weight ();
+    current->set_weight ((unsigned int) current_weight * 2 - 1);
 
     // Actual change of values
     if (idx == set_card - 1) 
@@ -225,7 +230,7 @@ PFSNode * ForestOBDD::get_best_pruning_potential_node1 ()
         !v->get_child (true)->get_value ())
       next_v = v->get_child (false);
     else if (v->get_child (false)->is_terminal () &&
-             v->get_child (!false)->get_value ())
+        !v->get_child (false)->get_value ())
       next_v = v->get_child (true);
     else
       next_v = v->get_child (false);
@@ -245,10 +250,38 @@ PFSNode * ForestOBDD::get_best_pruning_potential_node2 (bool orientation)
         !v->get_child (true)->get_value ())
       next_v = v->get_child (false);
     else if (v->get_child (false)->is_terminal () &&
-             v->get_child (!false)->get_value ())
+        !v->get_child (false)->get_value ())
       next_v = v->get_child (true);
     else
       next_v = v->get_child (orientation);
+    v = next_v;
+  }
+  return v->get_node ();
+}
+
+
+PFSNode * ForestOBDD::get_random_node ()
+{
+  Vertex * v = root;
+  while (!v->is_terminal ())
+  {
+    Vertex * next_v;
+    Vertex * hi = v->get_child (true);
+    Vertex * lo = v->get_child (false);
+
+    if (hi->is_terminal () && !hi->get_value ())
+      next_v = v->get_child (false);
+    else if (lo->is_terminal () && !lo->get_value ())
+      next_v = v->get_child (true);
+    else
+    {
+      unsigned int tot_weight = hi->get_weight () + lo->get_weight ();
+      unsigned int rand_int = rand () % tot_weight;
+      if (rand_int <= lo->get_weight ())
+        next_v = lo;
+      else
+        next_v = hi;
+    }
     v = next_v;
   }
   return v->get_node ();
