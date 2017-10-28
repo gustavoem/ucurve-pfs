@@ -74,7 +74,6 @@ void PFSROBDD::get_minima_list (unsigned int max_size_of_minima_list)
   while ( ( (Forest_A.size () > 0) && (Forest_B.size () > 0) ) &&
         (! cost_function->has_reached_threshold ()) )
   {
-    srand ( (unsigned) time (NULL) );
     direction = rand () % 2;
 
     number_of_iterations++;
@@ -128,7 +127,6 @@ PFSROBDD::Node * PFSROBDD::lower_forest_branch
   unsigned int i, m;
 
   // TODO: actual random selection of a tree
-  srand ( (unsigned) time (NULL) );
   i = rand () % 2;
   if (i == 0)
     it = Forest_A->begin ();
@@ -219,7 +217,6 @@ PFSROBDD::Node * PFSROBDD::upper_forest_branch
   unsigned int i, m;
 
     // TODO: actual random selection of a tree
-  srand ( (unsigned) time (NULL) );
   i = rand () % 2;
   if (i == 0)
     it = Forest_B->begin ();

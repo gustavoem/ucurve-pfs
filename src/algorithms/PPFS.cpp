@@ -59,7 +59,7 @@ void PPFS::get_minima_list (unsigned int max_size_of_minima_list)
   N->leftmost = 0;  // the first index is zero
   N->cost = FLT_MAX;
   N->vertex->cost = FLT_MAX;
-  Forest_A.insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
+  Forest_A.insert (ForestEntry (N->vertex->print_subset (), N));
 
   // the spanning tree T'
   N = new PFSNode;
@@ -71,18 +71,13 @@ void PPFS::get_minima_list (unsigned int max_size_of_minima_list)
   N->leftmost = 0;  // the first index is zero
   N->cost = FLT_MAX;
   N->vertex->cost = FLT_MAX;
-  Forest_B.insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
+  Forest_B.insert (ForestEntry (N->vertex->print_subset (), N));
 
-  nof_processors = omp_get_num_procs ();
-
-  srand ( (unsigned) time (NULL) );
   while ( ( (Forest_A.size () > 0) && (Forest_B.size () > 0) ) &&
         (! cost_function->has_reached_threshold ()) )
   {
     direction = rand () % 2;
     number_of_iterations++;
-
-    cout << "\n\nDirection = " << direction << endl;
 
     if (direction == 0)
       lower_forest_iteration (&Forest_A, &Forest_B);
@@ -106,41 +101,28 @@ void PPFS::lower_forest_iteration (ForestMap * Forest_A,
   {
     PFSNode * N;
     N = lower_forest_branch (Forest_A, Forest_B);
-    
+     
     if (N != NULL)
-    {
-      if (! cost_function->has_reached_threshold ())
+      if (!cost_function->has_reached_threshold ())
         upper_forest_pruning (Forest_B, N);
 
-      #pragma omp critical
-      cout << "lower_forest_iteration is deleting " << N->vertex->print_subset () << endl;
-      delete N->vertex;
-      delete N->adjacent;
-      delete N;
-    }
-    #pragma omp critical
-    cout << "Thread " << omp_get_thread_num () << " exiting!" << endl;
+    delete_node (N);
   }
-  cout << "Batch finished!!" << endl;
 }
 
 
 void PPFS::upper_forest_iteration (ForestMap * Forest_A, 
   ForestMap * Forest_B)
 {
-  PFSNode * N;
-  N = upper_forest_branch (Forest_A, Forest_B);
-
-  if (N != NULL)
+  #pragma omp parallel
   {
-    if (! cost_function->has_reached_threshold ())
-      lower_forest_pruning (Forest_A, N);
+    PFSNode * N;
+    N = upper_forest_branch (Forest_A, Forest_B);
+    if (N != NULL)
+      if (!cost_function->has_reached_threshold ())
+        lower_forest_pruning (Forest_A, N);
 
-    #pragma omp critical
-    cout << "upper_forest_iteration is deleting " << N->vertex->print_subset () << endl;
-    delete N->vertex;
-    delete N->adjacent;
-    delete N;
+    delete_node (N); 
   }
 }
 
@@ -158,8 +140,6 @@ PFSNode * PPFS::lower_forest_branch (ForestMap * Forest_A,
       R = NULL;
     else
     {
-      unsigned int tid = omp_get_thread_num ();
-      // cout << "Thread " << tid << " wants a tree to branch on " << endl;
       i = rand () % 2;
       if (i == 0)
         it = Forest_A->begin ();
@@ -169,8 +149,7 @@ PFSNode * PPFS::lower_forest_branch (ForestMap * Forest_A,
         it--;
       }
 
-      R = it->second;         // selects a tree from the forest
-      cout << "Thread " << tid << " selected " << R->vertex->print_subset () << endl;
+      R = it->second;
       Forest_A->erase (it);
     }
   }
@@ -179,34 +158,34 @@ PFSNode * PPFS::lower_forest_branch (ForestMap * Forest_A,
   if (R == NULL)
     return NULL;
 
+  #pragma omp critical
   calculate_node_cost (R, Forest_B);
   M = R;
   N = R;
 
   // Walk on the tree whose root is R[vertex]
-  //
   while (!N->adjacent->is_empty () && N->cost <= M->cost)
   {
     #pragma omp critical
-    Forest_A->insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
+    Forest_A->insert (ForestEntry (N->vertex->print_subset (), N));
 
     M = N;
     m = M->adjacent->remove_random_element ();
     N = new PFSNode;
-    N->vertex = new ElementSubset ("", set);
-    N->vertex->copy (M->vertex);
+    N->vertex = new ElementSubset (M->vertex);
     N->vertex->add_element (m);
+    N->leftmost = m + 1;  // the index starts with zero
+    N->adjacent = new ElementSubset ("", set);
+    for (i = N->leftmost; i < set->get_set_cardinality (); i++)
+      N->adjacent->add_element (i);
+    N->cost = FLT_MAX;
+
+    #pragma omp critical
+    calculate_node_cost (N, Forest_B);
 
     #pragma omp critical
     store_visited_subset (N->vertex);
-
-    N->leftmost = m + 1;  // the index starts with zero
-    N->adjacent = new ElementSubset ("", set);
-    N->cost = FLT_MAX;
-    for (i = N->leftmost; i < set->get_set_cardinality (); i++)
-      N->adjacent->add_element (i);
-    calculate_node_cost (N, Forest_B);
-
+  
     if (N->cost <= M->cost)
     {
       N->vertex->cost = N->cost;
@@ -236,7 +215,6 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
       R = NULL;
     else
     {
-      unsigned int tid = omp_get_thread_num ();
       i = rand () % 2;
       if (i == 0)
         it = Forest_B->begin ();
@@ -246,8 +224,7 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
         it--;
       }
 
-      R = it->second;         // selects a tree from the forest
-      cout << "Thread " << omp_get_thread_num () << " selected " << R->vertex->print_subset () << endl;
+      R = it->second;
       Forest_B->erase (it);
     }
   }
@@ -261,28 +238,27 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
   N = R;
 
   // Walk on the tree whose root is R[vertex]
-  //
   while (!N->adjacent->is_empty () && N->cost <= M->cost)
   {
     #pragma omp critical
-    Forest_B->insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
+    Forest_B->insert (ForestEntry (N->vertex->print_subset (), N));
 
     M = N;
     m = M->adjacent->remove_random_element ();
     N = new PFSNode;
-    N->vertex = new ElementSubset ("", set);
-    N->vertex->copy (M->vertex);
+    N->vertex = new ElementSubset (M->vertex);
     N->vertex->remove_element (m);
-
-    #pragma omp critical
-    store_visited_subset (N->vertex);
-
     N->leftmost = m + 1;  // the index starts with zero
     N->adjacent = new ElementSubset ("", set);
     N->cost = FLT_MAX;
     for (i = N->leftmost; i < set->get_set_cardinality (); i++)
       N->adjacent->add_element (i);
+
+    #pragma omp critical
     calculate_node_cost (N, Forest_A);
+
+    #pragma omp critical
+    store_visited_subset (N->vertex);
 
     if (N->cost <= M->cost)
     {
@@ -300,11 +276,10 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
 }
 
 
-void PPFS::search_upper_root (ForestMap * Forest_B, 
-  ElementSubset * M)
+void PPFS::search_upper_root (ForestMap * Forest_B, ElementSubset * M)
 {
   ForestMap::iterator it;
-  PFSNode * N;
+  PFSNode * N, * _M;
   unsigned int i;
   int m, k = set->get_set_cardinality () - 1;
 
@@ -314,41 +289,40 @@ void PPFS::search_upper_root (ForestMap * Forest_B,
   while (k >= 0)
   {
     M->add_element (k);
+    
     #pragma omp critical
     it = Forest_B->find (M->print_subset ());
     if (it != Forest_B->end ())
     {
-      it->second->adjacent->remove_element (k);
+      #pragma omp critical
+      {
+        _M = get_node (Forest_B, M->print_subset ());
+        if (_M != NULL)
+          _M->adjacent->remove_element (k);
+      }
       k = -1;
     }
     else
     {
       N = new PFSNode;
-      N->vertex = new ElementSubset ("", set);
-      N->vertex->copy (M);
-      #pragma omp critical
-      store_visited_subset (N->vertex);
-
+      N->vertex = new ElementSubset (M);
       m = k;
-      while ((k >= 0) && (M->has_element ((unsigned int) k)) )
+      while (k >= 0 && M->has_element ((unsigned int) k))
         k--;
-      N->leftmost = k + 1;  // the index starts with zero
-
+      N->leftmost = k + 1; 
       N->adjacent = new ElementSubset ("", set);
       for (i = N->leftmost; i < set->get_set_cardinality (); i++)
         N->adjacent->add_element (i);
       N->adjacent->remove_element ((unsigned int) m);
       N->cost = FLT_MAX; // infinity
+      
+      #pragma omp critical
+      store_visited_subset (N->vertex);
 
       #pragma omp critical
-      Forest_B->insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
-
-      // if the algorithm is working under heuristic mode 1 or 2
-      // and has reached threshold, then the search is stopped.
-      if (cost_function->has_reached_threshold ())
-        return;
-    } // else
-  } // while
+      Forest_B->insert (ForestEntry (N->vertex->print_subset (), N));
+    } 
+  }
 }
 
 
@@ -356,7 +330,7 @@ void PPFS::search_lower_root (ForestMap * Forest_A,
   ElementSubset * M)
 {
   ForestMap::iterator it;
-  PFSNode * N;
+  PFSNode * N, * _M;
   unsigned int i;
   int m, k = set->get_set_cardinality () - 1;
 
@@ -370,19 +344,20 @@ void PPFS::search_lower_root (ForestMap * Forest_A,
     it = Forest_A->find (M->print_subset ());
     if (it != Forest_A->end ())
     {
-      it->second->adjacent->remove_element (k);
+      #pragma omp critical
+      {
+        _M = get_node (Forest_A, M->print_subset ());
+        if (_M != NULL)
+          _M->adjacent->remove_element (k);
+      }
       k = -1;
     }
     else
     {
       N = new PFSNode;
-      N->vertex = new ElementSubset ("", set);
-      N->vertex->copy (M);
-      #pragma omp critical
-      store_visited_subset (N->vertex);
-
+      N->vertex = new ElementSubset (M);
       m = k;
-      while ((k >= 0) && (! M->has_element ((unsigned int) k)) )
+      while (k >= 0 && !M->has_element ((unsigned int) k))
         k--;
       N->leftmost = k + 1;  // the index starts with zero
       N->adjacent = new ElementSubset ("", set);
@@ -392,14 +367,12 @@ void PPFS::search_lower_root (ForestMap * Forest_A,
       N->cost = FLT_MAX; // infinity
 
       #pragma omp critical
-      Forest_A->insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
+      store_visited_subset (N->vertex);
 
-      // if the algorithm is working under heuristic mode 1 or 2
-      // and has reached threshold, then the search is stopped.
-      if (cost_function->has_reached_threshold ())
-        return;
-    } // else
-  } // while
+      #pragma omp critical
+      Forest_A->insert (ForestEntry (N->vertex->print_subset (), N));
+    }
+  }
 }
 
 
@@ -412,10 +385,9 @@ void PPFS::search_lower_children (ForestMap * Forest_B, PFSNode * N,
   unsigned int j;
 
   i = set->get_set_cardinality () - 1;  // i = n
-  while ((i >= 0) && (M->has_element (i)) )
+  while (i >= 0 && M->has_element (i))
   {
     M->remove_element (i); // A = M - {s_i}
-
     if (M->contains (Y)) // if B contains Y
     {
       #pragma omp critical
@@ -423,43 +395,33 @@ void PPFS::search_lower_children (ForestMap * Forest_B, PFSNode * N,
         it = Forest_B->find (M->print_subset ());
         if (it != Forest_B->end ())
         {
-          cout << "search_lower_children is deleting " << N->vertex->print_subset () << endl;
-          delete it->second->vertex;
-          delete it->second->adjacent;
-          delete it->second;
+          delete_node (it->second);
           Forest_B->erase (it);
         }
       }
     }
     else
     {
-      if (((N == NULL) || (N->adjacent->has_element (i)) ) )
+      if (N == NULL || N->adjacent->has_element (i))
       {
         B = new PFSNode;
-        B->vertex = new ElementSubset ("", set);
-        B->vertex->copy (M);
-        #pragma omp critical
-        store_visited_subset (B->vertex);
-
-        B->leftmost = i + 1;  // the index starts with zero
+        B->vertex = new ElementSubset (M);
+        B->leftmost = i + 1;
         B->adjacent = new ElementSubset ("", set);
         for (j = B->leftmost; j < set->get_set_cardinality (); j++)
           B->adjacent->add_element (j);
-
         B->cost = FLT_MAX; // infinity
 
         #pragma omp critical
-        Forest_B->insert(pair<string, PFSNode *> (B->vertex->print_subset (), B));
-
-        // if the algorithm is working under heuristic mode 1 or 2
-        // and has reached threshold, then the search is stopped.
-        if (cost_function->has_reached_threshold ())
-          return;
-      } // if ((it == Forest_A->end ()) &&
-    } // else
+        store_visited_subset (B->vertex);
+      
+        #pragma omp critical
+        Forest_B->insert(ForestEntry (B->vertex->print_subset (), B));
+      }
+    }
     M->add_element (i);
     i--;
-  } // while (i..
+  }
 }
 
 
@@ -469,24 +431,20 @@ void PPFS::search_upper_children (ForestMap * Forest_A, PFSNode * N,
   ForestMap::iterator it;
   int i;
   PFSNode * A;
-  unsigned int j;
+  unsigned int j; 
 
-  i = set->get_set_cardinality () - 1;  // i = n
-  while ((i >= 0) && (! M->has_element (i)) )
+  i = set->get_set_cardinality () - 1;
+  while (i >= 0 && !M->has_element (i))
   {
-    M->add_element (i); // A = M \cup {s_i}
-
-    if (M->is_contained_by (Y) ) // if A is contained in Y
+    M->add_element (i);
+    if (M->is_contained_by (Y))
     {
       #pragma omp critical
       {
         it = Forest_A->find (M->print_subset ());
         if (it != Forest_A->end ())
         {
-          cout << "search_upper_children is deleting " << N->vertex->print_subset () << endl;
-          delete it->second->vertex;
-          delete it->second->adjacent;
-          delete it->second;
+          delete_node (it->second);
           Forest_A->erase (it);
         }
       }
@@ -496,36 +454,30 @@ void PPFS::search_upper_children (ForestMap * Forest_A, PFSNode * N,
       if (N == NULL || N->adjacent->has_element (i))
       {
         A = new PFSNode;
-        A->vertex = new ElementSubset ("", set);
-        A->vertex->copy (M);
-        #pragma omp critical
-        store_visited_subset (A->vertex);
-
-        A->leftmost = i + 1;  // the index starts with zero
+        A->vertex = new ElementSubset (M);
+        A->leftmost = i + 1;
         A->adjacent = new ElementSubset ("", set);
         for (j = A->leftmost; j < set->get_set_cardinality (); j++)
           A->adjacent->add_element (j);
-        A->cost = FLT_MAX; // infinity
+        A->cost = FLT_MAX;
 
         #pragma omp critical
-        Forest_A->insert(pair<string, PFSNode *> (A->vertex->print_subset (), A));
+        store_visited_subset (A->vertex);
 
-        // if the algorithm is working under heuristic mode 1 or 2
-        // and has reached threshold, then the search is stopped.
-        if (cost_function->has_reached_threshold ())
-          return;
-      } // if ((it == Forest_A->end ()) &&
-    } // else
+        #pragma omp critical
+        Forest_A->insert(ForestEntry (A->vertex->print_subset (), A));
+      }
+    }
     M->remove_element (i);
     i--;
-  } // while (i..
+  }
 }
 
 
 void PPFS::upper_forest_pruning (ForestMap * Forest_B, PFSNode * N)
 {
   ForestMap::iterator it;
-  PFSNode * _M;
+  PFSNode * _M, * _M_copy;
   ElementSubset M ("", set);
   int k;
 
@@ -536,7 +488,7 @@ void PPFS::upper_forest_pruning (ForestMap * Forest_B, PFSNode * N)
   {
     #pragma omp critical
     {
-      it  = Forest_B->find (M.print_subset ());
+      it = Forest_B->find (M.print_subset ());
       if (it != Forest_B->end ())
       {
         _M = it->second;
@@ -544,21 +496,20 @@ void PPFS::upper_forest_pruning (ForestMap * Forest_B, PFSNode * N)
       }
       else
         _M = NULL;
+      _M_copy = copy_node (_M);
     }
-    search_lower_children (Forest_B, _M, & M, N->vertex);
 
-    // if the algorithm is working under heuristic mode 1 or 2
-    // and has reached threshold, then the search is stopped.
-    if (cost_function->has_reached_threshold ())
-      return;
-
-    if (_M != NULL)
+    search_lower_children (Forest_B, _M_copy, &M, N->vertex);
+    delete_node (_M_copy);
+    
+    #pragma omp critical
     {
-      #pragma omp critical
-          cout << "upper_forest_pruning is deleting " << N->vertex->print_subset () << endl;
-      delete _M->vertex;
-      delete _M->adjacent;
-      delete _M;
+      it = Forest_B->find (M.print_subset ());
+      if (it != Forest_B->end ())
+      {
+        delete_node (it->second);
+        Forest_B->erase (it);
+      }
     }
 
     M.add_element (k);
@@ -566,59 +517,46 @@ void PPFS::upper_forest_pruning (ForestMap * Forest_B, PFSNode * N)
   }
 
   #pragma omp critical
-  it  = Forest_B->find (M.print_subset ());
-  if (it != Forest_B->end ())
   {
-    search_lower_children (Forest_B, it->second, & M, N->vertex);
-
-    // if the algorithm is working under heuristic mode 1 or 2
-    // and has reached threshold, then the search is stopped.
-    //
-    if (cost_function->has_reached_threshold ())
-      return;
+    it = Forest_B->find (M.print_subset ());
+    if (it != Forest_B->end ())
+      _M = it->second;
+    else
+      _M = NULL;
+    _M_copy = copy_node (_M);
+  }
+  
+  search_lower_children (Forest_B, _M_copy, &M, N->vertex);
+  delete_node (_M_copy);
     
-    #pragma omp critical
+  _M = NULL;
+  #pragma omp critical
+  {
+    it  = Forest_B->find (M.print_subset ());
+    if (it != Forest_B->end ())
     {
-      it  = Forest_B->find (M.print_subset ());
-          cout << "upper_forest_pruning is deleting " << N->vertex->print_subset () << endl;
-      delete it->second->vertex;
-      delete it->second->adjacent;
-      delete it->second;
+      _M = it->second;
+      delete_node (it->second);
       Forest_B->erase (it);
     }
   }
-  else
-  {
-    search_lower_children (Forest_B, NULL, &M, N->vertex);
 
-    // if the algorithm is working under heuristic mode 1 or 2
-    // and has reached threshold, then the search is stopped.
-    //
-    if (cost_function->has_reached_threshold ())
-      return;
-
-    search_upper_root (Forest_B, &M); // warning: this function modifies "M" !!!
-
-    // if the algorithm is working under heuristic mode 1 or 2
-    // and has reached threshold, then the search is stopped.
-    //
-    if (cost_function->has_reached_threshold ())
-      return;
-  }
+  if (_M == NULL)
+    search_upper_root (Forest_B, &M);
 }
 
 
 void PPFS::lower_forest_pruning (ForestMap * Forest_A, PFSNode * N)
 {
   ForestMap::iterator it;
-  PFSNode * _M;
+  PFSNode * _M, * _M_copy;
   ElementSubset M ("", set);
   int k;
 
   M.copy (N->vertex);
   k = set->get_set_cardinality () - 1;  // k = n - 1
 
-  while ((! N->adjacent->is_empty ()) && (k >= (int) N->leftmost) )
+  while (!N->adjacent->is_empty () && k >= (int) N->leftmost) 
   {
     #pragma omp critical
     {
@@ -630,22 +568,20 @@ void PPFS::lower_forest_pruning (ForestMap * Forest_A, PFSNode * N)
       }
       else
         _M = NULL;
+      _M_copy = copy_node (_M);
     }
-    search_upper_children (Forest_A, _M, & M, N->vertex);
 
-    // if the algorithm is working under heuristic mode 1 or 2
-    // and has reached threshold, then the search is stopped.
-    if (cost_function->has_reached_threshold ())
-      return;
+    search_upper_children (Forest_A, _M_copy, & M, N->vertex);
+    delete_node (_M_copy);
 
-    if (_M != NULL)
+    #pragma omp critical
     {
-
-      #pragma omp critical
-          cout << "lower_forest_pruning is deleting " << N->vertex->print_subset () << endl;
-      delete _M->vertex;
-      delete _M->adjacent;
-      delete _M;
+      it = Forest_A->find (M.print_subset ());      
+      if (it != Forest_A->end ())
+      {
+        delete_node (it->second);
+        Forest_A->erase (it);
+      }
     }
 
     M.remove_element (k);
@@ -653,45 +589,32 @@ void PPFS::lower_forest_pruning (ForestMap * Forest_A, PFSNode * N)
   }
 
   #pragma omp critical
-  it  = Forest_A->find (M.print_subset ());
-  if (it != Forest_A->end ())
   {
-    search_upper_children (Forest_A, it->second, & M, N->vertex);
+    it  = Forest_A->find (M.print_subset ());
+    if (it != Forest_A->end ())
+      _M = it->second;
+    else
+      _M = NULL;
+    _M_copy = copy_node (_M);
+  }
 
-    // if the algorithm is working under heuristic mode 1 or 2
-    // and has reached threshold, then the search is stopped.
-    //
-    if (cost_function->has_reached_threshold ())
-      return;
+  search_upper_children (Forest_A, _M_copy, & M, N->vertex);
+  delete_node (_M_copy);
 
-    #pragma omp critical
+  _M = NULL;
+  #pragma omp critical
+  {
+    it = Forest_A->find (M.print_subset ());
+    if (it != Forest_A->end ())
     {
-      it = Forest_A->find (M.print_subset ());
-          cout << "lower_forest_pruning is deleting " << N->vertex->print_subset () << endl;
-      delete it->second->vertex;
-      delete it->second->adjacent;
-      delete it->second;
+      _M = it->second;
+      delete_node (it->second);
       Forest_A->erase (it);
     }
   }
-  else
-  {
-    search_upper_children (Forest_A, NULL, &M, N->vertex);
 
-    // if the algorithm is working under heuristic mode 1 or 2
-    // and has reached threshold, then the search is stopped.
-    //
-    if (cost_function->has_reached_threshold ())
-      return;
-
-    search_lower_root (Forest_A, & M); // warning: this function modifies "M" !!!
-
-    // if the algorithm is working under heuristic mode 1 or 2
-    // and has reached threshold, then the search is stopped.
-    //
-    if (cost_function->has_reached_threshold ())
-      return;
-  }
+  if (_M == NULL)
+    search_lower_root (Forest_A, &M);
 }
 
 void PPFS::calculate_node_cost (PFSNode * R, ForestMap * Forest_Dual)
@@ -699,35 +622,40 @@ void PPFS::calculate_node_cost (PFSNode * R, ForestMap * Forest_Dual)
   if (R->cost != FLT_MAX)
     return;
   
-  PFSNode * RB = NULL;
+  // copy elementsubset here?
+  PFSNode * RB_cpy = NULL;
   ForestMap::iterator it; 
-  
+    
 
-  #pragma omp critical
-  it = Forest_Dual->find (R->vertex->print_subset ());
-  if (it == Forest_Dual->end ())
+  // #pragma omp critical
+  // {
+    it = Forest_Dual->find (R->vertex->print_subset ());
+    if (it != Forest_Dual->end ())
+      RB_cpy = copy_node (it->second);
+  // }
+
+  if (RB_cpy == NULL)
   {
     R->cost = cost_function->cost (R->vertex);
     R->vertex->cost = R->cost;
+    // #pragma omp critical
+    parallel_store_minimum_subset (R->vertex);
+  }
+  else if (RB_cpy->cost == FLT_MAX)
+  {
+    R->cost = cost_function->cost (R->vertex);
+    R->vertex->cost = R->cost;
+    RB_cpy->cost = R->cost;
+    RB_cpy->vertex->cost = RB_cpy->cost;
+    // #pragma omp critical
     parallel_store_minimum_subset (R->vertex);
   }
   else
   {
-    RB = it->second;
-    if (RB->cost == FLT_MAX)
-    {
-      R->cost = cost_function->cost (R->vertex);
-      R->vertex->cost = R->cost;
-      RB->cost = R->cost;
-      RB->vertex->cost = RB->cost;
-      parallel_store_minimum_subset (R->vertex);
-    }
-    else
-    {
-      R->cost = RB->cost;
-      R->vertex->cost = R->cost;
-    } 
-  }
+    R->cost = RB_cpy->cost;
+    R->vertex->cost = R->cost;
+  } 
+  delete_node (RB_cpy);
 }
 
 
@@ -737,4 +665,40 @@ void PPFS::parallel_store_minimum_subset (ElementSubset * X)
   Y = new ElementSubset ("", set);
   Y->copy (X);
   min_list_ptr->push_back (Y);
+}
+
+
+PFSNode * PPFS::get_node (ForestMap * F, string subset)
+{
+  ForestMap::iterator it;
+  PFSNode * N = NULL;
+  it = F->find (subset);
+  if (it != F->end ())
+    N = it->second;
+  return N;
+}
+
+
+PFSNode * PPFS::copy_node (PFSNode * N)
+{
+  if (N == NULL)
+    return NULL;
+
+  PFSNode * M = new PFSNode;
+  M->vertex = new ElementSubset (N->vertex);
+  M->adjacent = new ElementSubset (N->adjacent);
+  M->leftmost = N->leftmost;
+  M->cost = N->cost;
+  return M;
+}
+
+
+void PPFS::delete_node (PFSNode * N)
+{
+  if (N == NULL)
+    return;
+  
+  delete N->vertex;
+  delete N->adjacent;
+  delete N;
 }

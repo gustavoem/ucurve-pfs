@@ -72,7 +72,6 @@ void RPFS_RAND::get_minima_list (unsigned int max_size_of_minima_list)
   // Forest_B.insert (pair<string, PFSNode *> (N->vertex->print_subset (), N));
   Forest_B->add_node (N);
 
-  srand ((unsigned) time (NULL));
   while (Forest_A->size () > 0 && Forest_B->size () > 0 && 
          !cost_function->has_reached_threshold ())
   {

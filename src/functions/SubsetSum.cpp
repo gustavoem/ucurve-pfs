@@ -39,7 +39,7 @@ double SubsetSum::cost (ElementSubset * X)
   timeval begin, end;
   gettimeofday (& begin, NULL);
   double cost = 0;
-  #pragma omp critical
+  // #pragma omp critical
   number_of_calls_of_cost_function++;
 
   //
@@ -63,7 +63,7 @@ double SubsetSum::cost (ElementSubset * X)
 
   gettimeofday (& end, NULL);
 
-  #pragma omp critical
+  // #pragma omp critical
   elapsed_time_of_cost_function_calls += diff_us (end, begin);
 
   // Threshold is a maximum number of calls of the cost function

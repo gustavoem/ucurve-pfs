@@ -37,6 +37,7 @@ class PPFS : public Solver
 protected:
 
   typedef map<string, PFSNode *> ForestMap;
+  typedef pair<string, PFSNode *> ForestEntry;
 
   // Stores a pointer to the list of minima
   //
@@ -110,6 +111,18 @@ protected:
   // Modified version of store_minimum_subset that is thread safe
   //
   void parallel_store_minimum_subset (ElementSubset *);
+
+  // Safely gets a node from a forest
+  //
+  static PFSNode * get_node (ForestMap *, string);
+
+  // Copies a PFSNode struct
+  //
+  static PFSNode * copy_node (PFSNode *);
+
+  // Deletes a PFSNode struct
+  //
+  static void delete_node (PFSNode *);
 
 public:
 
