@@ -124,6 +124,10 @@ protected:
   //
   static void delete_node (PFSNode *);
 
+  // Pops a node from the Forest
+  //
+  static PFSNode * pop_node (ForestMap *);
+
 public:
 
   // Default constructor.

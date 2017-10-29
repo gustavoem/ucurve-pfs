@@ -73,8 +73,8 @@ void PPFS::get_minima_list (unsigned int max_size_of_minima_list)
   N->vertex->cost = FLT_MAX;
   Forest_B.insert (ForestEntry (N->vertex->print_subset (), N));
 
-  while ( ( (Forest_A.size () > 0) && (Forest_B.size () > 0) ) &&
-        (! cost_function->has_reached_threshold ()) )
+  while (Forest_A.size () > 0 && Forest_B.size () > 0 && 
+    !cost_function->has_reached_threshold ())
   {
     direction = rand () % 2;
     number_of_iterations++;
@@ -101,7 +101,7 @@ void PPFS::lower_forest_iteration (ForestMap * Forest_A,
   {
     PFSNode * N;
     N = lower_forest_branch (Forest_A, Forest_B);
-     
+    #pragma omp barrier
     if (N != NULL)
       if (!cost_function->has_reached_threshold ())
         upper_forest_pruning (Forest_B, N);
@@ -118,6 +118,7 @@ void PPFS::upper_forest_iteration (ForestMap * Forest_A,
   {
     PFSNode * N;
     N = upper_forest_branch (Forest_A, Forest_B);
+    #pragma omp barrier
     if (N != NULL)
       if (!cost_function->has_reached_threshold ())
         lower_forest_pruning (Forest_A, N);
@@ -133,26 +134,10 @@ PFSNode * PPFS::lower_forest_branch (ForestMap * Forest_A,
   ForestMap::iterator it;
   PFSNode * R, * M, * N;
   unsigned int i, m;
+  pair<ForestMap::iterator, bool> insert_answ;
 
   #pragma omp critical
-  {
-    if (Forest_A->size () == 0)
-      R = NULL;
-    else
-    {
-      i = rand () % 2;
-      if (i == 0)
-        it = Forest_A->begin ();
-      else
-      {
-        it = Forest_A->end ();
-        it--;
-      }
-
-      R = it->second;
-      Forest_A->erase (it);
-    }
-  }
+  R = pop_node (Forest_A);  
   #pragma omp barrier
 
   if (R == NULL)
@@ -167,7 +152,12 @@ PFSNode * PPFS::lower_forest_branch (ForestMap * Forest_A,
   while (!N->adjacent->is_empty () && N->cost <= M->cost)
   {
     #pragma omp critical
-    Forest_A->insert (ForestEntry (N->vertex->print_subset (), N));
+    insert_answ = Forest_A->insert (ForestEntry (N->vertex->print_subset (), N));
+    
+    if (insert_answ.second == false)
+    {
+      cout << "We need to check if aleady in the forest before insertion" << endl;
+    }
 
     M = N;
     m = M->adjacent->remove_random_element ();
@@ -189,6 +179,7 @@ PFSNode * PPFS::lower_forest_branch (ForestMap * Forest_A,
     if (N->cost <= M->cost)
     {
       N->vertex->cost = N->cost;
+      #pragma omp critical
       parallel_store_minimum_subset (N->vertex);
     }
 
@@ -208,31 +199,16 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
   ForestMap::iterator it;
   PFSNode * R, * M, * N;
   unsigned int i, m;
+  pair<ForestMap::iterator, bool> insert_answ;
 
   #pragma omp critical
-  {
-    if (Forest_B->size () == 0)
-      R = NULL;
-    else
-    {
-      i = rand () % 2;
-      if (i == 0)
-        it = Forest_B->begin ();
-      else
-      {
-        it = Forest_B->end ();
-        it--;
-      }
-
-      R = it->second;
-      Forest_B->erase (it);
-    }
-  }
+  R = pop_node (Forest_B);
   #pragma omp barrier
 
   if (R == NULL)
     return NULL;
 
+  #pragma omp critical
   calculate_node_cost (R, Forest_A);
   M = R;
   N = R;
@@ -241,7 +217,12 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
   while (!N->adjacent->is_empty () && N->cost <= M->cost)
   {
     #pragma omp critical
-    Forest_B->insert (ForestEntry (N->vertex->print_subset (), N));
+    insert_answ = Forest_B->insert (ForestEntry (N->vertex->print_subset (), N));
+
+    if (insert_answ.second == false)
+    {
+      cout << "We need to check if aleady in the forest before insertion" << endl;
+    }
 
     M = N;
     m = M->adjacent->remove_random_element ();
@@ -263,6 +244,7 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
     if (N->cost <= M->cost)
     {
       N->vertex->cost = N->cost;
+      #pragma omp critical
       parallel_store_minimum_subset (N->vertex);
     }
 
@@ -283,13 +265,12 @@ void PPFS::search_upper_root (ForestMap * Forest_B, ElementSubset * M)
   unsigned int i;
   int m, k = set->get_set_cardinality () - 1;
 
-  while ((k >= 0) && (M->has_element ((unsigned int) k)) )
+  while (k >= 0 && M->has_element ((unsigned int) k))
     k--;
 
   while (k >= 0)
   {
     M->add_element (k);
-    
     #pragma omp critical
     it = Forest_B->find (M->print_subset ());
     if (it != Forest_B->end ())
@@ -359,12 +340,12 @@ void PPFS::search_lower_root (ForestMap * Forest_A,
       m = k;
       while (k >= 0 && !M->has_element ((unsigned int) k))
         k--;
-      N->leftmost = k + 1;  // the index starts with zero
+      N->leftmost = k + 1;
       N->adjacent = new ElementSubset ("", set);
       for (i = N->leftmost; i < set->get_set_cardinality (); i++)
         N->adjacent->add_element (i);
       N->adjacent->remove_element ((unsigned int) m);
-      N->cost = FLT_MAX; // infinity
+      N->cost = FLT_MAX;
 
       #pragma omp critical
       store_visited_subset (N->vertex);
@@ -627,18 +608,14 @@ void PPFS::calculate_node_cost (PFSNode * R, ForestMap * Forest_Dual)
   ForestMap::iterator it; 
     
 
-  // #pragma omp critical
-  // {
-    it = Forest_Dual->find (R->vertex->print_subset ());
-    if (it != Forest_Dual->end ())
-      RB_cpy = copy_node (it->second);
-  // }
+  it = Forest_Dual->find (R->vertex->print_subset ());
+  if (it != Forest_Dual->end ())
+    RB_cpy = copy_node (it->second);
 
   if (RB_cpy == NULL)
   {
     R->cost = cost_function->cost (R->vertex);
     R->vertex->cost = R->cost;
-    // #pragma omp critical
     parallel_store_minimum_subset (R->vertex);
   }
   else if (RB_cpy->cost == FLT_MAX)
@@ -647,7 +624,6 @@ void PPFS::calculate_node_cost (PFSNode * R, ForestMap * Forest_Dual)
     R->vertex->cost = R->cost;
     RB_cpy->cost = R->cost;
     RB_cpy->vertex->cost = RB_cpy->cost;
-    // #pragma omp critical
     parallel_store_minimum_subset (R->vertex);
   }
   else
@@ -701,4 +677,26 @@ void PPFS::delete_node (PFSNode * N)
   delete N->vertex;
   delete N->adjacent;
   delete N;
+}
+
+
+PFSNode * PPFS::pop_node (ForestMap * F)
+{
+  PFSNode * R;
+  ForestMap::iterator it;
+  if (F->size () == 0)
+      R = NULL;
+  else
+  {
+    if (rand () % 2)
+      it = F->begin ();
+    else
+    {
+      it = F->end ();
+      it--;
+    }
+    R = it->second;
+    F->erase (it);
+  }
+  return R;
 }
