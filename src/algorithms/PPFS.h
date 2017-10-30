@@ -29,7 +29,7 @@
 #include "../ElementSubset.h"
 #include "../PFSNode.h"
 #include "../ForestOBDD.h"
-
+#include <set>
 
 class PPFS : public Solver
 {
@@ -38,6 +38,7 @@ protected:
 
   typedef map<string, PFSNode *> ForestMap;
   typedef pair<string, PFSNode *> ForestEntry;
+  typedef std::set<string> SubsetSet;
 
   // Stores a pointer to the list of minima
   //
@@ -72,28 +73,28 @@ protected:
   // pruned, adds it to the Forest
   //
   void search_upper_children (ForestMap *, PFSNode *, ElementSubset *, 
-    ElementSubset *);
+    ElementSubset *, SubsetSet *);
 
   // Given an ElementSubset that is going to be removed from the upper
   // forest, finds its child and, if the children is not supposed to be
   // pruned, adds it to the Forest
   //
   void search_lower_children (ForestMap *, PFSNode *, ElementSubset *, 
-    ElementSubset *);
+    ElementSubset *, SubsetSet *);
 
   // Given an ElementSubset X that is being removed from the upper
   // forest, updates the forest creating roots with elements that
   // contains X until we find a root that contains X or we reach S
   // ElementSubset.
   //
-  void search_upper_root (ForestMap *, ElementSubset *);
+  void search_upper_root (ForestMap *, ElementSubset *, SubsetSet *);
 
   // Given an ElementSubset X that is being removed from the lower
   // forest, updates the forest creating roots with elements that are
   // contained by X until we find a root that is contained by X or we
   // reach the empty set ElementSubset.
   //
-  void search_lower_root (ForestMap *, ElementSubset *);
+  void search_lower_root (ForestMap *, ElementSubset *, SubsetSet *);
 
   // Updates the upper forest after branching on the lower forest.
   //
@@ -127,6 +128,10 @@ protected:
   // Pops a node from the Forest
   //
   static PFSNode * pop_node (ForestMap *);
+
+  // Inserts node into the Forest
+  //
+  static void set_update_root (PFSNode **, ForestMap *);
 
 public:
 

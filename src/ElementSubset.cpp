@@ -197,7 +197,7 @@ void ElementSubset::subset_intersection (ElementSubset * X)
 {
   unsigned int i;
   for (i = 0; i < set->get_set_cardinality (); i++)
-    if (! X->has_element (i))
+    if (!X->has_element (i))
   remove_element (i);
 }
 
