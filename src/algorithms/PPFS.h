@@ -42,15 +42,11 @@ protected:
 
   // Stores a pointer to the list of minima
   //
-  list<ElementSubset *> * min_list_ptr; 
-
-  // Storest number of processors in the computer
-  //
-  unsigned int nof_processors;
+  list<ElementSubset *> * min_list_ptr;
 
   // A threshold to keep the list of minima small
   //
-  float bound;  
+  float bound;
 
   // Performs a branch on the lower forest and updates the upper forest
   //
@@ -98,11 +94,11 @@ protected:
 
   // Updates the upper forest after branching on the lower forest.
   //
-  void upper_forest_pruning (ForestMap *, PFSNode *);
+  void upper_forest_pruning (ForestMap *, PFSNode *, SubsetSet *);
 
   // Updates the lower forest after branching on the upper forest
   //
-  void lower_forest_pruning (ForestMap *, PFSNode *);
+  void lower_forest_pruning (ForestMap *, PFSNode *, SubsetSet *);
 
   // Calculates the cost of a PFSNode, trying to use the dual forest
   // to fetch the already calculated cost if possible.
@@ -112,6 +108,10 @@ protected:
   // Modified version of store_minimum_subset that is thread safe
   //
   void parallel_store_minimum_subset (ElementSubset *);
+
+  // Removes a node from the ForestMap and returns it
+  //
+  PFSNode * remove_node (ForestMap *, bool, string);
 
   // Safely gets a node from a forest
   //
@@ -132,6 +132,7 @@ protected:
   // Inserts node into the Forest
   //
   static void set_update_root (PFSNode **, ForestMap *);
+
 
 public:
 
