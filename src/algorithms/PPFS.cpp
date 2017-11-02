@@ -76,31 +76,13 @@ void PPFS::get_minima_list (unsigned int max_size_of_minima_list)
   while (Forest_A.size () > 0 && Forest_B.size () > 0 && 
     !cost_function->has_reached_threshold ())
   {
-    cout << "batch started" << endl;
     direction = rand () % 2;
     number_of_iterations++;
-
-
-    if (i == 0) direction = 1;
-    if (i == 1) direction = 0;
 
     if (direction == 0)
       lower_forest_iteration (&Forest_A, &Forest_B);
     else
       upper_forest_iteration (&Forest_A, &Forest_B);
-
-    // cout << "-- Forest_A state: " << endl;
-    // for (ForestMap::iterator it = Forest_A.begin (); it != Forest_A.end (); it++)
-    // {
-    //   cout << it->second->vertex->print_subset () << endl;
-    // }
-    // cout << "-- Forest_B state: " << endl;
-    // for (ForestMap::iterator it = Forest_B.begin (); it != Forest_B.end (); it++)
-    // {
-    //   cout << it->second->vertex->print_subset () << endl;
-    // }
-    cout << "batch finished!" << endl << endl;
-    i++;
   }
   //
 
@@ -121,19 +103,11 @@ void PPFS::lower_forest_iteration (ForestMap * Forest_A,
     PFSNode * N;
     N = lower_forest_branch (Forest_A, Forest_B);
 
-    #pragma omp barrier
-
-    #pragma omp critical
-    cout << "[" << omp_get_thread_num () << "]" <<
-      "started pruning" << endl;
-
     if (N != NULL)
       if (!cost_function->has_reached_threshold ())
         upper_forest_pruning (Forest_B, N, &deleted_subsets);
 
     delete_node (N);
-    #pragma omp critical
-    cout << "thread " << omp_get_thread_num () << " finished its work" << endl;
   }
 }
 
@@ -147,19 +121,11 @@ void PPFS::upper_forest_iteration (ForestMap * Forest_A,
     PFSNode * N;
     N = upper_forest_branch (Forest_A, Forest_B);
 
-    #pragma omp barrier
-
-    #pragma omp critical
-    cout << "[" << omp_get_thread_num () << "]" <<
-      "started pruning" << endl;
-
     if (N != NULL)
       if (!cost_function->has_reached_threshold ())
         lower_forest_pruning (Forest_A, N, &deleted_subsets);
 
     delete_node (N);
-    #pragma omp critical
-    cout << "thread " << omp_get_thread_num () << " finished its work" << endl;
   }
 }
 
@@ -179,22 +145,14 @@ PFSNode * PPFS::lower_forest_branch (ForestMap * Forest_A,
   if (R == NULL)
     return NULL;
 
-  #pragma omp critical
-  cout << "[" << omp_get_thread_num () << "]" <<
-    "selected " << R->vertex->print_subset () << endl;
-
-  #pragma omp critical
   calculate_node_cost (R, Forest_B);
   M = R;
   N = R;
 
-  // Walk on the tree whose root is R[vertex]
   while (!N->adjacent->is_empty () && N->cost <= M->cost)
   {
     #pragma omp critical
     {
-      cout << "[" << omp_get_thread_num () << "]" <<
-          "  lower branch iteration on N = " << N->vertex->print_subset () << endl;
       set_update_root (&N, Forest_A);
       M = N;
       m = M->adjacent->remove_random_element ();
@@ -202,22 +160,12 @@ PFSNode * PPFS::lower_forest_branch (ForestMap * Forest_A,
       N->vertex = new ElementSubset (M->vertex);
     }
     N->vertex->add_element (m);
-    N->leftmost = m + 1;  // the index starts with zero
+    N->leftmost = m + 1;
     N->adjacent = new ElementSubset ("", set);
     for (i = N->leftmost; i < set->get_set_cardinality (); i++)
-    {
-      N->vertex->add_element (i);
-      N_str = N->vertex->print_subset ();
-      #pragma omp critical
-      {
-        if (get_node (Forest_A, N_str) == NULL)
-          N->adjacent->add_element (i);
-      }
-      N->vertex->remove_element (i);
-    }
+      N->adjacent->add_element (i);
     N->cost = FLT_MAX;
 
-    #pragma omp critical
     calculate_node_cost (N, Forest_B);
 
     #pragma omp critical
@@ -235,10 +183,6 @@ PFSNode * PPFS::lower_forest_branch (ForestMap * Forest_A,
     if (cost_function->has_reached_threshold ())
       return N;
   }
-
-  #pragma omp critical
-  cout << "[" << omp_get_thread_num () << "]" <<
-    "prunes on " << N->vertex->print_subset () << endl;
 
   return N;
 }
@@ -259,23 +203,14 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
   if (R == NULL)
     return NULL;
 
-  #pragma omp critical
-  cout << "[" << omp_get_thread_num () << "]" <<
-    "selected " << R->vertex->print_subset () << endl;
-
-  #pragma omp critical
   calculate_node_cost (R, Forest_A);
   M = R;
   N = R;
 
-  // Walk on the tree whose root is R[vertex]
   while (!N->adjacent->is_empty () && N->cost <= M->cost)
   {
     #pragma omp critical
     {
-      cout << "[" << omp_get_thread_num () << "]" <<
-        "  upper branch iteration on N = " << N->vertex->print_subset () << endl;
-
       set_update_root (&N, Forest_B);
       M = N;
       m = M->adjacent->remove_random_element ();
@@ -283,22 +218,12 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
       N->vertex = new ElementSubset (M->vertex);
     }
     N->vertex->remove_element (m);
-    N->leftmost = m + 1;  // the index starts with zero
+    N->leftmost = m + 1;
     N->adjacent = new ElementSubset ("", set);
-    N->cost = FLT_MAX;
     for (i = N->leftmost; i < set->get_set_cardinality (); i++)
-    {
-      N->vertex->remove_element (i);
-      N_str = N->vertex->print_subset ();
-      #pragma omp critical
-      {
-        if (get_node (Forest_B, N_str) == NULL)
-          N->adjacent->add_element (i);
-      }
-      N->vertex->add_element (i);
-    }
+      N->adjacent->add_element (i);
+    N->cost = FLT_MAX;
 
-    #pragma omp critical
     calculate_node_cost (N, Forest_A);
 
     #pragma omp critical
@@ -317,10 +242,6 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
       return N;
   }
 
-  #pragma omp critical
-  cout << "[" << omp_get_thread_num () << "]" <<
-    "prunes on " << N->vertex->print_subset () << endl;
-
   return N;
 }
 
@@ -330,7 +251,7 @@ void PPFS::search_upper_root (ForestMap * Forest_B, ElementSubset * M,
 {
   ForestMap::iterator it;
   PFSNode * N, * _M;
-  string N_str;
+  string N_str, M_str;
   unsigned int i;
   int m, k = set->get_set_cardinality () - 1;
 
@@ -340,24 +261,17 @@ void PPFS::search_upper_root (ForestMap * Forest_B, ElementSubset * M,
   while (k >= 0)
   {
     M->add_element (k);
+    M_str = M->print_subset ();
     #pragma omp critical
-    cout << "[" << omp_get_thread_num () << "]" <<
-      "    sur interation on M = " << M->print_subset () << endl;
-    #pragma omp critical
-    it = Forest_B->find (M->print_subset ());
-    if (it != Forest_B->end ())
     {
-      #pragma omp critical
+      _M = get_node (Forest_B, M_str);
+      if (_M != NULL)  
       {
-        _M = get_node (Forest_B, M->print_subset ());
-        if (_M != NULL)
-          _M->adjacent->remove_element (k);
-        cout << "[" << omp_get_thread_num () << "]" <<
-      "    sur updated root " << M->print_subset () << "removing adjacency with k = " << k << endl;
+        _M->adjacent->remove_element (k);
+        k = -1;
       }
-      k = -1;
     }
-    else
+    if (_M == NULL)
     {
       N = new PFSNode;
       N->vertex = new ElementSubset (M);
@@ -368,31 +282,27 @@ void PPFS::search_upper_root (ForestMap * Forest_B, ElementSubset * M,
       N->adjacent = new ElementSubset ("", set);
       for (i = N->leftmost; i < set->get_set_cardinality (); i++)
       {
+        bool should_add = false;
         N->vertex->remove_element (i);
         N_str = N->vertex->print_subset ();
+        N->vertex->add_element (i);
         #pragma omp critical
         {
-          if (Forest_B->find (N_str) == Forest_B->end () && 
-              deleted_subsets->count (N_str) == 0)
-            N->adjacent->add_element (i);
+          should_add = get_node (Forest_B, N_str) == NULL && 
+            deleted_subsets->count (N_str) == 0;
         }
-        N->vertex->add_element (i);
+        if (should_add)
+          N->adjacent->add_element (i);
       }
       N->adjacent->remove_element ((unsigned int) m);
-      N->cost = FLT_MAX; // infinity
-      
-      #pragma omp critical
-      store_visited_subset (N->vertex);
-
+      N->cost = FLT_MAX;
       N_str = N->vertex->print_subset ();
+
       #pragma omp critical
       {
+        store_visited_subset (N->vertex);
         if (!deleted_subsets->count (N_str))
-        {
-          cout << "[" << omp_get_thread_num () << "]" <<
-          "    sur set new root " << N->vertex->print_subset () << endl;
-          set_update_root (&N, Forest_B);
-        }
+          set_update_root (&N, Forest_B); 
       }
     } 
   }
@@ -404,7 +314,7 @@ void PPFS::search_lower_root (ForestMap * Forest_A, ElementSubset * M,
 {
   ForestMap::iterator it;
   PFSNode * N, * _M;
-  string N_str;
+  string N_str, M_str;
   unsigned int i;
   int m, k = set->get_set_cardinality () - 1;
 
@@ -414,24 +324,17 @@ void PPFS::search_lower_root (ForestMap * Forest_A, ElementSubset * M,
   while (k >= 0)
   {
     M->remove_element (k);
+    M_str = M->print_subset ();
     #pragma omp critical
-    cout << "[" << omp_get_thread_num () << "]" <<
-      "    search lower root interation on M = " << M->print_subset () << endl;
-    #pragma omp critical
-    it = Forest_A->find (M->print_subset ());
-    if (it != Forest_A->end ())
     {
-      #pragma omp critical
+      _M = get_node (Forest_A, M_str);
+      if (_M != NULL)
       {
-        _M = get_node (Forest_A, M->print_subset ());
-        if (_M != NULL)
           _M->adjacent->remove_element (k);
-        cout << "[" << omp_get_thread_num () << "]" <<
-          "    slr updated root " << M->print_subset () << "removing adjacency with k = " << k << endl;
+          k = -1;
       }
-      k = -1;
     }
-    else
+    if (_M == NULL)
     {
       N = new PFSNode;
       N->vertex = new ElementSubset (M);
@@ -442,31 +345,26 @@ void PPFS::search_lower_root (ForestMap * Forest_A, ElementSubset * M,
       N->adjacent = new ElementSubset ("", set);
       for (i = N->leftmost; i < set->get_set_cardinality (); i++)
       {
+        bool should_add = false;
         N->vertex->add_element (i);
         N_str = N->vertex->print_subset ();
+        N->vertex->remove_element (i);
         #pragma omp critical
         {
-          if (Forest_A->find (N_str) == Forest_A->end () && 
-              deleted_subsets->count (N_str) == 0)
-            N->adjacent->add_element (i);
+          should_add = get_node (Forest_A, N_str) == NULL && 
+            deleted_subsets->count (N_str) == 0;
         }
-        N->vertex->remove_element (i);
+        N->adjacent->add_element (i);
       }
       N->adjacent->remove_element ((unsigned int) m);
       N->cost = FLT_MAX;
-
-      #pragma omp critical
-      store_visited_subset (N->vertex);
-
       N_str = N->vertex->print_subset ();
+
       #pragma omp critical
       {
+        store_visited_subset (N->vertex);
         if (!deleted_subsets->count (N_str))
-        {
-          cout << "[" << omp_get_thread_num () << "]" <<
-          "    slr set new root " << N->vertex->print_subset () << endl;
           set_update_root (&N, Forest_A);
-        }
       }
     }
   }
@@ -479,36 +377,22 @@ void PPFS::search_lower_children (ForestMap * Forest_B, PFSNode * N,
   ForestMap::iterator it;
   string M_str;
   PFSNode * B;
-  ElementSubset * orig_M;
   int i;
   unsigned int j; 
 
-  #pragma omp critical
-  {
-    cout << "[" << omp_get_thread_num () << "]" <<
-    "  performing slc on " << M->print_subset () << endl;
-  }
-  orig_M = new ElementSubset (M);
-    
-
-  i = set->get_set_cardinality () - 1;  // i = n
+  i = set->get_set_cardinality () - 1;
   while (i >= 0 && M->has_element (i))
   {
-    M->remove_element (i); // A = M - {s_i}
-    #pragma omp critical
-    cout << "[" << omp_get_thread_num () << "]" <<
-          "    slc on " << orig_M->print_subset () << " iteration on " << M->print_subset () << endl;
+    M->remove_element (i);
     M_str = M->print_subset ();
-    if (M->contains (Y)) // if B contains Y
+    if (M->contains (Y))
     {
       #pragma omp critical
       {
-        cout << "[" << omp_get_thread_num () << "]" <<
-          "    suc is removing node " << M_str << endl;
         B = remove_node (Forest_B, true, M_str);
-        delete B;
         deleted_subsets->insert (M_str);
       }
+      delete B;
     }
     else
     {
@@ -520,36 +404,32 @@ void PPFS::search_lower_children (ForestMap * Forest_B, PFSNode * N,
         B->adjacent = new ElementSubset ("", set);
         for (j = B->leftmost; j < set->get_set_cardinality (); j++)
         {
+          bool should_add = false;
           B->vertex->remove_element (j);
           string B_str = B->vertex->print_subset ();
+          B->vertex->add_element (j);
           #pragma omp critical
           {
-            if (Forest_B->find (B_str) == Forest_B->end () && 
-                deleted_subsets->count (B_str) == 0)
-              B->adjacent->add_element (j);
+            should_add = get_node (Forest_B, B_str) == NULL && 
+              deleted_subsets->count (B_str) == 0;
           }
-          B->vertex->add_element (j);
+          if (should_add)
+            B->adjacent->add_element (j);
         }
-        B->cost = FLT_MAX; // infinity
+        B->cost = FLT_MAX;
 
         #pragma omp critical
-        store_visited_subset (B->vertex);
-      
-        #pragma omp critical
         {
+          store_visited_subset (B->vertex);
           if (!deleted_subsets->count (M_str))
-          {
-            cout << "[" << omp_get_thread_num () << "]" <<
-              "    slc set new root " << B->vertex->print_subset () << endl;
             set_update_root (&B, Forest_B);
-          }
         }
       }
     }
     M->add_element (i);
     i--;
   }
-  delete orig_M;
+  // delete orig_M;
 }
 
 
@@ -559,36 +439,22 @@ void PPFS::search_upper_children (ForestMap * Forest_A, PFSNode * N,
   ForestMap::iterator it;
   string M_str;
   PFSNode * A;
-  ElementSubset * orig_M;
   int i;
   unsigned int j; 
-
-  #pragma omp critical
-  {
-    cout << "[" << omp_get_thread_num () << "]" <<
-    "  performing suc on " << M->print_subset () << endl;
-  }  
-
-  orig_M = new ElementSubset (M);
 
   i = set->get_set_cardinality () - 1;
   while (i >= 0 && !M->has_element (i))
   {
     M->add_element (i);
-    #pragma omp critical
-    cout << "[" << omp_get_thread_num () << "]" <<
-          "    suc on " << orig_M->print_subset () << " iteration on " << M->print_subset () << endl;
     M_str = M->print_subset ();
     if (M->is_contained_by (Y))
     {
       #pragma omp critical
       {
-        cout << "[" << omp_get_thread_num () << "]" <<
-          "    suc is removing node " << M_str << endl;
         A = remove_node (Forest_A, false, M_str);
-        delete A;
         deleted_subsets->insert (M_str);
       }
+      delete A;
     }
     else
     {
@@ -600,36 +466,32 @@ void PPFS::search_upper_children (ForestMap * Forest_A, PFSNode * N,
         A->adjacent = new ElementSubset ("", set);
         for (j = A->leftmost; j < set->get_set_cardinality (); j++)
         {
+          bool should_add = false;
           A->vertex->add_element (j);
           string A_str = A->vertex->print_subset ();
+          A->vertex->remove_element (j);
           #pragma omp critical
           {
-            if (Forest_A->find (A_str) == Forest_A->end () && 
-                deleted_subsets->count (A_str) == 0)
-              A->adjacent->add_element (j);
+            should_add = get_node (Forest_A, A_str) == NULL && 
+              deleted_subsets->count (A_str) == 0;
           }
-          A->vertex->remove_element (j);
+          if (should_add)
+            A->adjacent->add_element (j);
         }
         A->cost = FLT_MAX;
 
         #pragma omp critical
-        store_visited_subset (A->vertex);
-
-        #pragma omp critical
         {
+          store_visited_subset (A->vertex);
           if (!deleted_subsets->count (M_str))
-          {
-            cout << "[" << omp_get_thread_num () << "]" <<
-              "    suc set new root " << A->vertex->print_subset () << endl;
             set_update_root (&A, Forest_A);
-          }
         }
       }
     }
     M->remove_element (i);
     i--;
   }
-  delete orig_M;
+  // delete orig_M;
 }
 
 
@@ -650,15 +512,11 @@ void PPFS::upper_forest_pruning (ForestMap * Forest_B, PFSNode * N,
     M_str = M.print_subset ();
     #pragma omp critical
     {
-      cout << "[" << omp_get_thread_num () << "]" <<
-        "  upper pruning iteration on M = " << M_str << endl;
       _M = remove_node (Forest_B, true, M_str);
       deleted_subsets->insert (M_str);
-      cout << "[" << omp_get_thread_num () << "]" <<
-        "  upper pruning is deleting " << M_str << endl;
       _M_copy = copy_node (_M);
-      delete _M;
     }
+    delete _M;
 
     search_lower_children (Forest_B, _M_copy, &M, N->vertex, 
       deleted_subsets);
@@ -671,14 +529,8 @@ void PPFS::upper_forest_pruning (ForestMap * Forest_B, PFSNode * N,
   M_str = M.print_subset ();
   #pragma omp critical
   {
-    cout << "[" << omp_get_thread_num () << "]" <<
-        "  upper pruning is deleting (out of main loop) " << M_str << endl;
     deleted_subsets->insert (M_str);
-    it = Forest_B->find (M.print_subset ());
-    if (it != Forest_B->end ())
-      _M = it->second;
-    else
-      _M = NULL;
+    _M = get_node (Forest_B, M_str);
     _M_copy = copy_node (_M);
   }
   
@@ -690,22 +542,8 @@ void PPFS::upper_forest_pruning (ForestMap * Forest_B, PFSNode * N,
     search_upper_root (Forest_B, &M, deleted_subsets);
   
   #pragma omp critical
-  {
-    cout << "[" << omp_get_thread_num () << "]" << 
-      "  deleted children on upper forest pruning" << endl;
-    SubsetSet::iterator sub_it;
-    for (sub_it = deleted_subsets->begin (); sub_it != deleted_subsets->end (); sub_it++)
-    {
-      cout << "** " << *sub_it << endl;
-    }
-    cout << "end" << endl;
-  }
-
-  #pragma omp critical
-  {
-    _M = remove_node (Forest_B, true, M_str);
-    delete_node (_M);
-  }
+  _M = remove_node (Forest_B, true, M_str);
+  delete_node (_M);
 }
 
 
@@ -726,15 +564,11 @@ void PPFS::lower_forest_pruning (ForestMap * Forest_A, PFSNode * N,
     M_str = M.print_subset ();
     #pragma omp critical
     {
-      cout << "[" << omp_get_thread_num () << "]" <<
-        "  lower pruning iteration on M = " << M_str << endl;
       _M = remove_node (Forest_A, false, M_str);
-      cout << "[" << omp_get_thread_num () << "]" <<
-        "  lower pruning is deleting " << M_str << endl;
       deleted_subsets->insert (M_str);
       _M_copy = copy_node (_M);
-      delete _M;
     }
+    delete _M;
 
     search_upper_children (Forest_A, _M_copy, &M, N->vertex,
       deleted_subsets);
@@ -747,14 +581,8 @@ void PPFS::lower_forest_pruning (ForestMap * Forest_A, PFSNode * N,
   M_str = M.print_subset ();
   #pragma omp critical
   {
-    cout << "[" << omp_get_thread_num () << "]" <<
-        "  lower pruning is deleting (out of main loop) " << M_str << endl;
     deleted_subsets->insert (M_str);
-    it  = Forest_A->find (M.print_subset ());
-    if (it != Forest_A->end ())
-      _M = it->second;
-    else
-      _M = NULL;
+    _M = get_node (Forest_A, M_str);
     _M_copy = copy_node (_M);
   }
 
@@ -766,43 +594,27 @@ void PPFS::lower_forest_pruning (ForestMap * Forest_A, PFSNode * N,
     search_lower_root (Forest_A, &M, deleted_subsets);
   
   #pragma omp critical
-  {
-    cout << "[" << omp_get_thread_num () << "]" << 
-      "  deleted children on upper forest pruning" << endl;
-    SubsetSet::iterator sub_it;
-    for (sub_it = deleted_subsets->begin (); sub_it != deleted_subsets->end (); sub_it++)
-    {
-      cout << "**" << *sub_it << endl;
-    }
-    cout << "end" << endl;
-  }
-
-  #pragma omp critical
-  {
-    _M = remove_node (Forest_A, false, M_str);
-    delete_node (_M);
-  }
-
+  _M = remove_node (Forest_A, false, M_str);
+  delete_node (_M);
 }
 
 void PPFS::calculate_node_cost (PFSNode * R, ForestMap * Forest_Dual)
 {
   if (R->cost != FLT_MAX)
     return;
-  
-  // copy elementsubset here?
-  PFSNode * RB_cpy = NULL;
-  ForestMap::iterator it; 
-    
 
-  it = Forest_Dual->find (R->vertex->print_subset ());
-  if (it != Forest_Dual->end ())
-    RB_cpy = copy_node (it->second);
+  PFSNode * RB_cpy = NULL;
+  string R_str = R->vertex->print_subset ();
+  ForestMap::iterator it; 
+  
+  #pragma omp critical
+  RB_cpy = copy_node (get_node (Forest_Dual, R_str));
 
   if (RB_cpy == NULL)
   {
     R->cost = cost_function->cost (R->vertex);
     R->vertex->cost = R->cost;
+    #pragma omp critical
     parallel_store_minimum_subset (R->vertex);
   }
   else if (RB_cpy->cost == FLT_MAX)
@@ -811,6 +623,7 @@ void PPFS::calculate_node_cost (PFSNode * R, ForestMap * Forest_Dual)
     R->vertex->cost = R->cost;
     RB_cpy->cost = R->cost;
     RB_cpy->vertex->cost = RB_cpy->cost;
+    #pragma omp critical
     parallel_store_minimum_subset (R->vertex);
   }
   else
@@ -818,6 +631,7 @@ void PPFS::calculate_node_cost (PFSNode * R, ForestMap * Forest_Dual)
     R->cost = RB_cpy->cost;
     R->vertex->cost = R->cost;
   } 
+  
   delete_node (RB_cpy);
 }
 
@@ -837,32 +651,32 @@ PFSNode * PPFS::remove_node (ForestMap * F, bool dual, string N_str)
   PFSNode * N = NULL;
   int i;
     
-  cout << "[" << omp_get_thread_num () << "]" <<
-          "  is removing node " << N_str << endl;
+  // cout << "[" << omp_get_thread_num () << "]" <<
+          // "  is removing node " << N_str << endl;
 
   i = set->get_set_cardinality () - 1;
   it = F->find (N_str);
   if (it != F->end ())
   {
     N = it->second;
-    ElementSubset * X = new ElementSubset (N->vertex);
-    if (dual)
-    {
-      while (i >= 0 && X->has_element (i))
-        i--;
-      X->add_element (i);
-    }
-    else
-    {
-      while (i >= 0 && !X->has_element (i))
-        i--;
-      X->remove_element (i);
-    }
+    // ElementSubset * X = new ElementSubset (N->vertex);
+    // if (dual)
+    // {
+      // while (i >= 0 && X->has_element (i))
+        // i--;
+      // X->add_element (i);
+    // }
+    // else
+    // {
+    //   while (i >= 0 && !X->has_element (i))
+    //     i--;
+    //   X->remove_element (i);
+    // }
     
-    father_it = F->find (X->print_subset ());
-    delete X;
-    if (father_it != F->end ())
-      father_it->second->adjacent->remove_element (i);
+    // father_it = F->find (X->print_subset ());
+    // delete X;
+    // if (father_it != F->end ())
+      // father_it->second->adjacent->remove_element (i);
 
     F->erase (it);
   }
@@ -936,12 +750,10 @@ void PPFS::set_update_root (PFSNode ** N_ptr, ForestMap * F)
   it = F->find (subset_str);
   if (it == F->end ()) 
   {
-    cout << "    [" << omp_get_thread_num () << "] adds root " << subset_str << endl;
     F->insert (ForestEntry (subset_str, *N_ptr));
   }
   else
   {
-    cout << "    [" << omp_get_thread_num () << "] updates root " << subset_str << endl;
     it->second->adjacent->subset_intersection ((*N_ptr)->adjacent);
     // todo: we should see which one has a calculated cost
     it->second->cost = (*N_ptr)->cost;
