@@ -58,11 +58,11 @@ protected:
 
   // Branches on the lower forest
   //
-  PFSNode * lower_forest_branch (ForestMap *, ForestMap *);
+  PFSNode * lower_forest_branch (ForestMap *, ForestMap *, SubsetSet *);
 
   // Branches on the upper forest
   // 
-  PFSNode * upper_forest_branch (ForestMap *, ForestMap *);
+  PFSNode * upper_forest_branch (ForestMap *, ForestMap *, SubsetSet *);
 
   // Given an ElementSubset that is going to be removed from the lower
   // forest, finds its child and, if the children is not supposed to be
