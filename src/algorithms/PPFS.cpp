@@ -102,6 +102,12 @@ void PPFS::lower_forest_iteration (ForestMap * Forest_A,
   {
     PFSNode * N;
     N = lower_forest_branch (Forest_A, Forest_B, &deleted_subsets);
+    
+    if (N != NULL)
+    {
+      #pragma omp critical
+      deleted_subsets.insert (N->vertex->print_subset ());
+    }
 
     #pragma omp critical
     cout << "[" << omp_get_thread_num () << "]" <<
@@ -125,6 +131,12 @@ void PPFS::upper_forest_iteration (ForestMap * Forest_A,
     PFSNode * N;
     N = upper_forest_branch (Forest_A, Forest_B, &deleted_subsets);
 
+    if (N != NULL)
+    {
+      #pragma omp critical
+      deleted_subsets.insert (N->vertex->print_subset ());
+    }
+
     #pragma omp critical
     cout << "[" << omp_get_thread_num () << "]" <<
           " finished upper branching" << endl;
@@ -132,7 +144,7 @@ void PPFS::upper_forest_iteration (ForestMap * Forest_A,
     if (N != NULL)
       if (!cost_function->has_reached_threshold ())
         lower_forest_pruning (Forest_A, N, &deleted_subsets);
-
+    
     delete_node (N);
   }
 }
@@ -147,14 +159,7 @@ PFSNode * PPFS::lower_forest_branch (ForestMap * Forest_A,
   unsigned int i, m;
 
   #pragma omp critical
-  // {
-    R = pop_node (Forest_A);  
-    // N_str = R->vertex->print_subset ();
-    // deleted_subsets->insert (N_str);
-    // 
-  // }
-  #pragma omp barrier
-
+  R = pop_node (Forest_A);  
 
   if (R == NULL)
     return NULL;
@@ -232,8 +237,6 @@ PFSNode * PPFS::upper_forest_branch (ForestMap * Forest_A,
 
   #pragma omp critical
   R = pop_node (Forest_B);
-  #pragma omp barrier
-
 
   if (R == NULL)
     return NULL;
