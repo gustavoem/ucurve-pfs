@@ -1,0 +1,93 @@
+O algoritmo \algname{Parallel U-Curve Search} (PUCS) foi desenvolvido 
+para resolver o problema U-Curve particionando o espaço de busca em 
+partes que podem ser resolvidas independentemente e de forma paralela. 
+Além disso, a dinâmica desse algoritmo depende de parâmetros que 
+determinam o tempo de execução e qualidade da solução obtida, permitindo
+ao usuário adequar o algoritmo aos recursos computacionais disponíveis. 
+
+\section{Princípios do algoritmo}
+ 
+\subsection{Partição do espaço de busca}
+Seja $S$ o conjunto de características do problema em questão. O 
+primeiro passo do particionamento é escolher arbitrariamente $S'$ um 
+subconjunto de $S$; de maneira complementar, definimos 
+$\overline{S'} = S \setminus S'$. Agora, sejam $X, Y \in \powerset (S)$
+e $\sim$ a relação:
+
+\begin{equation*}
+    X \sim Y \iff (X \cap S') = (Y \cap S')
+\end{equation*}
+Esta relação é de equivalência, pois nela valem:
+
+\begin{itemize}
+    \item{reflexividade}
+        \begin{align*} 
+            X \sim X \text{, pois }
+            (X \cap S') = (X \cap S')
+        \end{align*} 
+    \item{simetria}
+        \begin{align*}
+            X \sim Y  & \iff \\
+            (X \cap S') = (Y \cap S') & \iff \\
+            (Y \cap S') = (X \cap S') & \iff \\
+            Y \sim X 
+        \end{align*}
+    \item{transitividade,}
+        \begin{align*}
+            X \sim Y, Y \sim Z & \Rightarrow \\
+            (X \cap S') = (Y \cap S') = (Z \cap S') & \Rightarrow \\
+            (X \cap S') = (Z \cap S') & \Rightarrow \\
+            X \sim Z
+        \end{align*}
+\end{itemize}
+Portanto, o conjunto das classes de equivalência definidas por $\sim$ é
+uma partição do espaço de busca original. Tome como exemplo o conjunto
+$S = \{a, b, c\}$; se $S' = {a}$, então existem duas classes de 
+equivalência no particionamento do espaço de busca que definimos, 
+formados pelos conjuntos $\{\emptyset, b, c, bc\}$ e $\{a, ab, ac, 
+abc\}$.
+
+Pela definição da relação $\sim$ temos que a presença de cada 
+característica de $S'$ em uma dada parte do reticulado não muda, isto é,
+ou ela está presente em todos subconjuntos da parte ou não está presente
+em nenhum, portanto, dizemos que estas variáveis são {\bf fixas}. De 
+modo análogo, as variáveis de $\overline{S'}$ são {\bf livres}. Tanto 
+variáveis fixas quanto livres podem definir reticulados booleanos junto 
+a relação de ordem parcial $\subseteq$.
+
+O conjunto $\powerset (S')$ induz um reticulado booleano em que cada
+elemento representa uma classe de equivalência do espaço de soluções
+do problema original, chamamos este de {\bf reticulado externo}. Para 
+cada classe de equivalência (nó do reticulado externo), o conjunto 
+$\powerset (\overline {S'})$ induz um outro reticulado booleano ({\bf
+reticulado interno}) em que cada elemento representa um subconjunto de
+problema original. Seja $A \in \powerset (S')$ um elemento do reticulado 
+externo, então cada $B \in \powerset (\overline{S'})$ do reticulado 
+interno em $A$ representa o conjunto $X = B \cup A$ do espaço de busca
+do problema original.
+
+Os reticulados internos e externo elucidam a estrutura recursiva do 
+problema de seleção de características e sugerem que podemos construir 
+uma solução ao problema original a partir de soluções de outros 
+problemas, sobre os reticulados externo e internos, abordagem conhecida
+em computação como divisão e conquista. Seja $\langle S, c \rangle$ uma 
+instância do problema de seleção de características, $S'$ o conjunto de 
+variáveis fixas, $\overline{S'}$ o conjunto de variáveis livres, e 
+$A \in \powerset (S')$ um subconjunto que é nó do reticulado externo, 
+então podemos definir um outro problema de seleção de características 
+$\langle \overline{S'}, c_{A} \rangle$ em que 
+\begin{align*}
+    c_{A} (X) = c (X \cup A).
+\end{align*}
+Resolver a instância $\langle \overline{S'}, c_{A} \rangle$ é 
+essencialmente achar o mínimo do problema inicial restrito a classe de
+equivalência de $A$, dizemos também que estamos resolvendo a parte $A$. 
+Se soubermos em qual classe o mínimo global reside, podemos resolver 
+apenas tal parte e garantir que a solução encontrada é a solução do 
+problema original.
+
+O algoritmo PUCS percorre o reticulado externo recolhendo partes 
+candidatas a conter o mínimo e resolve cada uma destas, escolhendo o 
+mínimo das soluções destas partes como o mínimo global do problema.
+
+\subsection{Percorrimento do reticulado externo}
