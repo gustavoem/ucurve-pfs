@@ -4,6 +4,7 @@
 \usepackage[a4paper, top=30mm, left=20mm, bottom=20mm,
     right=20mm]{geometry}
 \usepackage{graphicx}
+\usepackage{color}
 \usepackage{fancyhdr}
 \fancyhead[LO,RE]{\itshape \nouppercase Chapter \arabic{chapter}}
 \usepackage{amssymb}
@@ -14,6 +15,8 @@
 \usepackage[backend=bibtex, 
             maxbibnames=10,
             style=alphabetic]{biblatex}
+\usepackage{hyperref}
+
 
 \pagestyle{fancy}
 
@@ -38,8 +41,15 @@
      Problema de Otimização U-curve} \\
     {\large Instituto de Matemática e Estatística} \\
 }
-\author{Gustavo Estrela de Matos}
-\date{\today}
+
+
+
+\author{{\bf Aluno:} \href{mailto:gustavo.estrela.matos@gmail.com}{Gustavo Estrela de Matos} \bigskip\\
+{\bf Orientador} \href{mailto:marcelo.reis@butantan.gov.br}{Marcelo da Silva Reis} \bigskip\\}
+
+
+
+\date{S\~ao Paulo, \today}
 
 
 \begin{document}
@@ -48,6 +58,7 @@
 \maketitle
 
 \chapter*{Resumo}
+A fazer.
 %O problema U-curve é uma formulação de um problema de otimização que 
 %pode ser utilizado na etapa de seleção de características em Aprendizado
 %de Máquina, com aplicações em desenho de modelos computacionais de 
