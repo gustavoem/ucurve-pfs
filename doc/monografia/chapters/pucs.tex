@@ -1,4 +1,4 @@
-O algoritmo \algname{Parallel U-Curve Search} (PUCS) foi desenvolvido 
+O algoritmo \algname{Parallel U-Curve Search (PUCS)} foi desenvolvido 
 para resolver o problema U-Curve particionando o espaço de busca em 
 partes que podem ser resolvidas independentemente e de forma paralela. 
 Além disso, a dinâmica desse algoritmo depende de parâmetros que 
@@ -86,8 +86,30 @@ Se soubermos em qual classe o mínimo global reside, podemos resolver
 apenas tal parte e garantir que a solução encontrada é a solução do 
 problema original.
 
-O algoritmo PUCS percorre o reticulado externo recolhendo partes 
-candidatas a conter o mínimo e resolve cada uma destas, escolhendo o 
-mínimo das soluções destas partes como o mínimo global do problema.
+O algoritmo \algname{PUCS} percorre o reticulado externo recolhendo 
+partes candidatas a conter o mínimo e resolve cada uma destas, 
+escolhendo o mínimo das soluções destas partes como o mínimo global do 
+problema.
 
-\subsection{Percorrimento do reticulado externo}
+\subsection{Dinâmica do algoritmo}
+Para escolher partes candidatas a conter o mínimo global do problema,
+o algoritmo \algname{PUCS} faz um passeio aleatório no reticulado 
+externo. O algoritmo se inicia escolhendo arbitrariamente um nó inicial 
+que pertence ao espaço de busca, então a cada passo as condições de podas
+são verificadas e escolhe-se aleatoriamente um vizinho do nó corrente
+que ainda pertence ao espaço de busca para se tornar o novo nó corrente.
+O algoritmo repete estes passos até que todos os nós do reticulado 
+externo tenham sido ou podados ou visitados.
+
+As podas eliminam do reticulado externo intervalos da forma 
+$[X, \powerset(S')]$ ou $[\emptyset, X]$ e são realizadas sempre que a 
+hipótese de curva em u implica que todas as partes contidas nestes 
+intervalos não contém o mínimo global. Para entender o critério de poda,
+vamos definir que a {\bf ponta superior} de um reticulado booleano 
+$\powerset (A)$ é o próprio conjunto $A$ e a {\bf ponta inferior} deste
+reticulado é o conjunto vazio.
+
+\begin{mydefinition}[Critério de poda para o reticulado externo do 
+algoritmo PUCS]
+Sejam $P, Q \in \powerset (S')$ dois elementos do reticulado externo.
+\end{mydefinition}
