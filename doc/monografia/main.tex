@@ -4,6 +4,7 @@
 \usepackage[a4paper, top=30mm, left=20mm, bottom=20mm,
     right=20mm]{geometry}
 \usepackage{graphicx}
+\usepackage{color}
 \usepackage{fancyhdr}
 \fancyhead[LO,RE]{\itshape \nouppercase Chapter \arabic{chapter}}
 \usepackage{amssymb}
@@ -14,6 +15,8 @@
 \usepackage[backend=bibtex, 
             maxbibnames=10,
             style=alphabetic]{biblatex}
+\usepackage{hyperref}
+
 
 \pagestyle{fancy}
 
@@ -35,21 +38,51 @@
 \newtheorem{mytheorem}{Teorema}
 \numberwithin{mytheorem}{section}
 
-\title{
-    {Projeto de Algoritmos Baseados em Florestas de Posets para o 
-     Problema de Otimização U-curve} \\
-    {\large Instituto de Matemática e Estatística} \\
-}
-\author{Gustavo Estrela de Matos}
-\date{\today}
-
 
 \begin{document}
 
 
-\maketitle
+\pagenumbering{roman}
+\thispagestyle{empty}
+\begin{center}
+{\Large
+{\bf Projeto de Algoritmos Baseados em Florestas de Posets para o 
+     Problema de Otimização U-curve}\\
+\bigskip
+\bigskip
+\bigskip
+\textsc{
+    Monografia apresentada\\[-0.25cm] 
+    ao\\[-0.25cm]
+    Instituto de Matemática e Estatística\\[-0.25cm]
+    da\\[-0.25cm]
+    Universidade de São Paulo\\[-0.25cm]
+    para\\[-0.25cm]
+    aprovação em MAC499 -- Trabalho\\[-0.25cm]
+    de\\[-0.25cm]
+    Conclusão de Curso}\\
+\bigskip
+\bigskip
+\bigskip
+{\bf Aluno:} \href{mailto:gustavo.estrela.matos@gmail.com}{Gustavo Estrela de Matos}\\
+\bigskip
+{\bf Orientador:} \href{mailto:marcelo.reis@butantan.gov.br}{Marcelo da Silva Reis}\\
+\bigskip
+\bigskip
+\bigskip
+Centro de Toxinas, Resposta-imune e Sinalização Celular (CeTICS)\\
+\bigskip
+Laboratório Especial de Ciclo Celular, Instituto Butantan\\
+\bigskip
+\bigskip
+\bigskip
+São Paulo, \today
+}
+\end{center}
+\newpage
 
 \chapter*{Resumo}
+A fazer.
 %O problema U-curve é uma formulação de um problema de otimização que 
 %pode ser utilizado na etapa de seleção de características em Aprendizado
 %de Máquina, com aplicações em desenho de modelos computacionais de 
@@ -71,6 +104,9 @@
 %comparativos entre diferentes algoritmos de seleção de características.
 
 \tableofcontents
+
+\clearpage
+\pagenumbering{arabic} 
 
 \nocite{*}
 \chapter{Introdução}

@@ -8,14 +8,14 @@
 % - algoritmos de seleção de características
 % - trabalhos antigos
 
-A seleção de características pode ser utilizada como um auxílio na
-construção de um modelo de aprendizado de máquina. Essa técnica consiste
+Seleção de características é uma técnica que pode ser utilizada em uma das
+etapas da construção de um modelo de aprendizado de máquina. Ela consiste
 em, dado o conjunto de características observadas nas amostras, escolher
 um subconjunto que seja ótimo de acordo com alguma métrica. Devemos 
-considerar a etapa de seleção de características na construção de um 
-modelo de aprendizado quando a quantidade de características é muito
-grande, o que pode fazer o modelo ser muito caro computacionalmente; ou
-quando a quantidade de amostras é pequena comparada a complexidade do 
+considerar o uso de seleção de características quando a quantidade de
+características é muito grande, o que pode tornar o uso do modelo muito caro
+do ponto de vista computacional. Outra aplicação dessa técnica é em situações
+nas quais a quantidade de amostras é pequena comparada à complexidade do 
 modelo original, em outras palavras, quando ocorre sobreajuste (do 
 inglês, \foreignword{overfitting}).
 
@@ -23,69 +23,77 @@ Mais formalmente, o problema de seleção de características consiste em
 um problema de otimização combinatória em que, dado um conjunto $S$ de 
 características, procuramos por um subconjunto $X \in \powerset (S)$
 ótimo de acordo com uma função de custo $c : \mathcal{P}(S) \to 
-\fieldR_{+}$. É comum nas abordagens do problema explorar o fato de que
+\fieldR_{+}$. {\color{blue}É comum nas abordagens do problema explorar o fato de que
 o espaço de busca $\powerset(S)$ junto a relação $\subseteq$ define um
-reticulado booleano. No geral, a função de custo $c$ deve ser capaz de
+reticulado Booleano {\bf[Adicionar referência(s) para esta afirmação]}}. No geral, a função de custo $c$ deve ser capaz de
 medir quão informativas as características $X$ são em respeito ao rótulo
-$Y$ do problema de aprendizado, portanto essa função costuma depender da
-estimação da distribuição de probabilidade de $(X, Y)$.
+$Y$ do problema de aprendizado; portanto $c$ costuma depender da
+estimação da distribuição de probabilidade conjunta de $(X, Y)$.
 
 Quando ocorre a estimação da distribuição de probabilidade conjunta de 
-$(X, Y)$, o custo das cadeias do reticulado booleano reproduzem um
-fenômeno conhecido em aprendizado de máquina, ``curvas em U''. Para 
+$(X, Y)$, o custo das cadeias do reticulado Booleano reproduzem um
+fenômeno conhecido em aprendizado de máquina, o das ``curvas em U''. Para 
 entender intuitivamente esse fenômeno, devemos observar que conforme 
 subimos uma cadeia do reticulado estamos aumentando o número de 
 características sendo consideradas, portanto existem mais possíveis
 valores de $X$, permitindo descrever melhor os valores de $Y$; por outro
 lado, também precisaríamos de mais amostras para estimar bem 
 $\probability (X, Y)$, e, quando isso não é possível, erros de estimação
-fazem com que o custo de $X$ aumente.
+fazem com que $c(X)$, isto é, o custo de $X$, aumente.
 
 Podemos então considerar um caso particular do problema de seleção de
 características em que a função de custo descreve ``curvas em U''
-em todas as cadeias do reticulado booleano. Esse caso particular é 
+em todas as cadeias do reticulado Booleano. Esse caso particular é 
 conhecido como problema U-curve e existem na literatura algoritmos 
 ótimos para esse problema como o \algname {U-Curve Branch and Bound 
-(UBB), U-Curve-Search (UCS) e Poset Forest Search (PFS)}. A solução do 
-problema U-Curve tem aplicações em problemas de aprendizado como projeto
-de W-operadores \cite{MJCJJB} e preditores na estimação de Redes Gênicas 
-Probabilísticas \cite{BCJMJ07}.
+(UBB), U-Curve-Search (UCS) e Poset Forest Search (PFS)} {\color{blue}[Adicionar referências para os algoritmos]}. A solução do 
+problema U-curve tem aplicações em problemas de aprendizado de máquina tais como como projeto
+de W-operadores~\cite{MJCJJB} e preditores na estimação de Redes Gênicas 
+Probabilísticas~\cite{BCJMJ07}.
 
-O problema U-Curve é NP-difícil \cite{REI12}, e os algoritmos 
-apresentados na literatura tem limitações, tanto do ponto de vista de
+O problema U-Curve é NP-difícil~\cite{REI12}; por conta deste fato, os algoritmos 
+apresentados até então na literatura têm limitações tanto do ponto de vista de
 tempo de computação quanto do uso de memória. Dentre estes algoritmos,
 destacamos o PFS, que foi criado como um melhoramento do algoritmo UBB. 
-O algoritmo PFS organiza o reticulado booleano em florestas, e essa 
-organização em árvores, que são disjuntas, indica que a paralelização 
-desse algoritmo deve trazer ganhos do ponto de vista de consumo de 
+O algoritmo PFS organiza o reticulado Booleano $(\mathcal{P}(S),\subseteq)$ em uma floresta de posets, composta de árvores disjuntas que são subgrafos da árvore que constitui o espaço de busca do algoritmo UBB. Além disso, PFS também mantém uma floresta de posets composta de árvores induzidas a partir de uma árvore construída a partir do reticulado Booleano dual $(\mathcal{P}(S),\supseteq)$. Uma vez que o espaço de busca é composto de várias árvores disjuntas, parece razoável a hipótese de que a paralelização 
+desse algoritmo possa trazer ganhos do ponto de vista de consumo de 
 tempo. Além disso, a escolha de árvores para etapa de ramificação no 
 algoritmo também pode ser explorada e pode trazer ganhos em respeito ao
 consumo de tempo e de memória.
 
+{\color{blue}[Comentário: acho que vai ter que revisar a explicação básica da dinâmica do PFS, detalhando-a mais e/ou fazendo referências para minha tese. Uma ideia seria aproveitar o que escrevemos sobre o PFS no projeto de mestrado]}.
+
 \section{Objetivos do Trabalho}
 Podemos dividir os objetivos deste trabalho em objetivos gerais e 
-específicos.
+específicos.\\
+
 {\bf Objetivos gerais}:
-\begin{itemize}
-\item{criar algoritmos para o problema U-Curve que sejam mais eficientes
+\begin{enumerate}
+\item{Criar algoritmos para o problema U-curve que sejam mais eficientes
 em consumo de tempo e/ou de memória do que as presentes soluções;}
-\item{verificar a qualidade das soluções econtradas no desenvolvimento
-de modelos de aprendizado computacional.}
-\end{itemize}
+\item{Verificar a qualidade das soluções encontradas no desenvolvimento
+de modelos de Aprendizado Computacional.}
+\end{enumerate}
+
 {\bf Objetivos específicos}:
 \begin{itemize}
-\item{estudar o algoritmo \algname {Poset Forest Search (PFS)};}
-\item{modificar a etapa ramificação do algoritmo \algname{PFS} e avaliar
+\item{Estudar o algoritmo \algname {Poset Forest Search (PFS)};}
+\item{Modificar a etapa de ramificação do algoritmo \algname{PFS} e avaliar
 as mudanças na dinâmica do algoritmo;}
-\item{paralelizar o algoritmo \algname{PFS}, com as modificações feitas
+\item{Paralelizar o algoritmo \algname{PFS}, com as modificações feitas
 na etapa de ramificação (se houver melhorias com tal mudança);}
-\item{criar um novo algoritmo, de natureza paralela, para o roblema 
-U-Curve, o \algname{PUCS};}
-\item{avaliar o consumo de recursos computacionais dos algoritmos 
+\item{Criar um novo algoritmo, de natureza paralela e facilmente combinável com outros algoritmos, para o problema 
+U-Curve (o algoritmo \algname{PUCS});}
+\item{Avaliar o consumo de recursos computacionais dos algoritmos 
 criados, comparando com os algoritmos já presentes na literatura como
 o \algname{UBB};}
-\item{avaliar os conjuntos de características selecionados por cada 
+\item{Avaliar os conjuntos de características selecionados por cada 
 algoritmo na seleção de modelos de aprendizado computacional, usando 
-como exemplo conjuntos de dados do repositório UCI Machine Learning 
-Repository.}
+como exemplo conjuntos de dados do repositório \href{https://archive.ics.uci.edu/ml/index.php}{UCI Machine Learning 
+Repository.}}
 \end{itemize}
+
+\section{Organização do Trabalho}
+
+A fazer, resumo de cada capítulo da monografia.
+
