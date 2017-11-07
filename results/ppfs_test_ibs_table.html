@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><meta http-equiv="content-type" content="text/html; charset=iso-8859-1"><TITLE>Feature selection algorithms and cost functions benchmarking</TITLE></HEAD>
+<BODY><H1>Feature selection algorithms and cost functions benchmarking</H1><HR>
+<H3>Table description:</H3>
+<EM>2^|S|:</EM> size of the search space of an instance of S elements.<BR>
+<EM>Total Time (sec):</EM> required time to run each algorithm (average of up to 50 runnings).<BR>
+<EM>Cost Function Time (sec):</EM> required time for the computation of all calls the cost function, during the running of each algorithm (average of 50 runnings).<BR>
+<EM># Calls of Cost Function:</EM> number of times the chosen cost function (SubsetSum) is computed by each algorithm (average of 50 runnings).<BR>
+<EM># The best solution:</EM> number of times (out of 50) that each algorithm had the best solution among all algorithms.<BR><HR><BR>
+<TABLE border='5'>
+<TR bgcolor='yellow'>
+<TD colspan=2><CENTER>Size of instance</CENTER></TD>
+<TD><CENTER>&nbsp;</CENTER></TD>
+<TD colspan=3><CENTER>Total Time (sec)</CENTER></TD>
+<TD><CENTER>&nbsp;</CENTER></TD>
+<TD colspan=3><CENTER>Cost Function Time (sec)</CENTER><TD><CENTER>&nbsp;</CENTER></TD>
+<TD colspan=3><CENTER># Calls of Cost Function</CENTER></TD>
+<TD><CENTER>&nbsp;</CENTER></TD>
+<TD colspan=3><CENTER># The best solution</CENTER></TD>
+</TR>
+<TR bgcolor='yellow'>
+<TD><CENTER>&nbsp;|S|&nbsp;</CENTER></TD><TD><CENTER>&nbsp;2^|S|&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD><TD><CENTER>&nbsp; UBB &nbsp;</CENTER></TD><TD><CENTER>&nbsp; PFS &nbsp;</CENTER></TD><TD><CENTER>&nbsp; PPFS &nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD><TD><CENTER>&nbsp; UBB &nbsp;</CENTER></TD><TD><CENTER>&nbsp; PFS &nbsp;</CENTER></TD><TD><CENTER>&nbsp; PPFS &nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD><TD><CENTER>&nbsp; UBB &nbsp;</CENTER></TD><TD><CENTER>&nbsp; PFS &nbsp;</CENTER></TD><TD><CENTER>&nbsp; PPFS &nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD><TD><CENTER>&nbsp; UBB &nbsp;</CENTER></TD><TD><CENTER>&nbsp; PFS &nbsp;</CENTER></TD><TD><CENTER>&nbsp; PPFS &nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp; 1&nbsp;</CENTER></TD><TD><CENTER>&nbsp;      2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.005&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.005&nbsp;&#8723;&nbsp;0.004&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.028&nbsp;&#8723;&nbsp;0.006&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;  2.0&nbsp;&#8723;&nbsp;  0.0&nbsp;</CENTER></TD><TD><CENTER>&nbsp;  2.0&nbsp;&#8723;&nbsp;  0.0&nbsp;</CENTER></TD><TD><CENTER>&nbsp;  2.0&nbsp;&#8723;&nbsp;  0.0&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp; 2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;      4&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.004&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.004&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.038&nbsp;&#8723;&nbsp;0.008&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;  3.8&nbsp;&#8723;&nbsp;  0.4&nbsp;</CENTER></TD><TD><CENTER>&nbsp;  3.9&nbsp;&#8723;&nbsp;  0.3&nbsp;</CENTER></TD><TD><CENTER>&nbsp;  3.9&nbsp;&#8723;&nbsp;  0.3&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp; 3&nbsp;</CENTER></TD><TD><CENTER>&nbsp;      8&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.004&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.004&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.039&nbsp;&#8723;&nbsp;0.007&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;  7.0&nbsp;&#8723;&nbsp;  1.3&nbsp;</CENTER></TD><TD><CENTER>&nbsp;  7.0&nbsp;&#8723;&nbsp;  1.2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;  7.0&nbsp;&#8723;&nbsp;  1.2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp; 4&nbsp;</CENTER></TD><TD><CENTER>&nbsp;     16&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.004&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.004&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.047&nbsp;&#8723;&nbsp;0.008&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp; 12.5&nbsp;&#8723;&nbsp;  3.6&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 12.8&nbsp;&#8723;&nbsp;  3.0&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 13.2&nbsp;&#8723;&nbsp;  3.3&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp; 5&nbsp;</CENTER></TD><TD><CENTER>&nbsp;     32&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.004&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.005&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.058&nbsp;&#8723;&nbsp;0.009&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp; 25.0&nbsp;&#8723;&nbsp;  6.9&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 26.8&nbsp;&#8723;&nbsp;  4.5&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 26.9&nbsp;&#8723;&nbsp;  3.0&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp; 6&nbsp;</CENTER></TD><TD><CENTER>&nbsp;     64&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.005&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.005&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.061&nbsp;&#8723;&nbsp;0.010&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp; 49.8&nbsp;&#8723;&nbsp; 15.8&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 52.7&nbsp;&#8723;&nbsp;  7.3&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 50.5&nbsp;&#8723;&nbsp;  6.4&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp; 7&nbsp;</CENTER></TD><TD><CENTER>&nbsp;    128&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.005&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.005&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.070&nbsp;&#8723;&nbsp;0.013&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp; 79.8&nbsp;&#8723;&nbsp; 43.1&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 87.3&nbsp;&#8723;&nbsp; 20.5&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 82.8&nbsp;&#8723;&nbsp; 23.5&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp; 8&nbsp;</CENTER></TD><TD><CENTER>&nbsp;    256&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.005&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.006&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.079&nbsp;&#8723;&nbsp;0.013&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;159.3&nbsp;&#8723;&nbsp; 82.3&nbsp;</CENTER></TD><TD><CENTER>&nbsp;177.0&nbsp;&#8723;&nbsp; 32.1&nbsp;</CENTER></TD><TD><CENTER>&nbsp;171.2&nbsp;&#8723;&nbsp; 36.2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp; 9&nbsp;</CENTER></TD><TD><CENTER>&nbsp;    512&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.005&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.008&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.104&nbsp;&#8723;&nbsp;0.021&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.001&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;401.6&nbsp;&#8723;&nbsp;160.9&nbsp;</CENTER></TD><TD><CENTER>&nbsp;333.8&nbsp;&#8723;&nbsp; 93.9&nbsp;</CENTER></TD><TD><CENTER>&nbsp;344.5&nbsp;&#8723;&nbsp; 95.2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;10&nbsp;</CENTER></TD><TD><CENTER>&nbsp;   1024&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.006&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.011&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.146&nbsp;&#8723;&nbsp;0.027&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.001&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;736.0&nbsp;&#8723;&nbsp;339.5&nbsp;</CENTER></TD><TD><CENTER>&nbsp;643.6&nbsp;&#8723;&nbsp;133.0&nbsp;</CENTER></TD><TD><CENTER>&nbsp;626.5&nbsp;&#8723;&nbsp;151.1&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;11&nbsp;</CENTER></TD><TD><CENTER>&nbsp;   2048&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.007&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.017&nbsp;&#8723;&nbsp;0.004&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.227&nbsp;&#8723;&nbsp;0.062&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.000&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.003&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;1336.0&nbsp;&#8723;&nbsp;724.4&nbsp;</CENTER></TD><TD><CENTER>&nbsp;1151.0&nbsp;&#8723;&nbsp;359.7&nbsp;</CENTER></TD><TD><CENTER>&nbsp;1135.6&nbsp;&#8723;&nbsp;381.1&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;12&nbsp;</CENTER></TD><TD><CENTER>&nbsp;   4096&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.009&nbsp;&#8723;&nbsp;0.003&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.029&nbsp;&#8723;&nbsp;0.007&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.385&nbsp;&#8723;&nbsp;0.113&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.001&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.001&nbsp;&#8723;&nbsp;0.000&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.006&nbsp;&#8723;&nbsp;0.002&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;2462.2&nbsp;&#8723;&nbsp;1522.0&nbsp;</CENTER></TD><TD><CENTER>&nbsp;2173.1&nbsp;&#8723;&nbsp;652.5&nbsp;</CENTER></TD><TD><CENTER>&nbsp;2139.2&nbsp;&#8723;&nbsp;710.3&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;13&nbsp;</CENTER></TD><TD><CENTER>&nbsp;   8192&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.014&nbsp;&#8723;&nbsp;0.006&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.049&nbsp;&#8723;&nbsp;0.015&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.640&nbsp;&#8723;&nbsp;0.237&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.002&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.001&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.010&nbsp;&#8723;&nbsp;0.004&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;4755.3&nbsp;&#8723;&nbsp;3356.7&nbsp;</CENTER></TD><TD><CENTER>&nbsp;3839.8&nbsp;&#8723;&nbsp;1376.6&nbsp;</CENTER></TD><TD><CENTER>&nbsp;3743.5&nbsp;&#8723;&nbsp;1532.9&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;14&nbsp;</CENTER></TD><TD><CENTER>&nbsp;  16384&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.024&nbsp;&#8723;&nbsp;0.012&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.104&nbsp;&#8723;&nbsp;0.037&nbsp;</CENTER></TD><TD><CENTER>&nbsp;1.337&nbsp;&#8723;&nbsp;0.513&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.004&nbsp;&#8723;&nbsp;0.002&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.003&nbsp;&#8723;&nbsp;0.001&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.022&nbsp;&#8723;&nbsp;0.009&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;10272.9&nbsp;&#8723;&nbsp;6213.5&nbsp;</CENTER></TD><TD><CENTER>&nbsp;8175.9&nbsp;&#8723;&nbsp;3037.4&nbsp;</CENTER></TD><TD><CENTER>&nbsp;8026.4&nbsp;&#8723;&nbsp;3303.7&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;15&nbsp;</CENTER></TD><TD><CENTER>&nbsp;  32768&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.045&nbsp;&#8723;&nbsp;0.028&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.163&nbsp;&#8723;&nbsp;0.078&nbsp;</CENTER></TD><TD><CENTER>&nbsp;2.010&nbsp;&#8723;&nbsp;1.096&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.008&nbsp;&#8723;&nbsp;0.005&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.005&nbsp;&#8723;&nbsp;0.003&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.033&nbsp;&#8723;&nbsp;0.019&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;20404.5&nbsp;&#8723;&nbsp;13887.2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;12459.6&nbsp;&#8723;&nbsp;6164.5&nbsp;</CENTER></TD><TD><CENTER>&nbsp;12062.2&nbsp;&#8723;&nbsp;6897.2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;16&nbsp;</CENTER></TD><TD><CENTER>&nbsp;  65536&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.082&nbsp;&#8723;&nbsp;0.054&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.360&nbsp;&#8723;&nbsp;0.163&nbsp;</CENTER></TD><TD><CENTER>&nbsp;4.483&nbsp;&#8723;&nbsp;2.030&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.015&nbsp;&#8723;&nbsp;0.010&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.012&nbsp;&#8723;&nbsp;0.006&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.077&nbsp;&#8723;&nbsp;0.037&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;39194.5&nbsp;&#8723;&nbsp;26393.2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;27027.3&nbsp;&#8723;&nbsp;12397.0&nbsp;</CENTER></TD><TD><CENTER>&nbsp;26835.7&nbsp;&#8723;&nbsp;12446.9&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;17&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 131072&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.150&nbsp;&#8723;&nbsp;0.113&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.664&nbsp;&#8723;&nbsp;0.362&nbsp;</CENTER></TD><TD><CENTER>&nbsp;8.072&nbsp;&#8723;&nbsp;4.370&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.029&nbsp;&#8723;&nbsp;0.022&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.022&nbsp;&#8723;&nbsp;0.012&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.136&nbsp;&#8723;&nbsp;0.076&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;70712.1&nbsp;&#8723;&nbsp;53653.1&nbsp;</CENTER></TD><TD><CENTER>&nbsp;48001.9&nbsp;&#8723;&nbsp;26149.2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;48093.4&nbsp;&#8723;&nbsp;26233.2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;18&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 262144&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.358&nbsp;&#8723;&nbsp;0.235&nbsp;</CENTER></TD><TD><CENTER>&nbsp;1.250&nbsp;&#8723;&nbsp;0.690&nbsp;</CENTER></TD><TD><CENTER>&nbsp;14.341&nbsp;&#8723;&nbsp;8.062&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.071&nbsp;&#8723;&nbsp;0.047&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.043&nbsp;&#8723;&nbsp;0.024&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.244&nbsp;&#8723;&nbsp;0.139&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;169213.3&nbsp;&#8723;&nbsp;111075.6&nbsp;</CENTER></TD><TD><CENTER>&nbsp;85880.9&nbsp;&#8723;&nbsp;47950.8&nbsp;</CENTER></TD><TD><CENTER>&nbsp;86050.8&nbsp;&#8723;&nbsp;49186.8&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;19&nbsp;</CENTER></TD><TD><CENTER>&nbsp; 524288&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.470&nbsp;&#8723;&nbsp;0.433&nbsp;</CENTER></TD><TD><CENTER>&nbsp;2.936&nbsp;&#8723;&nbsp;1.629&nbsp;</CENTER></TD><TD><CENTER>&nbsp;34.639&nbsp;&#8723;&nbsp;19.074&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.095&nbsp;&#8723;&nbsp;0.090&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.102&nbsp;&#8723;&nbsp;0.057&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.547&nbsp;&#8723;&nbsp;0.321&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;222283.3&nbsp;&#8723;&nbsp;204460.0&nbsp;</CENTER></TD><TD><CENTER>&nbsp;198503.0&nbsp;&#8723;&nbsp;108116.1&nbsp;</CENTER></TD><TD><CENTER>&nbsp;197832.5&nbsp;&#8723;&nbsp;110659.6&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;20&nbsp;</CENTER></TD><TD><CENTER>&nbsp;1048576&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;1.374&nbsp;&#8723;&nbsp;0.947&nbsp;</CENTER></TD><TD><CENTER>&nbsp;5.024&nbsp;&#8723;&nbsp;3.097&nbsp;</CENTER></TD><TD><CENTER>&nbsp;61.038&nbsp;&#8723;&nbsp;38.250&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.293&nbsp;&#8723;&nbsp;0.205&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.174&nbsp;&#8723;&nbsp;0.109&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.820&nbsp;&#8723;&nbsp;0.534&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;642566.4&nbsp;&#8723;&nbsp;440377.1&nbsp;</CENTER></TD><TD><CENTER>&nbsp;321495.8&nbsp;&#8723;&nbsp;198004.3&nbsp;</CENTER></TD><TD><CENTER>&nbsp;318507.0&nbsp;&#8723;&nbsp;199354.3&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;21&nbsp;</CENTER></TD><TD><CENTER>&nbsp;2097152&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;2.388&nbsp;&#8723;&nbsp;1.820&nbsp;</CENTER></TD><TD><CENTER>&nbsp;11.997&nbsp;&#8723;&nbsp;7.637&nbsp;</CENTER></TD><TD><CENTER>&nbsp;144.610&nbsp;&#8723;&nbsp;89.521&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;0.523&nbsp;&#8723;&nbsp;0.402&nbsp;</CENTER></TD><TD><CENTER>&nbsp;0.420&nbsp;&#8723;&nbsp;0.271&nbsp;</CENTER></TD><TD><CENTER>&nbsp;1.974&nbsp;&#8723;&nbsp;1.258&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;1115483.9&nbsp;&#8723;&nbsp;838108.2&nbsp;</CENTER></TD><TD><CENTER>&nbsp;754636.3&nbsp;&#8723;&nbsp;478683.6&nbsp;</CENTER></TD><TD><CENTER>&nbsp;759129.7&nbsp;&#8723;&nbsp;472831.1&nbsp;</CENTER></TD><TD><CENTER>&nbsp;</CENTER></TD>
+<TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD><TD><CENTER>&nbsp;50&nbsp;</CENTER></TD></TR>
+<TR><TD><CENTER>&nbsp;22&nbsp;</CENTER></TD><TD><CENTER>&nbsp;4194304&nbsp;</CENTER></TD>

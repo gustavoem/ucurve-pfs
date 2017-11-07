@@ -107,9 +107,46 @@ hipótese de curva em u implica que todas as partes contidas nestes
 intervalos não contém o mínimo global. Para entender o critério de poda,
 vamos definir que a {\bf ponta superior} de um reticulado booleano 
 $\powerset (A)$ é o próprio conjunto $A$ e a {\bf ponta inferior} deste
-reticulado é o conjunto vazio.
+reticulado é o conjunto vazio. Note que no reticulado interno de uma
+parte $P$ a ponta inferior representa o próprio conjunto de 
+características $P$, enquanto que a ponta superior representa o conjunto
+de características $P \cup \overline{S'}$.
 
-\begin{mydefinition}[Critério de poda para o reticulado externo do 
-algoritmo PUCS]
-Sejam $P, Q \in \powerset (S')$ dois elementos do reticulado externo.
-\end{mydefinition}
+\begin{mytheorem}[Critério de poda para o reticulado externo do 
+algoritmo \algname{PUCS}]
+Sejam $S$ um conjunto de características e $S'$ um conjunto de variáveis
+fixas no particionamento definido pelo algoritmo \algname{PUCS}. Dados
+$P, Q \in \powerset (S')$ dois elementos do reticulado externo com 
+$Q \subseteq P$; se a ponta inferior do reticulado interno de $P$ tem 
+custo maior do que a ponta inferior do reticulado interno de $Q$, então 
+todas as partes do intervalo $[P, \powerset (S')]$ tem apenas conjuntos 
+de características com custo maior do que o custo da ponta inferior de 
+$Q$.
+\end{mytheorem}
+\begin{proof}
+Se o custo da ponta inferior do reticulado interno de $P$ é maior do que
+a de $Q$, então:
+\begin{align*}
+    c_Q (\emptyset) < c_P (\emptyset) & \text{, portanto} \\
+    c (\emptyset \cup Q) < c (\emptyset \cup P) &\\
+    c (Q) < c (P)
+\end{align*}
+Como $Q \subseteq P$, temos que existe uma cadeia que passa pelas pontas
+inferiores de $Q$ e $P$. Além disso, para qualquer conjunto de 
+características $X \in \powerset (S)$, com $P \subseteq X$, a hipótese 
+de curva em U garante que:
+\begin{align*}
+    c (P) \leq max \{c (Q), c (X)\}
+\end{align*}
+e $c (P) > c (Q)$ implica que $c (X) \geq c (P)$, isto é, qualquer 
+elemento do reticulado booleano original que cobre a ponta inferior de 
+$P$ tem custo estritamente maior do que o custo da ponta inferior de $Q$.
+Note que para qualquer parte $R$ do intervalo $[P, \powerset (S')]$, 
+vale que $P \subseteq R$, e como a ponta inferior de $P$ não contém 
+nenhum elemento de $\overline {S'}$, então qualquer conjunto de 
+características da parte $R$ cobre a ponta inferior de $P$ e portanto 
+tem custo estritamente maior do que o custo da ponta inferior da parte 
+$Q$.
+\end{proof}
+
+% TODO: escrever o critério dual
