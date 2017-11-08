@@ -52,19 +52,59 @@ característica de $S'$ em uma dada parte do reticulado não muda, isto é,
 ou ela está presente em todos subconjuntos da parte ou não está presente
 em nenhum, portanto, dizemos que estas variáveis são {\bf fixas}. De 
 modo análogo, as variáveis de $\overline{S'}$ são {\bf livres}. Tanto 
-variáveis fixas quanto livres podem definir reticulados booleanos junto 
+variáveis fixas quanto livres podem definir reticulados Booleanos junto 
 a relação de ordem parcial $\subseteq$.
 
-O conjunto $\powerset (S')$ induz um reticulado booleano em que cada
+O conjunto $\powerset (S')$ induz um reticulado Booleano em que cada
 elemento representa uma classe de equivalência do espaço de soluções
 do problema original, chamamos este de {\bf reticulado externo}. Para 
 cada classe de equivalência (nó do reticulado externo), o conjunto 
-$\powerset (\overline {S'})$ induz um outro reticulado booleano ({\bf
+$\powerset (\overline {S'})$ induz um outro reticulado Booleano ({\bf
 reticulado interno}) em que cada elemento representa um subconjunto de
 problema original. Seja $A \in \powerset (S')$ um elemento do reticulado 
 externo, então cada $B \in \powerset (\overline{S'})$ do reticulado 
 interno em $A$ representa o conjunto $X = B \cup A$ do espaço de busca
-do problema original.
+do problema original. A figura \ref{fig:pucs_parts} apresenta um exemplo
+de particionamento feito pelo \algname{PUCS} em um reticulado Booleano
+com cinco características.
+
+\begin{figure}[!ht]
+  \centering 
+  \begin{tabular}{c c}
+    \subfigure[] {\scalebox{0.4}{
+     \includegraphics[clip=true]{pucs/partition/full_lattice.pdf}}
+     \label{fig:pucs_part:full} }
+    & 
+    \subfigure[] {\scalebox{1}{
+    \includegraphics[clip=true]{pucs/partition/external_lattice.pdf}}
+    \label{fig:pucs_part:external} }
+    \\
+    \subfigure[] {\scalebox{1}{
+    \includegraphics[clip=true]{pucs/partition/internal_lattice.pdf}}
+    \label{fig:pucs_part:internal} }
+    &
+    \subfigure[] {\scalebox{0.4}{
+    \includegraphics[clip=true]{pucs/partition/all_parts.pdf}}
+    \label{fig:pucs_part:parts} }   
+    \\
+  \end{tabular}
+    \caption{Exemplo de particionamento feito pelo algoritmo 
+    \algname{PUCS} em uma instância com cinco características; o 
+    reticulado Booleano desta instância é representado na figura 
+    \ref{fig:pucs_part:full}. Neste particionamento, as duas primeiras
+    variáveis formam o conjunto de variáveis fixadas, definindo o 
+    reticulado externo (figura \ref{fig:pucs_part:external}) enquanto 
+    as outras três definem os reticulados internos, que são cópias do
+    reticulado da figura \ref{fig:pucs_part:internal}. A figura 
+    \ref{fig:pucs_part:parts} mostra o reticulado Booleano original, sem
+    as arestas que ligam duas partes diferentes, e a cor de cada nó 
+    representa a qual parte tal nó pertence, de acordo com as cores
+    do reticulado externo em \ref{fig:pucs_part:external}
+    Note que, de fato, 
+    cada parte forma um reticulado pequeno de mesmo tamanho e com mesma 
+    estrutura que o reticulado da figura \ref{fig:pucs_part:internal}}
+  \label{fig:pucs_parts} 
+\end{figure}
 
 Os reticulados internos e externo elucidam a estrutura recursiva do 
 problema de seleção de características e sugerem que podemos construir 
@@ -91,6 +131,7 @@ partes candidatas a conter o mínimo e resolve cada uma destas,
 escolhendo o mínimo das soluções destas partes como o mínimo global do 
 problema.
 
+
 \subsection{Dinâmica do algoritmo}
 Para escolher partes candidatas a conter o mínimo global do problema,
 o algoritmo \algname{PUCS} faz um passeio aleatório no reticulado 
@@ -105,7 +146,7 @@ As podas eliminam do reticulado externo intervalos da forma
 $[X, \powerset(S')]$ ou $[\emptyset, X]$ e são realizadas sempre que a 
 hipótese de curva em u implica que todas as partes contidas nestes 
 intervalos não contém o mínimo global. Para entender o critério de poda,
-vamos definir que a {\bf ponta superior} de um reticulado booleano 
+vamos definir que a {\bf ponta superior} de um reticulado Booleano 
 $\powerset (A)$ é o próprio conjunto $A$ e a {\bf ponta inferior} deste
 reticulado é o conjunto vazio. Note que no reticulado interno de uma
 parte $P$ a ponta inferior representa o próprio conjunto de 
@@ -139,7 +180,7 @@ de curva em U garante que:
     c (P) \leq max \{c (Q), c (X)\}
 \end{align*}
 e $c (P) > c (Q)$ implica que $c (X) \geq c (P)$, isto é, qualquer 
-elemento do reticulado booleano original que cobre a ponta inferior de 
+elemento do reticulado Booleano original que cobre a ponta inferior de 
 $P$ tem custo estritamente maior do que o custo da ponta inferior de $Q$.
 Note que para qualquer parte $R$ do intervalo $[P, \powerset (S')]$, 
 vale que $P \subseteq R$, e como a ponta inferior de $P$ não contém 
