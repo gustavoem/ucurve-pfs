@@ -10,7 +10,8 @@
 //   M.S. Reis, G. Estrela, C.E. Ferreira and J. Barrera
 //   "featsel: A Framework for Benchmarking of
 //   Feature Selection Algorithms and Cost Functions"
-//   https://github.com/msreis/featsel
+//   SoftwareX 6 (2017) pp. 193-197.
+//   DOI: 10.1016/j.softx.2017.07.005.
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -72,6 +73,10 @@ int main(int argc, char * argv[])
   string file_name;
   bool store_visited_subsets = false;
   ofstream log_file;
+
+
+  // enables omp nested parallelization
+  omp_set_nested (true);
 
   srand ((unsigned) time (NULL));
 
@@ -200,7 +205,8 @@ by citing the paper that describes this framework: \n\n \
 M.S. Reis, G. Estrela, C.E. Ferreira and J. Barrera \n \
 'featsel: A Framework for Benchmarking of \n \
 Feature Selection Algorithms and Cost Functions' \n \
-https://github.com/msreis/featsel \n\n \
+SoftwareX 6 (2017) pp. 193-197.\n \
+DOI: 10.1016/j.softx.2017.07.005.\n\n \
 ");
 
   // Parse the arguments
@@ -314,10 +320,20 @@ https://github.com/msreis/featsel \n\n \
         a->append (argv[i]);
         if (strcmp (argv[i], "pucs") == 0) 
         {
-          if (argv[i + 1][0] != '-')
-            *p = atof (argv[++i]);
-          if (argv[i + 1][0] != '-')
-            *l = atoi (argv[++i]);
+          if (i + 2 < argc) {
+            if (argv[i + 1][0] != '-')
+              *p = atof (argv[++i]);
+            else 
+              *p = 0;
+            if (argv[i + 1][0] != '-')
+              *l = atoi (argv[++i]);
+            else
+              *l = 1;
+          }
+          else {
+            *l = 1;
+            *p = 0;
+          }
         }
       }
       else

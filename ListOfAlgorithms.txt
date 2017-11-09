@@ -18,3 +18,4 @@
        rpfs_leftmost RPFS_LEFTMOST
                 ppfs PPFS
            rpfs_rand RPFS_RAND
+                pucs PUCS
