@@ -5,9 +5,7 @@ Além disso, a dinâmica desse algoritmo depende de parâmetros que
 determinam o tempo de execução e qualidade da solução obtida, permitindo
 ao usuário adequar o algoritmo aos recursos computacionais disponíveis. 
 
-\section{Princípios do algoritmo}
- 
-\subsection{Partição do espaço de busca}
+\section{Princípios}\label{sec:pucs_principles}
 Seja $S$ o conjunto de características do problema em questão. O 
 primeiro passo do particionamento é escolher arbitrariamente $S'$ um 
 subconjunto de $S$; de maneira complementar, definimos 
@@ -64,9 +62,9 @@ reticulado interno}) em que cada elemento representa um subconjunto de
 problema original. Seja $A \in \powerset (S')$ um elemento do reticulado 
 externo, então cada $B \in \powerset (\overline{S'})$ do reticulado 
 interno em $A$ representa o conjunto $X = B \cup A$ do espaço de busca
-do problema original. A figura \ref{fig:pucs_parts} apresenta um exemplo
-de particionamento feito pelo \algname{PUCS} em um reticulado Booleano
-com cinco características.
+do problema original. A figura ~\ref{fig:pucs_parts} apresenta um 
+exemplo de particionamento feito pelo \algname{PUCS} em um reticulado 
+Booleano com cinco características.
 
 \begin{figure}[!ht]
   \centering 
@@ -91,18 +89,18 @@ com cinco características.
     \caption{Exemplo de particionamento feito pelo algoritmo 
     \algname{PUCS} em uma instância com cinco características; o 
     reticulado Booleano desta instância é representado na figura 
-    \ref{fig:pucs_part:full}. Neste particionamento, as duas primeiras
+    ~\ref{fig:pucs_part:full}. Neste particionamento, as duas primeiras
     variáveis formam o conjunto de variáveis fixadas, definindo o 
-    reticulado externo (figura \ref{fig:pucs_part:external}) enquanto 
+    reticulado externo (figura ~\ref{fig:pucs_part:external}) enquanto 
     as outras três definem os reticulados internos, que são cópias do
-    reticulado da figura \ref{fig:pucs_part:internal}. A figura 
-    \ref{fig:pucs_part:parts} mostra o reticulado Booleano original, sem
+    reticulado da figura ~\ref{fig:pucs_part:internal}. A figura 
+    ~\ref{fig:pucs_part:parts} mostra o reticulado Booleano original, sem
     as arestas que ligam duas partes diferentes, e a cor de cada nó 
     representa a qual parte tal nó pertence, de acordo com as cores
-    do reticulado externo em \ref{fig:pucs_part:external}
+    do reticulado externo em ~\ref{fig:pucs_part:external}
     Note que, de fato, 
     cada parte forma um reticulado pequeno de mesmo tamanho e com mesma 
-    estrutura que o reticulado da figura \ref{fig:pucs_part:internal}}
+    estrutura que o reticulado da figura ~\ref{fig:pucs_part:internal}}
   \label{fig:pucs_parts} 
 \end{figure}
 
@@ -126,25 +124,22 @@ Se soubermos em qual classe o mínimo global reside, podemos resolver
 apenas tal parte e garantir que a solução encontrada é a solução do 
 problema original.
 
-O algoritmo \algname{PUCS} percorre o reticulado externo recolhendo 
-partes candidatas a conter o mínimo e resolve cada uma destas, 
-escolhendo o mínimo das soluções destas partes como o mínimo global do 
-problema.
+
+\section{Dinâmica}
+Com as estruturas de reticulado interno e externo, o \algname{PUCS} 
+resolve uma instância do problema U-Curve em duas etapas. Na primeira, o
+algoritmo percorre o reticulado externo, fazendo podas sempre que 
+possível, e armazena cada parte que é candidata a conter o mínimo global
+do problema. Na segunda etapa, para cada parte candidata, resolve-se o
+problema U-Curve auxiliar que é equivalente ao problema original, mas 
+restrito a parte de interesse; em seguida, escolhe-se como resposta o 
+conjunto custo mínimo entre as soluções dos problemas parciais.
 
 
-\subsection{Dinâmica do algoritmo}
-Para escolher partes candidatas a conter o mínimo global do problema,
-o algoritmo \algname{PUCS} faz um passeio aleatório no reticulado 
-externo. O algoritmo se inicia escolhendo arbitrariamente um nó inicial 
-que pertence ao espaço de busca, então a cada passo as condições de podas
-são verificadas e escolhe-se aleatoriamente um vizinho do nó corrente
-que ainda pertence ao espaço de busca para se tornar o novo nó corrente.
-O algoritmo repete estes passos até que todos os nós do reticulado 
-externo tenham sido ou podados ou visitados.
-
+\subsection{Condições de poda}
 As podas eliminam do reticulado externo intervalos da forma 
 $[X, \powerset(S')]$ ou $[\emptyset, X]$ e são realizadas sempre que a 
-hipótese de curva em u implica que todas as partes contidas nestes 
+hipótese de curva em U implica que todas as partes contidas nestes 
 intervalos não contém o mínimo global. Para entender o critério de poda,
 vamos definir que a {\bf ponta superior} de um reticulado Booleano 
 $\powerset (A)$ é o próprio conjunto $A$ e a {\bf ponta inferior} deste
@@ -167,19 +162,21 @@ $Q$.
 \begin{proof}
 Se o custo da ponta inferior do reticulado interno de $P$ é maior do que
 a de $Q$, então:
+
 \begin{align*}
-    c_Q (\emptyset) < c_P (\emptyset) & \text{, portanto} \\
-    c (\emptyset \cup Q) < c (\emptyset \cup P) &\\
-    c (Q) < c (P)
+    c_Q (\emptyset) & < c_P (\emptyset) \\
+    c (\emptyset \cup Q) & < c (\emptyset \cup P) \\
+    c (Q) & < c (P) 
 \end{align*}
+
 Como $Q \subseteq P$, temos que existe uma cadeia que passa pelas pontas
 inferiores de $Q$ e $P$. Além disso, para qualquer conjunto de 
 características $X \in \powerset (S)$, com $P \subseteq X$, a hipótese 
 de curva em U garante que:
 \begin{align*}
-    c (P) \leq max \{c (Q), c (X)\}
+    c (P) & \leq max \{c (Q), c (X)\}
 \end{align*}
-e $c (P) > c (Q)$ implica que $c (X) \geq c (P)$, isto é, qualquer 
+e como $c (P) > c (Q)$, temos que $c (X) \geq c (P)$, isto é, qualquer 
 elemento do reticulado Booleano original que cobre a ponta inferior de 
 $P$ tem custo estritamente maior do que o custo da ponta inferior de $Q$.
 Note que para qualquer parte $R$ do intervalo $[P, \powerset (S')]$, 
@@ -190,4 +187,228 @@ tem custo estritamente maior do que o custo da ponta inferior da parte
 $Q$.
 \end{proof}
 
-% TODO: escrever o critério dual
+\begin{mytheorem}[Critério dual de poda para o reticulado externo do 
+algoritmo \algname{PUCS}]
+Sejam $S$ um conjunto de características e $S'$ um conjunto de variáveis
+fixas no particionamento definido pelo algoritmo \algname{PUCS}. Dados
+$P, Q \in \powerset (S')$ dois elementos do reticulado externo com 
+$Q \subseteq P$; se a ponta superior do reticulado interno de $P$ tem 
+custo menor do que a ponta superior do reticulado interno de $Q$, então 
+todas as partes do intervalo $[\emptyset, Q]$ tem apenas conjuntos 
+de características com custo maior do que o custo da ponta superior de 
+$P$.
+\end{mytheorem}
+
+\begin{proof}
+Se o custo da ponta superior do reticulado interno de $Q$ é maior do que
+a de $P$, então:
+
+\begin{align*}
+    c_P (\overline{S'}) & < c_Q (\overline{S'}) \\
+    c (\overline{S'} \cup P) & < c (\overline{S'} \cup Q) \\
+\end{align*}
+
+Como $Q \subseteq P$, temos que existe uma cadeia que passa pelas pontas
+superiores de $Q$ e $P$. Além disso, para qualquer conjunto de 
+características $X \in \powerset (S)$, com $\{Q \cup \overline{S'}\}\supseteq X$, a hipótese 
+de curva em U garante que:
+\begin{align*}
+    c (Q \cup \overline{S'}) \leq max \{c (P \cup \overline{S'}), c (X)\}
+\end{align*}
+e como $c (Q \cup \overline{S'}) > c (P \cup \overline{S'})$, temos que 
+$c (X) \geq c (Q \cup \overline{S'})$, isto é, qualquer elemento do reticulado Booleano 
+original que é coberto pela ponta superior de $Q$ tem custo estritamente maior 
+do que o custo da ponta superior de $P$. Note que para qualquer parte 
+$R$ do intervalo $[\emptyset, Q]$, vale que $R \subseteq Q$, e como 
+a ponta superior de $Q$ contém todos os elementos de $\overline {S'}$, 
+então qualquer conjunto de características da parte $R$ é coberto pela 
+ponta superior de $Q$ e portanto tem custo estritamente maior do que o 
+custo da ponta superior da parte $P$.
+\end{proof}
+
+\subsection{Passeio aleatório no reticulado externo}
+O passeio do \algname{PUCS} se inicia escolhendo arbitrariamente um nó 
+inicial que pertence ao espaço de busca, então a cada passo escolhe-se 
+aleatoriamente um vizinho do nó corrente, que também deve pertencer ao 
+espaço de busca, e verificam-se as condições de poda. Caso elas sejam 
+verdadeiras, o procedimento de poda elimina parte do reticulado; se o 
+vizinho escolhido foi removido nesta etapa, então escolhe-se outro 
+vizinho. O vizinho escolhido torna-se então o nó corrente e o 
+procedimento é repetido até que não seja possível escolher um vizinho; 
+quando isto ocorre e o espaço ainda não foi esgotado, escolhe-se 
+novamente um início de passeio arbitrariamente. Todo nó visitado é 
+automaticamente removido do espaço de busca, e os passeios aleatórios
+são repetidos até que o espaço de busca tenha sido esgotado, ou seja,
+todo nó foi ou visitado ou removido em alguma poda.
+
+Durante a realização dos passeios aleatórios, precisamos armazenar quais
+são as partes candidatas a conterem o mínimo global. As podas deste 
+algoritmo removem do espaço de busca apenas partes que obrigatoriamente 
+não contém o mínimo global, portanto qualquer outra parte é candidata a 
+conter tal elemento. Desta forma, como toda parte é visitada ou podada, 
+temos que o conjunto de nós visitados e não podados é exatamente o 
+conjunto de candidatos a conterem o subconjunto de custo ótimo.
+
+% TODO: acho que isso tem mais a ver com a implementação
+%Sempre que um nó do reticulado externo é podado ou visitado ele deve ser
+%removido do espaço de busca, e representar este espaço explicitamente 
+%não é uma boa solução devido ao seu tamanho, que é exponencial em 
+%relação a quantidade de características fixas. A estrutura de dados 
+%utilizada deve ser eficiente tanto para inserções (de intervalos e de 
+%pontos do reticulado) quanto para consultas. Escolhemos para este 
+%algoritmo 
+
+As figuras ~\ref{fig:pucs:example:part_1} - 
+~\ref{fig:pucs:example:part_3} mostram a dinâmica do \algname{PUCS} ao
+resolver uma instância do problema U-Curve.
+
+\begin{figure}[!ht]
+    \begin{center}
+    \begin{tabular}{l r}
+    \centering
+        \subfigure[] {
+        \label{fig:pucs:example:lattice}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/sample_run/Boolean_lattice.pdf}
+    }
+    &
+        \subfigure[] {
+        \label{fig:pucs:example:A}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/sample_run/A.pdf}
+    }
+    \end{tabular}   
+    \end{center}
+    \caption{Uma instância do problema U-Curve e o seu particionamento
+    quando o conjunto de variáveis fixas $S'$ é composto pela primeira, 
+    segunda e última variável. No reticulado externo, denotamos por $X$ 
+    \foreignword{don't cares}, que são as variáveis livres do 
+    particionamento. O subconjunto colorido em verde é o elemento de
+    custo mínimo desta instância.}
+    \label{fig:pucs:example:part_1}
+\end{figure}
+
+\begin{itemize}
+    \item{Figura ~\ref{fig:pucs:example:lattice}: uma instância do 
+        problema U-Curve com cinco características e com a função de 
+        custo anotada ao lado dos nós do reticulado.} 
+    \item{Figura ~\ref{fig:pucs:example:A}: o particionamento do espaço
+        de busca quando são fixadas a primeira, segunda e última 
+        característica.}
+\end{itemize}
+
+\begin{figure}[!ht]
+    \begin{center}
+    \begin{tabular}{l r}
+    \centering
+    \subfigure[] {
+        \label{fig:pucs:example:B}
+        \includegraphics[ clip=true, width=0.48\textwidth]{pucs/sample_run/B.pdf}
+    }
+    &
+    \subfigure[] {
+        \label{fig:pucs:example:C}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/sample_run/C.pdf}
+    }
+    \\
+    \subfigure[] {
+        \label{fig:pucs:example:D}
+        \includegraphics[ clip=true, width=0.48\textwidth]{pucs/sample_run/D.pdf}
+    }
+    &
+    \subfigure[] {
+        \label{fig:pucs:example:E}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/sample_run/E.pdf}
+    }
+    \end{tabular}   
+    \caption{Dinâmica do algoritmo \algname{PUCS} ao resolver a instância apresentada na figura ~\ref{fig:pucs:example:part_1}}
+    \label{fig:pucs:example:part_2}
+    \end{center}
+\end{figure}
+
+\begin{itemize}
+    \item{Figura ~\ref{fig:pucs:example:B} a parte 00XX0 é escolhida
+        arbitrariamente para ser o início do passeio aleatório. O 
+        vizinho 00XX1 é escolhido aleatoriamente como candidato a ser o
+        próximo nó do passeio. Como o custo da ponta superior de 00XX1 
+        (6) é menor do que o custo da ponta superior de 00XX0 (7), o
+        intervalo de partes $[000, 000]$ é removido do espaço de busca.}
+    \item{Figura ~\ref{fig:pucs:example:C} a pontas inferiores das 
+        partes 10XX1 (7) e 01XX1 (8) têm custo maior do que a ponta 
+        inferior de 00XX1 (5), portanto os intervalos de partes 
+        $[101, 111]$ e $[011, 111]$ são removidos do espaço de busca.}
+    \item{Figura ~\ref{fig:pucs:example:D} todos os vizinhos de 00XX1
+        foram podados, portanto esta parte torna-se candidata a conter 
+        o mínimo, e iniciamos um novo passeio.}
+    \item{Figura ~\ref{fig:pucs:example:E} a parte 10XX0 é escolhida 
+        arbitrariamente como início de passeio. O custo da ponta 
+        superior de 10XX0 (6) é maior do que o custo da ponta superior
+        de 11XX0 (5), portanto o intervalo de partes $[000, 100]$ é 
+        removido do espaço de busca.} 
+\end{itemize}
+
+    
+\begin{figure}[!ht]
+    \begin{center}
+    \begin{tabular}{l r}
+    \centering
+    \subfigure[] {
+        \label{fig:pucs:example:F}
+        \includegraphics[ clip=true, width=0.48\textwidth]{pucs/sample_run/F.pdf}
+    }
+    &
+    \subfigure[] {
+        \label{fig:pucs:example:G}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/sample_run/G.pdf}
+    }
+    \\
+    \subfigure[] {
+        \label{fig:pucs:example:H}
+        \includegraphics[ clip=true, width=0.48\textwidth]{pucs/sample_run/H.pdf}
+    }
+    &
+    \subfigure[] {
+        \label{fig:pucs:example:I}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/sample_run/I.pdf}
+    }
+    \end{tabular}   
+    \caption{Continuação da figura ~\ref{fig:pucs:example:part_2}}%
+    \label{fig:pucs:example:part_3}
+    \end{center}
+\end{figure}
+
+\begin{itemize}
+    \item{Figura ~\ref{fig:pucs:example:F} Nenhuma poda é realizada ao
+        comparar 11XX0 com 01XX0, portanto a última torna-se o nó 
+        corrente e a primeira torna-se candidata a conter o mínimo.} 
+    %TODO
+    \item{Figura ~\ref{fig:pucs:example:G}} 
+    \item{Figura ~\ref{fig:pucs:example:H} Resolve-se as partes 
+        candidatas a conter o mínimo.} 
+    \item{Figura ~\ref{fig:pucs:example:I} O elemento de custo mínimo
+        entre as partes é 11100, que é de fato a solução ótima do 
+        problema com custo 3.} 
+\end{itemize}
+
+
+\subsection{Solução das partes}
+Ao fim do passeio aleatório, teremos uma coleção de partes 
+que precisam ser resolvidas para se obter o conjunto de custo mínimo. 
+Nesta etapa, o \algname{PUCS} constrói para cada parte uma instância 
+auxiliar do problema U-Curve que é equivalente ao problema original, 
+porém restrito a parte de interesse. Seja $\langle S, c \rangle$ a 
+instância do problema original e $S'$ o conjunto de variáveis fixas no 
+particionamento feito pelo \algname{PUCS} neste problema, então,
+dada uma parte $A \in \powerset(S')$, o conjunto de custo mínimo nesta 
+parte é exatamente a solução ótima do problema U-Curve auxiliar 
+$\langle \overline{S'}, c_A \rangle$ em que $c_A (X) = c (X \cup A)$ 
+para qualquer $X \in \powerset(\overline{S'})$.
+
+Para solucionar os problemas auxiliares, podemos chamar um outro 
+algoritmo de seleção de características, ótimo ou sub-ótimo, e podemos 
+inclusive chamar o próprio \algname{PUCS}, tornando o algoritmo 
+recursivo. Chamamos o último algoritmo na sequência de chamadas 
+recursivas de {\bf algoritmo base}; o \algname{PUCS} é algoritmo base 
+apenas no caso em que cada parte contém apenas um elemento. A escolha do
+algoritmo base é crítica no desempenho da chamada do \algname{PUCS} 
+no que diz respeito a uso de recursos computacionais e também na 
+qualidade da solução obtida.
+
