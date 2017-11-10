@@ -409,12 +409,14 @@ no que diz respeito a uso de recursos computacionais e também na
 qualidade da solução obtida.
 
 
-\subsection{Parâmetros de funcionamento}
-%Na seção anterior apresentamos a dinâmica básica do algoritmo 
-%\algname{PUCS}, mas ainda não detalhamos como alguns passos acontecem. 
-Estes passos dependem da escolha de alguns parâmetros do algoritmo: $p$,
-$l$ e algoritmo base. Estes parâmetros são críticos para definir o 
-desempenho e qualidade de resposta obtida pelo \algname{PUCS}.
+\section{Parâmetros de funcionamento}
+Na seção anterior apresentamos a dinâmica básica do algoritmo 
+\algname{PUCS}, porém por simplicidade não definimos alguns parâmetros 
+que regem o funcionamento do mesmo. Apesar de ser fácil entender a 
+dinâmica do algoritmo sem conhecer estes parâmetros, eles tem papel 
+crítico no desempenho do mesmo, tanto no quesito de uso de recursos 
+computacionais quanto na qualidade da solução encontrada. Estes 
+parâmetros são $p$, $l$, e algoritmo base.
 
 O parâmetro $p$ define a quantidade de variáveis fixas no 
 particionamento do espaço de busca e deve estar contido no intervalo 
@@ -462,15 +464,19 @@ parte candidata, portanto percorre mais nós do que uma chamada única do
 algoritmo base.
 
 \section{Implementação do algoritmo}
+O algoritmo \algname{PUCS} foi implementado no arcabouço \emph{featsel},
+usando a linguagem \algname{C++}. Nesta seção apresentaremos detalhes
+sobre sua implementação 
 
 \subsection{Controle do espaço de busca}
-%Sempre que um nó do reticulado externo é podado ou visitado ele deve ser
-%removido do espaço de busca, e representar este espaço explicitamente 
-%não é uma boa solução devido ao seu tamanho, que é exponencial em 
-%relação a quantidade de características fixas. A estrutura de dados 
-%utilizada deve ser eficiente tanto para inserções (de intervalos e de 
-%pontos do reticulado) quanto para consultas. Escolhemos para este 
-%algoritmo 
+Sempre que um nó do reticulado externo é podado ou visitado ele deve ser
+removido do espaço de busca, e representar este espaço explicitamente 
+não é uma boa solução devido ao seu tamanho, que é exponencial em 
+relação a quantidade de características fixas. A estrutura de dados 
+utilizada deve ser eficiente tanto para inserções (de intervalos e de 
+pontos do reticulado) quanto para consultas. Escolhemos para nossa 
+implementação usar a estrutura de dados de diagramas de decisão binária
+reduzidos e ordenados ~\cite{Bry86}.
 
 
 \subsection{Paralelização do código}
@@ -479,6 +485,7 @@ algoritmo base.
 
 
 \subsection{Tempo de execução contra qualidade de solução}
+% TODO
 Os parâmetros $p$ e $l$ influenciam a dinâmica do algoritmo e também na
 granularidade do particionamento feito. Quando o valor destes parâmetros
 é baixo, o número de partes deve ser baixo e o desempenho do 
