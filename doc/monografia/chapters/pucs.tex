@@ -251,15 +251,6 @@ conter tal elemento. Desta forma, como toda parte é visitada ou podada,
 temos que o conjunto de nós visitados e não podados é exatamente o 
 conjunto de candidatos a conterem o subconjunto de custo ótimo.
 
-% TODO: acho que isso tem mais a ver com a implementação
-%Sempre que um nó do reticulado externo é podado ou visitado ele deve ser
-%removido do espaço de busca, e representar este espaço explicitamente 
-%não é uma boa solução devido ao seu tamanho, que é exponencial em 
-%relação a quantidade de características fixas. A estrutura de dados 
-%utilizada deve ser eficiente tanto para inserções (de intervalos e de 
-%pontos do reticulado) quanto para consultas. Escolhemos para este 
-%algoritmo 
-
 As figuras ~\ref{fig:pucs:example:part_1} - 
 ~\ref{fig:pucs:example:part_3} mostram a dinâmica do \algname{PUCS} ao
 resolver uma instância do problema U-Curve.
@@ -418,9 +409,9 @@ no que diz respeito a uso de recursos computacionais e também na
 qualidade da solução obtida.
 
 
-\section{Parâmetros de funcionamento}
-Na seção anterior apresentamos a dinâmica básica do algoritmo 
-\algname{PUCS}, mas ainda não detalhamos como alguns passos acontecem. 
+\subsection{Parâmetros de funcionamento}
+%Na seção anterior apresentamos a dinâmica básica do algoritmo 
+%\algname{PUCS}, mas ainda não detalhamos como alguns passos acontecem. 
 Estes passos dependem da escolha de alguns parâmetros do algoritmo: $p$,
 $l$ e algoritmo base. Estes parâmetros são críticos para definir o 
 desempenho e qualidade de resposta obtida pelo \algname{PUCS}.
@@ -438,17 +429,17 @@ Portanto, quanto maior o $p$ maior o tamanho do reticulado externo
 ($|\powerset(\overline{S'})|$) e vice-versa. Isto significa que quando 
 $p$ é pequeno, o \algname{PUCS} passa pouco tempo percorrendo o 
 reticulado externo e a maior parte do tempo deve ser gasta na solução 
-dos reticulados internos, pelo algoritmo base; quando $p$ é grande, o 
-inverso deve acontecer.
+dos reticulados internos individualmente, pelo algoritmo base; quando
+$p$ é grande, o inverso deve acontecer.
 
 Como vimos na seção ~\ref{sec:dynamics:solution}, a estrutura criada no
 particionamento do problema nos permite fazer chamadas recursivas do 
 \algname{PUCS}. O parâmetro $l$ determina a quantidade de chamadas 
-recursivas acontecerão até que o algoritmo base seja chamado. Ao fazer 
-chamadas recursivas estamos particionando o espaço de busca seguidas 
-vezes e portanto, assim como o parâmetro $p$, quando aumentamos o valor
-de $l$, o tamanho da parte que será resolvida pelo algoritmo base 
-diminui. 
+recursivas que acontecerão até que o algoritmo base seja chamado. Ao 
+fazer chamadas recursivas estamos particionando o espaço de busca 
+seguidas vezes e portanto, assim como o parâmetro $p$, quando aumentamos 
+o valor de $l$, o tamanho da parte que será resolvida pelo algoritmo 
+base diminui. 
 % É preciso notar que a quantidade total de partes cresce 
 % rapidamente com o crescimento de $l$, O número total de partes após $l$
 %chamadas recursivas do \algname{PUCS} é:
@@ -465,4 +456,41 @@ portanto se o algoritmo base é ótimo, então o \algname{PUCS} também é
 ótimo. Se o algoritmo base for uma heurística, então o \algname{PUCS}
 também se comporta como uma heurística, entretanto é provável que a 
 solução encontrada pelo \algname{PUCS} seja melhor do que a solução 
-dada pelo algoritmo base.
+dada pelo algoritmo base. Dizemos que isto é provável porque o 
+\algname{PUCS} faz diversas chamadas ao algoritmo base, uma para cada
+parte candidata, portanto percorre mais nós do que uma chamada única do
+algoritmo base.
+
+\section{Implementação do algoritmo}
+
+\subsection{Controle do espaço de busca}
+%Sempre que um nó do reticulado externo é podado ou visitado ele deve ser
+%removido do espaço de busca, e representar este espaço explicitamente 
+%não é uma boa solução devido ao seu tamanho, que é exponencial em 
+%relação a quantidade de características fixas. A estrutura de dados 
+%utilizada deve ser eficiente tanto para inserções (de intervalos e de 
+%pontos do reticulado) quanto para consultas. Escolhemos para este 
+%algoritmo 
+
+
+\subsection{Paralelização do código}
+
+\section{Ajuste dos parâmetros}
+
+
+\subsection{Tempo de execução contra qualidade de solução}
+Os parâmetros $p$ e $l$ influenciam a dinâmica do algoritmo e também na
+granularidade do particionamento feito. Quando o valor destes parâmetros
+é baixo, o número de partes deve ser baixo e o desempenho do 
+\algname{PUCS} deve ser mais próximo ao do algoritmo base.  Por outro 
+lado, quando $p$ e $l$ têm valor alto o particionamento deve ser mais 
+fino, criando mais partes; como consequência, o tempo gasto no 
+particionamento e no percorrimento do reticulado externo deve aumentar, 
+e além disso, o número de partes que serão resolvidas pelo algoritmo 
+base também deve aumentar. Portanto, quanto maior o valor destes 
+parâmetros, maior deve ser o tempo gasto pelo \algname{PUCS}.
+
+Se o algoritmo base usado é ótimo e a hipótese U-Curve é verdadeira, 
+então os parâmetros $p$ e $l$ não devem influenciar na qualidade da 
+solução encontrada porque nesta situação o \algname{PUCS} é ótimo, ou 
+seja, a solução encontrada sempre é a de custo mínimo. 
