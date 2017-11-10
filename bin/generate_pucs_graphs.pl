@@ -1,3 +1,25 @@
+#!/usr/bin/perl -w
+
+# generate_pucs_graphs.pl: script to generate graphs with the PUCS algorithm's
+# output results.
+#
+#    This file is part of the featsel program
+#    Copyright (C) 2016  Gustavo Estrela
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
 use strict;
 use POSIX;
 use lib './lib';
@@ -50,10 +72,10 @@ print "Starting $0 program.\nExecution of $number_of_instances " .
 
 # Generate instances
 my @instance_file;             # Store the list of instance file names.
-my $MAX_ELEM_VALUE = 100000;   # Maximum value of an element of S.
+my $MAX_ELEM_VALUE = 10000000;   # Maximum value of an element of S.
 foreach my $i (1..$number_of_instances)
 {
-  random_subset_sum_instance ($instance_size, $MAX_ELEM_VALUE, $INPUT_DIR, $_);
+  random_subset_sum_instance ($instance_size, $MAX_ELEM_VALUE, $INPUT_DIR, $i);
 }
 # Load files
 opendir (my $dh, $INPUT_DIR) or die "Cannot open input directory: $!\n";
@@ -63,14 +85,14 @@ closedir $dh;
 my @experiment;
 foreach my $file (sort @instance_file)
 {
-  if ($file =~ /Test_0*(\d+)_\w+/)
+  if ($file =~ /(Test_0*${instance_size}_\d+.\w+)/)
   {
     push @experiment, $file;
   }
   else
   {
-    die "\nError: '$file' file name must follow this format: Test_\\d+_\\w+." .
-        "xml" . ".\n\n";
+    die "\nError: '$file' file name must follow this format: Test_${instance_size}_(\\d+)" .
+        ".xml" . "\n\n";
   }
 }
 
@@ -86,7 +108,7 @@ foreach my $i (1..$p_values)
     print "Runnig with p = $p and l = $l ...";
     $avg_time[$i][$j] = 0;
     $avg_err[$i][$j] = 0;
-    foreach my $k (1..$number_of_instances)
+    foreach my $k (0..$number_of_instances - 1)
     {
       my ($t0, $t1);
       $t0 = [gettimeofday];
@@ -94,7 +116,6 @@ foreach my $i (1..$p_values)
               "-c subset_sum -f $INPUT_DIR/" . $experiment[$k] . 
               " > $LOG_FILE");
       $t1 = [gettimeofday];
-
       $avg_time[$i][$j] += tv_interval ($t0, $t1);
 
       open (LOG, $LOG_FILE);
@@ -103,14 +124,15 @@ foreach my $i (1..$p_values)
         if ($_ =~ /(\<\d+\>)\s+\:\s+(\S+)/)
         {
           my $minimum_found = $2;
+          # print "subset = $1 | ";
           $avg_err[$i][$j] += $minimum_found;
+          # print "minimum_found = $minimum_found\n";
         }
       }
       close(LOG);
-      
-      $avg_err[$i][$j] /= $number_of_instances;
-      $avg_time[$i][$j] /= $number_of_instances;
     }
+    $avg_err[$i][$j] /= $number_of_instances * 1.0;
+    $avg_time[$i][$j] /= $number_of_instances;
     print "[done].\n";
   }
 }
@@ -141,10 +163,11 @@ my $x = $max_l * 3;
 printf PLOT "set terminal svg enhanced size 700, 500\n";
 printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_time.svg'\n";
 printf PLOT "unset key\n";
-printf PLOT "set xlabel \"p\" rotate parallel\n";
+printf PLOT "set logscale z\n";
+printf PLOT "set xlabel \"p\" rotate parallel offset 0, -1\n";
 printf PLOT "set ytics 1\n";
 printf PLOT "set ylabel \"l\" rotate parallel\n";
-printf PLOT "set zlabel \"Average Total time (seconds)\" rotate parallel\n";
+printf PLOT "set zlabel \"Average Total time (seconds)\" rotate parallel offset -2,0\n";
 printf PLOT "unset colorbox\n";
 printf PLOT "set dgrid3d $l_values, $p_values\n";
 printf PLOT "set hidden3d\n";  
@@ -153,17 +176,17 @@ printf PLOT "splot \"$GNUPLOT_DATA_FILE\" using 1:2:4 with lines\n";
 system ("gnuplot $GNUPLOT_PLOT_FILE");
 system ("rm $GNUPLOT_PLOT_FILE");
 
-my $Xaxis = $max_p * 3;
-my $grid_points = $max_l * 3;
+$Xaxis = $max_p * 3;
+$grid_points = $max_l * 3;
 open (PLOT, ">$GNUPLOT_PLOT_FILE");
-my $x = $max_l * 3;
+$x = $max_l * 3;
 printf PLOT "set terminal svg enhanced size 700, 500\n";
 printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_error.svg'\n";
 printf PLOT "unset key\n";
-printf PLOT "set xlabel \"p\" rotate parallel\n";
+printf PLOT "set xlabel \"p\" rotate parallel offset 0, -1\n";
 printf PLOT "set ytics 1\n";
 printf PLOT "set ylabel \"l\" rotate parallel\n";
-printf PLOT "set zlabel \"Average Absolute Error from Optimal Solution\" rotate parallel\n";
+printf PLOT "set zlabel \"Average Absolute Error from Optimal Solution\" rotate parallel offset -2,0\n";
 printf PLOT "unset colorbox\n";
 printf PLOT "set dgrid3d $l_values, $p_values\n";
 printf PLOT "set hidden3d\n";  
@@ -171,8 +194,9 @@ printf PLOT "splot \"$GNUPLOT_DATA_FILE\" using 1:2:3 with lines\n";
 # Execute Gnuplot.
 system ("gnuplot $GNUPLOT_PLOT_FILE");
 # Remove temporary files.
-# system ("rm $GNUPLOT_PLOT_FILE");
-# system ("rm $GNUPLOT_DATA_FILE");
+system ("rm $GNUPLOT_PLOT_FILE");
+system ("rm $GNUPLOT_DATA_FILE");
+system ("rm $INPUT_DIR/*.xml");
 print "[done]\n";
 
 
@@ -185,6 +209,7 @@ sub random_subset_sum_instance
   my $sum = 0;
   $sum += $S[$_] foreach 1..$size;
   my $t = 0;
+  my $opt = "";
   foreach my $i (1..$size)
   {
     if (rand() > .5)
@@ -192,6 +217,7 @@ sub random_subset_sum_instance
       $t += $S[$i];
     }
   }
+
 
   my $file_name = sprintf "$INPUT_DIR/Test_%03d_%04d.xml", $size, $id;
   open (XML, ">$file_name")
