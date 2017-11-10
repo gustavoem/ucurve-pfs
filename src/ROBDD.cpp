@@ -209,7 +209,10 @@ void ROBDD::change_subset_value (ElementSubset * subset,
 
 void ROBDD::add_subset (ElementSubset * subset) 
 {
-  change_subset_value (subset, true);
+  ROBDD * subset_robdd = new ROBDD (elm_set, subset);
+  Vertex * root2 = subset_robdd->get_root ();
+  union_to (root2);
+  delete subset_robdd;
 }
 
 

@@ -150,6 +150,7 @@ de características $P \cup \overline{S'}$.
 
 \begin{mytheorem}[Critério de poda para o reticulado externo do 
 algoritmo \algname{PUCS}]
+\label{theorem:pucs:pruning}
 Sejam $S$ um conjunto de características e $S'$ um conjunto de variáveis
 fixas no particionamento definido pelo algoritmo \algname{PUCS}. Dados
 $P, Q \in \powerset (S')$ dois elementos do reticulado externo com 
@@ -189,6 +190,7 @@ $Q$.
 
 \begin{mytheorem}[Critério dual de poda para o reticulado externo do 
 algoritmo \algname{PUCS}]
+\label{theorem:pucs:pruning_dual}
 Sejam $S$ um conjunto de características e $S'$ um conjunto de variáveis
 fixas no particionamento definido pelo algoritmo \algname{PUCS}. Dados
 $P, Q \in \powerset (S')$ dois elementos do reticulado externo com 
@@ -379,9 +381,12 @@ resolver uma instância do problema U-Curve.
     \item{Figura ~\ref{fig:pucs:example:F} Nenhuma poda é realizada ao
         comparar 11XX0 com 01XX0, portanto a última torna-se o nó 
         corrente e a primeira torna-se candidata a conter o mínimo.} 
-    %TODO
-    \item{Figura ~\ref{fig:pucs:example:G}} 
-    \item{Figura ~\ref{fig:pucs:example:H} Resolve-se as partes 
+    \item{Figura ~\ref{fig:pucs:example:G} A parte 01XX0 torna-se o nó 
+        corrente, mas como não possui vizinho no espaço de busca é 
+        removida do espaço de busca e torna-se candidata a conter o 
+        mínimo.}  
+    \item{Figura ~\ref{fig:pucs:example:H} Todo nó foi removido do 
+        espaço de busca por podas ou por visitas. Resolve-se as partes 
         candidatas a conter o mínimo.} 
     \item{Figura ~\ref{fig:pucs:example:I} O elemento de custo mínimo
         entre as partes é 11100, que é de fato a solução ótima do 
@@ -389,7 +394,7 @@ resolver uma instância do problema U-Curve.
 \end{itemize}
 
 
-\subsection{Solução das partes}
+\subsection{Solução das partes} \label{sec:dynamics:solution}
 Ao fim do passeio aleatório, teremos uma coleção de partes 
 que precisam ser resolvidas para se obter o conjunto de custo mínimo. 
 Nesta etapa, o \algname{PUCS} constrói para cada parte uma instância 
@@ -412,3 +417,52 @@ algoritmo base é crítica no desempenho da chamada do \algname{PUCS}
 no que diz respeito a uso de recursos computacionais e também na 
 qualidade da solução obtida.
 
+
+\section{Parâmetros de funcionamento}
+Na seção anterior apresentamos a dinâmica básica do algoritmo 
+\algname{PUCS}, mas ainda não detalhamos como alguns passos acontecem. 
+Estes passos dependem da escolha de alguns parâmetros do algoritmo: $p$,
+$l$ e algoritmo base. Estes parâmetros são críticos para definir o 
+desempenho e qualidade de resposta obtida pelo \algname{PUCS}.
+
+O parâmetro $p$ define a quantidade de variáveis fixas no 
+particionamento do espaço de busca e deve estar contido no intervalo 
+$(0, 1]$, sendo a proporção de variáveis que devem ser fixadas; desta 
+forma:
+\begin{align*}
+    |S'| & =  \ceil{|S| * p} \\
+    |\overline{S'}| & = |S| - \ceil{|S| * p} \\
+\end{align*}
+Portanto, quanto maior o $p$ maior o tamanho do reticulado externo 
+($|\powerset (S')|$) e menor o tamanho dos reticulados internos 
+($|\powerset(\overline{S'})|$) e vice-versa. Isto significa que quando 
+$p$ é pequeno, o \algname{PUCS} passa pouco tempo percorrendo o 
+reticulado externo e a maior parte do tempo deve ser gasta na solução 
+dos reticulados internos, pelo algoritmo base; quando $p$ é grande, o 
+inverso deve acontecer.
+
+Como vimos na seção ~\ref{sec:dynamics:solution}, a estrutura criada no
+particionamento do problema nos permite fazer chamadas recursivas do 
+\algname{PUCS}. O parâmetro $l$ determina a quantidade de chamadas 
+recursivas acontecerão até que o algoritmo base seja chamado. Ao fazer 
+chamadas recursivas estamos particionando o espaço de busca seguidas 
+vezes e portanto, assim como o parâmetro $p$, quando aumentamos o valor
+de $l$, o tamanho da parte que será resolvida pelo algoritmo base 
+diminui. 
+% É preciso notar que a quantidade total de partes cresce 
+% rapidamente com o crescimento de $l$, O número total de partes após $l$
+%chamadas recursivas do \algname{PUCS} é:
+%\begin{align*}
+    %\prod_{i = 1}^l 2^{n (1 - p)^{i - 1}p}
+%\end{align*}
+
+
+O algoritmo base determina como as partes serão resolvidas. Note que os 
+teoremas ~\ref{theorem:pucs:pruning} e ~\ref{theorem:pucs:pruning_dual}
+garantem que se a hipótese U-Curve for verdadeira, então todas as partes
+que foram podadas do espaço de busca não contém o mínimo global, 
+portanto se o algoritmo base é ótimo, então o \algname{PUCS} também é
+ótimo. Se o algoritmo base for uma heurística, então o \algname{PUCS}
+também se comporta como uma heurística, entretanto é provável que a 
+solução encontrada pelo \algname{PUCS} seja melhor do que a solução 
+dada pelo algoritmo base.
