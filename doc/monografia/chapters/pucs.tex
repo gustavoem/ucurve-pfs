@@ -426,13 +426,13 @@ forma:
     |S'| & =  \ceil{|S| * p} \\
     |\overline{S'}| & = |S| - \ceil{|S| * p} \\
 \end{align*}
-Portanto, quanto maior o $p$ maior o tamanho do reticulado externo 
+Portanto, quanto maior o $p$, maior o tamanho do reticulado externo 
 ($|\powerset (S')|$) e menor o tamanho dos reticulados internos 
-($|\powerset(\overline{S'})|$) e vice-versa. Isto significa que quando 
-$p$ é pequeno, o \algname{PUCS} passa pouco tempo percorrendo o 
-reticulado externo e a maior parte do tempo deve ser gasta na solução 
-dos reticulados internos individualmente, pelo algoritmo base; quando
-$p$ é grande, o inverso deve acontecer.
+($|\powerset(\overline{S'})|$) e vice-versa. Note que quando $p$ é 
+pequeno o algoritmo \algname{PUCS} deve ser semelhante ao algorítmo 
+base, já que o tamanho das partes continua semelhante; quando o $p$ é
+grande, o particionamento é mais ``fino'' porque as partes se tornam 
+menores e consequentemente há mais partes.
 
 Como vimos na seção ~\ref{sec:dynamics:solution}, a estrutura criada no
 particionamento do problema nos permite fazer chamadas recursivas do 
@@ -449,7 +449,6 @@ base diminui.
     %\prod_{i = 1}^l 2^{n (1 - p)^{i - 1}p}
 %\end{align*}
 
-
 O algoritmo base determina como as partes serão resolvidas. Note que os 
 teoremas ~\ref{theorem:pucs:pruning} e ~\ref{theorem:pucs:pruning_dual}
 garantem que se a hipótese U-Curve for verdadeira, então todas as partes
@@ -464,9 +463,9 @@ parte candidata, portanto percorre mais nós do que uma chamada única do
 algoritmo base.
 
 \section{Implementação do algoritmo}
-O algoritmo \algname{PUCS} foi implementado no arcabouço \emph{featsel},
-usando a linguagem \algname{C++}. Nesta seção apresentaremos detalhes
-sobre sua implementação 
+O algoritmo \algname{PUCS} foi implementado no arcabouço 
+\toolname{featsel}, usando a linguagem \algname{C++}. Nesta seção 
+apresentaremos detalhes sobre sua implementação 
 
 \subsection{Controle do espaço de busca}
 Sempre que um nó do reticulado externo é podado ou visitado ele deve ser
@@ -476,15 +475,58 @@ relação a quantidade de características fixas. A estrutura de dados
 utilizada deve ser eficiente tanto para inserções (de intervalos e de 
 pontos do reticulado) quanto para consultas. Escolhemos para nossa 
 implementação usar a estrutura de dados de diagramas de decisão binária
-reduzidos e ordenados ~\cite{Bry86}.
-
+reduzidos e ordenados (\foreignword{Reduced Ordered Binary Decision 
+Diagram} (ROBDD)) ~\cite{Bry86}.
 
 \subsection{Paralelização do código}
+Usamos a biblioteca \toolname{OpenMP} na paralelização do código.
+Esta biblioteca nos permite paralelizar o algoritmo de maneira fácil,
+com anotações que indicam ao compilador como blocos do código fonte 
+podem ser processados paralelamente.
 
-\section{Ajuste dos parâmetros}
+O \algname{PUCS} foi criado com o intuito de ser um algoritmo paralelo
+para resolver o problema U-Curve. A particionamento do espaço foi feito
+exatamente para que o processo de paralelização do código fosse simples,
+facilitando a distribuição de trabalho entre threads e usando o mínimo
+de comunicação entre as mesmas. Desta forma, para paralelizar o código,
+basta indicar ao compilador que o particionamento e passeio pelo 
+reticulado deve ser feito pela thread principal enquanto a solução de 
+cada parte pode ser realizada por qualquer outra thread, usando a
+estrutura de \foreignword{tasks} da biblioteca \toolname{OpenMP}. 
+Desta forma, sempre que o algoritmo visita uma parte que não é podada, 
+cria-se uma \foreignword{task} que deve solucionar tal parte. 
+
+Esta abordagem pode causar cálculos supérfluos, pois partes resolvidas
+podem ser podadas no decorrer dos passeios aleatórios, no entanto, para 
+evitar tais recálculos seria necessário esperar o percorrimento de todo
+reticulado externo antes de se resolver as partes. Esta segunda 
+abordagem tornaria necessário armazenar e manter atualizada uma lista de 
+partes candidatas, o que pode ser caro computacionalmente; além disso, 
+como o passeio é feito apenas por uma thread, todas as outras seriam
+subutilizadas durante o passeio. 
+
+\section{Testes com instâncias artificiais}
+Nesta seção apresentamos testes feitos com o \algname{PUCS} ao  
+solucionar instâncias artificiais do problema U-Curve onde função de 
+custo utilizada é a de soma de subconjuntos. Estes testes foram feitos
+em uma servidora % TODO: configuração da servidora do butantan
+
+\subsection{Ajuste de parâmetros}
+Antes de discutir o desempenho do algoritmo, precisamos entender como
+os parâmetros devem ser ajustados para cada tipo de instância do 
+problema U-Curve. Consideramos instâncias pequenas aquelas que podem ser
+resolvidas otimamente. Estas instâncias costumam ter no máximo por volta
+de 30 características e algoritmos ingênuos como a busca exaustiva 
+podem, já para estas instâncias, se tornar muito caros 
+computacionalmente. Já as instâncias grandes, que não podem ser 
+resolvidas por algoritmos ótimos, costumam ter mais do que 30 
+características; utilizam-se para estas algoritmos sub-ótimos, 
+heurísticas.
+
+\subsubsection{Instâncias pequenas}
 
 
-\subsection{Tempo de execução contra qualidade de solução}
+\subsubsection{Instâncias grandes}
 % TODO
 Os parâmetros $p$ e $l$ influenciam a dinâmica do algoritmo e também na
 granularidade do particionamento feito. Quando o valor destes parâmetros
