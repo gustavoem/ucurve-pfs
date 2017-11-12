@@ -19,6 +19,8 @@
 \usepackage{hyperref}
 \usepackage{subfigure}
 \usepackage[font={small,it}]{caption}
+\usepackage{algpseudocode}
+\usepackage[plain]{algorithm}
 
 
 \pagestyle{fancy}
@@ -33,9 +35,15 @@
 \newcommand{\powerset}{\mathcal{P}}
 \newcommand{\probability}{\mathbb{P}}
 \newcommand{\expectation}{\mathbb{E}}
-\newcommand{\algname}[1]{{\tt #1}}
+\newcommand{\algname}[1]{\texttt{#1}}
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
+\newcommand{\mathsc}[1]{{\normalfont\textsc{#1}}}
+
+\algrenewcommand\Return{\State \algorithmicreturn{} } % tirar os returns da mesma linha nos pseudocodigos 
+
+
+\DeclareMathOperator*{\argmin}{argmin} 
 
 \addbibresource{references.bib}
 
@@ -43,6 +51,8 @@
 \numberwithin{mydefinition}{section}
 \newtheorem{mytheorem}{Teorema}
 \numberwithin{mytheorem}{section}
+\newtheorem{mylemma}{Lema}
+\numberwithin{mylemma}{section}
 
 
 \begin{document}
@@ -120,6 +130,9 @@ A fazer.
 
 \chapter{Conceitos Fundamentais}
 \input{chapters/fundamental_concepts}
+
+\chapter{Melhoramentos no Poset Forest Search}
+\input{chapters/pfs}
 
 \chapter{O algoritmo Parallel U-Curve Search}
 \input{chapters/pucs}

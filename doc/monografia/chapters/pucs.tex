@@ -525,21 +525,4 @@ heurísticas.
 
 \subsubsection{Instâncias pequenas}
 
-
 \subsubsection{Instâncias grandes}
-% TODO
-Os parâmetros $p$ e $l$ influenciam a dinâmica do algoritmo e também na
-granularidade do particionamento feito. Quando o valor destes parâmetros
-é baixo, o número de partes deve ser baixo e o desempenho do 
-\algname{PUCS} deve ser mais próximo ao do algoritmo base.  Por outro 
-lado, quando $p$ e $l$ têm valor alto o particionamento deve ser mais 
-fino, criando mais partes; como consequência, o tempo gasto no 
-particionamento e no percorrimento do reticulado externo deve aumentar, 
-e além disso, o número de partes que serão resolvidas pelo algoritmo 
-base também deve aumentar. Portanto, quanto maior o valor destes 
-parâmetros, maior deve ser o tempo gasto pelo \algname{PUCS}.
-
-Se o algoritmo base usado é ótimo e a hipótese U-Curve é verdadeira, 
-então os parâmetros $p$ e $l$ não devem influenciar na qualidade da 
-solução encontrada porque nesta situação o \algname{PUCS} é ótimo, ou 
-seja, a solução encontrada sempre é a de custo mínimo. 
