@@ -69,6 +69,8 @@ void UBB_PFS::get_minima_list (unsigned int max_size_of_minima_list)
     last_cost = Last_cost_stack.back ();
     Last_cost_stack.pop_back ();
 
+    // cout << "Current element_subset " << A->print_subset () << endl;
+
     current_cost = A->cost = cost_function->cost (A);
 
     if (A->get_subset_cardinality () == 0 || current_cost <= last_cost)
@@ -95,6 +97,7 @@ void UBB_PFS::get_minima_list (unsigned int max_size_of_minima_list)
         Leftmost_free_elem.push_back (i+1);
         Last_cost_stack.push_back (current_cost);
         A->remove_element (i);
+        // cout << "Stacked " << B->print_subset () << endl;
       }
     } // if
 
@@ -143,7 +146,9 @@ void UBB_PFS::parallel_solve (list<ElementSubset *> * S,
       if (leftmost == set->get_set_cardinality ())
       {
         #pragma omp critical
+        X->cost = cost_function->cost (X);
         store_minimum_subset (X);
+        // cout << X->print_subset () << " has empty subtree " << endl;
         delete X;
         continue;
       }
@@ -152,8 +157,6 @@ void UBB_PFS::parallel_solve (list<ElementSubset *> * S,
       partition = set_partition (leftmost);
       fixed_set = partition->get_fixed_elm_set ();
       unfixed_set = partition->get_unfixed_elm_set ();
-      // cout << "Fixed set size: " << fixed_set->get_set_cardinality () << endl;
-      // cout << "Unfixed set size: " << unfixed_set->get_set_cardinality () << endl;
 
       fixed_subset = new ElementSubset ("", fixed_set);
       for (unsigned int i = 0; i < fixed_set->get_set_cardinality (); i++)
