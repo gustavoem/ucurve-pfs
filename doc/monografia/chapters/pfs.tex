@@ -201,8 +201,13 @@ do espaço de busca em duas direções.
   \label{fig:pfs:pfs_trees}
 \end{figure}
 
-\section{Pseudo-código e }
-
+No algoritmo \algname{UBB} o controle do espaço de busca pode ser 
+facilmente implementado, pois basta não inserir a sub-árvore podada na 
+pilha de busca em profundidade. No \algname{PFS}, uma estratégia 
+equivalente é capaz apenas de restringir nós do espaço de busca que foi 
+utilizado para o percorrimento de cadeias, ou seja, uma poda neste 
+algoritmo implica na atualização das duas estruturas de dados que 
+controlam o espaço de busca. 
 
 \section{Melhoramentos na escolha de raiz}
 % - aleatória
