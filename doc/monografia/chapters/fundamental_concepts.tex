@@ -32,20 +32,19 @@ $X_2$, ..., $X_l$ tal que $X_1 \subseteq X_2 \subseteq \dots
 %utilizadas na seleção de característica descrevam curvas próximas do 
 %formato de u nas cadeias do reticulado. Esse fenômeno é conhecido em 
 %aprendizado e explicaremos como ele ocorre na seção 
-%\ref{fund_concept:cost_functions}.
+%\ref{fund_concept:mce}.
 
-\section{Funções de custo}
-Nesta seção apresentaremos as duas funções de custo mais utilizadas 
-durante este trabalho: a entropia condicional média (MCE) e a soma de 
-subconjuntos. A primeira foi utilizada na seleção de modelos de
-aprendizado, enquanto a segunda foi utilizada para criação e solução
-de instâncias artificiais. 
+%Nesta seção apresentaremos as duas funções de custo mais utilizadas 
+%durante este trabalho: a entropia condicional média (MCE) e a soma de 
+%subconjuntos. A primeira foi utilizada na seleção de modelos de
+%aprendizado, enquanto a segunda foi utilizada para criação e solução
+%de instâncias artificiais. 
 %A função de soma de subconjuntos é 
 %decomponível em curvas u e a MCE não, porém explicaremos como a última 
 %função deve ter um formato parecido com a da curva em u.
 
-\subsection{Custo de modelos de aprendizado computacional} 
-\label{fund_concept:cost_functions} A função de custo utilizada na 
+\section{Funções de custo}
+\label{fund_concept:mce} A função de custo utilizada na 
 solução do problema deve, de alguma forma, refletir a qualidade do 
 conjunto de características avaliado. Por isso,
 diferentes aplicações de seleção de características
@@ -133,14 +132,14 @@ concentre.
 
 Essa concentração da distribuição da probabilidade indica que o custo 
 dos subconjuntos deve diminuir conforme subimos por uma cadeia do 
-reticulado, ou seja, este raciocínio nos leva a pensar que adicionar 
+reticulado, e este raciocínio nos leva a pensar que adicionar 
 características sempre melhora a classificação; de fato, o valor de
 $\expectation[H (Y | \mathbf{X})]$ deve diminuir (até algum ponto 
 de saturação) conforme aumentamos o número de variáveis do problema. 
 Mas se isso é verdade, por que fazemos seleção de características? A 
 inconsistência entre esse raciocínio e a motivação para seleção de 
 característica é que essa linha de raciocínio negligenciou o fato de que 
-problemas de classificação (supervisada) dependem de uma amostra da 
+problemas de classificação (supervisionada) dependem de uma amostra da 
 distribuição de $Y$ dado $\mathbf{X = x}$, ou seja, não sabemos nem ao 
 menos calcular $H (Y | \mathbf{X = x})$, podemos apenas estimar o seu 
 valor a partir da amostra.
@@ -178,59 +177,8 @@ $
 $
 \end{center}
 
-\subsection{Soma de subconjuntos}
-Para se avaliar o desempenho dos algoritmos criados neste trabalho, 
-utilizamos instâncias artificiais que são reduções do problema da soma
-de subconjuntos. Este problema consiste em, dado um conjunto finito de
-inteiros não-negativos $S$ e um inteiro não-negativo $t$, descobrir se
-há um subconjunto de $S$ que soma $t$. Podemos resolver este problema 
-com a solução de uma instância do problema de seleção de características
-onde o conjunto de características é $S'$ uma cópia de $S$ e a função de
-custo é $c$:
-
-\begin{equation*} \label{cost_function:subset_sum}
-    c (X) = |t - \sum_{x \in X} x| \text{, para todo } 
-                                        X \in \powerset(S') \text{.}
-\end{equation*}
-
-Assim como a função de custo MCE, a função de custo de somas de 
-subconjuntos também apresenta um formato interessante nas cadeias
-do reticulado booleano. Para toda cadeia com elementos $A \subseteq B 
-\subseteq C$ vale que $c (B) \leq max\{c (A), c (B)\}$. Vamos provar 
-esta propriedade para dois casos disjuntos, quando $|t - \sum_{b \in B}
-b| > 0$ e quando $|t - \sum_{b \in B} b| \leq 0$. Começamos a 
-demonstração definindo $D = B \setminus A$ e $E = C \setminus B$.
-
-\begin{itemize}
-    \item{se $|t - \sum_{b \in B} b| > 0$, então:}
-    \begin{align*}
-        c (B) & =  |t - \sum_{b \in B} b|  & \\
-              & \leq  |t - \sum_{b \in B} b + \sum_{d \in D} d| & 
-                \text{(pois $S$ contém apenas números positivos e $t -
-                \sum_{b \in B} b > 0$)} \\
-              & = |t - \sum_{a \in B \setminus D} a| \\
-              & = |t - \sum_{a \in A} a| \\
-              & = c (A)
-    \end{align*}
-    portanto, $c (B) \leq  c (A)$, logo $c (B) \leq max \{c (A), c (C)\}$.
-    
-    \item{se $|t - \sum_{b \in B} b| \leq 0$, então:}
-    \begin{align*}
-        c (B) & =  |t - \sum_{b \in B} b|  & \\
-              & \leq  |t - \sum_{b \in B} b - \sum_{e \in E} e| & 
-                \text{(pois $S$ contém apenas números positivos e $t -
-                \sum_{b \in B} b \leq 0$)} \\
-              & = |t - \sum_{c \in B \cup E} c| \\
-              & = |t - \sum_{c \in C} c| \\
-              & = c (C)
-    \end{align*}
-    portanto, $c (B) \leq  c (C)$, logo $c (B) \leq max \{c (A), c (C)\}$.
-\end{itemize}
-Como acabamos de provar para os dois casos possíveis, temos que 
-$c (B) \leq max \{c (A), c (C)\}$. \qed
-
 \section{O problema U-Curve}
-As duas funções de custo apresentadas na seção ~\ref{fund_concept:cost_functions}
+A função de custo apresentada na seção ~\ref{fund_concept:mce}
 descrevem curvas que tem um formato em U (a menos de oscilações) nas 
 cadeias do reticulado booleano, vamos definir esta propriedade agora.
 
@@ -276,5 +224,117 @@ função de custo decomponível em curvas U a menos de algumas oscilações,
 por um algoritmo de busca do problema U-Curve. Tal abordagem não é 
 ótima, porém, como existem poucas oscilações da função de custo, é 
 provável que a solução encontrada ainda seja próxima da melhor solução.
+
+\section{Funções de custo artificiais}
+Para testar e comparar o desempenho de algoritmos precisamos de muitas 
+instâncias do problema U-Curve. Usar instâncias reais para este fim pode
+ser inviável devido a escassez de dados e, além disso, é possível isto
+cause uma análise viesada para os dados usados. Por isso é necessário 
+usar funções de custo que nos permitam criar instâncias artificiais 
+parecidas com problemas reais e que sejam tão gerais quanto possível, 
+evitando que a avaliação dos algoritmos seja viesada. 
+
+Nesta seção apresentamos duas funções de custo artificiais, a primeira 
+foi utilizada na maioria dos testes de desempenho dos algoritmos, 
+servindo de base para avaliar tempo de execução, otimalidade e número de 
+chamadas da função custo. A segunda não foi utilizada em testes deste
+trabalho, mas foi objeto de estudos pois, diferente da primeira, é capaz
+de simular violações da hipótese de curva U, o que é esperado que ocorra
+mesmo que moderadamente em instâncias reais.
+
+\subsection{Soma de subconjuntos}
+Para se avaliar o desempenho dos algoritmos criados neste trabalho, 
+utilizamos instâncias artificiais que são reduções do problema da soma
+de subconjuntos. Este problema consiste em, dado um conjunto finito de
+inteiros não-negativos $S$ e um inteiro não-negativo $t$, descobrir se
+há um subconjunto de $S$ que soma $t$. Podemos resolver este problema 
+com a solução de uma instância do problema de seleção de características
+onde o conjunto de características é $S'$ uma cópia de $S$ e a função de
+custo é $c$:
+
+\begin{equation*} \label{cost_function:subset_sum}
+    c (X) = |t - \sum_{x \in X} x| \text{, para todo } 
+                                        X \in \powerset(S') \text{.}
+\end{equation*}
+
+Assim como a função de custo MCE, a função de custo de somas de 
+subconjuntos também apresenta formato de curva em U nas cadeias
+do reticulado booleano. Para toda cadeia com elementos $A \subseteq B 
+\subseteq C$ vale que $c (B) \leq max\{c (A), c (B)\}$, então de fato 
+esta função é decomponível em curvas U. Vamos provar 
+esta propriedade para dois casos disjuntos, quando $|t - \sum_{b \in B}
+b| > 0$ e quando $|t - \sum_{b \in B} b| \leq 0$. Começamos a 
+demonstração definindo $D = B \setminus A$ e $E = C \setminus B$.
+
+\begin{itemize}
+    \item{se $|t - \sum_{b \in B} b| > 0$, então:}
+    \begin{align*}
+        c (B) & =  |t - \sum_{b \in B} b|  & \\
+              & \leq  |t - \sum_{b \in B} b + \sum_{d \in D} d| & 
+                \text{(pois $S$ contém apenas números positivos e $t -
+                \sum_{b \in B} b > 0$)} \\
+              & = |t - \sum_{a \in B \setminus D} a| \\
+              & = |t - \sum_{a \in A} a| \\
+              & = c (A)
+    \end{align*}
+    portanto, $c (B) \leq  c (A)$, logo $c (B) \leq max \{c (A), c (C)\}$.
+    
+    \item{se $|t - \sum_{b \in B} b| \leq 0$, então:}
+    \begin{align*}
+        c (B) & =  |t - \sum_{b \in B} b|  & \\
+              & \leq  |t - \sum_{b \in B} b - \sum_{e \in E} e| & 
+                \text{(pois $S$ contém apenas números positivos e $t -
+                \sum_{b \in B} b \leq 0$)} \\
+              & = |t - \sum_{c \in B \cup E} c| \\
+              & = |t - \sum_{c \in C} c| \\
+              & = c (C)
+    \end{align*}
+    portanto, $c (B) \leq  c (C)$, logo $c (B) \leq max \{c (A), c (C)\}$.
+\end{itemize}
+Como acabamos de provar para os dois casos possíveis, temos que 
+$c (B) \leq max \{c (A), c (C)\}$. Desta maneira, a função de custo de
+soma de subconjuntos é decomponível em curvas U.\qed
+
+\subsection{Violação da curva U}
+Como vimos na seção ~\ref{def:conditional_entropy}, funções de custo 
+utilizadas em problemas de seleção de características podem descrever 
+curvas em formato de U nas cadeias do reticulado Booleano, e isto nos 
+permite aproximar a solução destes problemas assumindo que a função de 
+custo é decomponível em curvas U. Entretanto, é possível que as funções
+de custo apresentem oscilações, ou seja, mínimos locais. Por isso, é 
+interessante estudar a robustez dos algoritmos que resolvem o problema 
+U-Curve quando a hipótese de curva em U não é verdadeira. Apesar de não 
+analisarmos os algoritmos deste trabalho quanto sua robustez, achamos 
+importante citar esta métrica de qualidade.
+
+Uma maneira de gerar funções com oscilações e violações da curva em U
+é adicionar uma perturbação senoidal a uma função decomponível em curvas
+U. Seja a seguinte função ~\cite{AG+18}:
+
+\begin{align*}
+    c(X | X_0, {\mathbf W}, c_{max}) &= c_{max} [1 - e^{- \frac{1}{2} 
+                    (X - X_0)^T {\mathbf W} (X - X_0)}] \\
+\end{align*}
+em que,
+\begin{align*}
+    X \in \powerset(S) & \text{ é um conjunto de características;} \\
+    X_0 \in \powerset (S) & \text{ é o conjunto de custo mínimo;} \\
+    c_{max} \in \fieldR & \text{ é uma constante que escala o custo máximo de um subconjunto;} \\
+    {\mathbf W} & \text { é uma matriz positiva-definida de pesos que dá forma a função.}
+\end{align*}
+
+Adiciona-se então um ruído senoidal a esta função
+
+\begin{align*}
+    & c(X | X_0, {\mathbf W}, c_{max}) = c_{max} [1 - e^{- \frac{1}{2} 
+                    (X - X_0)^T {\mathbf W} (X - X_0)}]  + 
+                    A \cos (2\pi f \beta (X)) \\
+    & \text{com } \beta (X) = \frac{1}{n} \sum_{i = 1}^{n} X (i)
+\end{align*}
+em que, $A \in \fieldR$ é uma constante que regula a amplitude do ruído, 
+ou seja, a profundidade dos mínimos locais; e $f \in \fieldR$ controla a
+frequência do ruído, isto é, qual a distância entre os mínimos locais 
+gerados.
+
 
 
