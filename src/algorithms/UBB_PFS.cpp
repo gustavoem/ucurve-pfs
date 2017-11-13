@@ -48,7 +48,9 @@ void UBB_PFS::get_minima_list (unsigned int max_size_of_minima_list)
   this->max_size_of_minima_list = max_size_of_minima_list;
 
   ElementSubset * A, * B;
-  unsigned int i, n;
+  unsigned int n;
+  int i;
+  int max_iterations = 2 * set->get_set_cardinality ();
   double bound, current_cost, last_cost;
   list <ElementSubset *> Stack;
   list <unsigned int> Leftmost_free_elem;
@@ -88,7 +90,7 @@ void UBB_PFS::get_minima_list (unsigned int max_size_of_minima_list)
       if (store_visited_subsets)
         list_of_visited_subsets->add_subset (A);
 
-      for (i = n; i < set->get_set_cardinality (); i++)
+      for (i = (int) set->get_set_cardinality () - 1; i >= (int) n; i--)
       {
         A->add_element (i);
         B = new ElementSubset ("", set);
@@ -101,12 +103,17 @@ void UBB_PFS::get_minima_list (unsigned int max_size_of_minima_list)
       }
     } // if
 
-    // if (Stack.size () >= omp_get_num_threads ())
-    if (Stack.size () >= 7)
+    cout << "parts: " << Stack.size () << endl;
+
+    //if ((unsigned int) Stack.size () > set->get_set_cardinality () ||
+    //    max_iterations < 1)
+    if ((int) Stack.size () >= omp_get_num_procs () || max_iterations < 0)
     {
+      cout << "max iterations: " << max_iterations << endl;
       parallel_solve (&Stack, &Leftmost_free_elem);
     }
-
+    
+    max_iterations--;
     delete A;
   } // while
 
@@ -145,10 +152,9 @@ void UBB_PFS::parallel_solve (list<ElementSubset *> * S,
 
       if (leftmost == set->get_set_cardinality ())
       {
-        #pragma omp critical
         X->cost = cost_function->cost (X);
+        #pragma omp critical
         store_minimum_subset (X);
-        // cout << X->print_subset () << " has empty subtree " << endl;
         delete X;
         continue;
       }
@@ -169,6 +175,8 @@ void UBB_PFS::parallel_solve (list<ElementSubset *> * S,
 
       #pragma omp task
       {
+        #pragma omp critical
+        cout << "[" << omp_get_thread_num () << "] solving part " << P->get_least_subset ()->print_subset () << endl; 
         Solver * sub_solver;
         sub_solver = new PosetForestSearch ();
         sub_solver->set_parameters (part_cost, unfixed_set, 
