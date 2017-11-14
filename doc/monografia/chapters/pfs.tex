@@ -29,12 +29,12 @@ Esta árvore é definida por aplicações recursivas do seguinte lema:
 
 \begin{mylemma}
 \label{lemma:lower_forest}
-Sejam $X$ e $Y$ conjunto, $X$ não-vazio e $I(i)$ o índice o $i$-ésimo 
+Sejam $X$ e $Y$ conjunto, $X$ não-vazio e $x_i$ o $i$-ésimo 
 elemento de $X$. Seja $X_0 \supseteq X_1 \supseteq \dots \supseteq 
 X_{|X|}$ uma cadeia tal que $X_0 = X$, $X_{|X|} = \emptyset$ e $X_{i} 
-\cup \{x_{I (i)}\} = X_{i - 1}$ para todo $0 < i \leq |X|$. Vale que:
+\cup \{x_i\} = X_{i - 1}$ para todo $0 < i \leq |X|$. Vale que:
 \begin{align*}
-\{ Y \} \cup \bigcup_{i = 1}^{|X|} \{W \cup Y \cup \{x_{I(i)}\} : W \in \powerset (X_i)\} = \{W \cup Y : W \in \powerset (X)\}.
+\{ Y \} \cup \bigcup_{i = 1}^{|X|} \{W \cup Y \cup \{x_i\} : W \in \powerset (X_i)\} = \{W \cup Y : W \in \powerset (X)\}.
 \end{align*}
 \end{mylemma} 
 
@@ -168,18 +168,26 @@ gerada por aplicações recursivas do lema ~\ref{lemma:upper_forest}.
 
 \begin{mylemma}
 \label{lemma:upper_forest}
-Sejam $X$ e $Y$ conjunto, $X$ não-vazio e $I(i)$ o índice o $i$-ésimo 
+Sejam $X$ e $Y$ conjunto, $X$ não-vazio e $x_i$o $i$-ésimo 
 elemento de $X$. Seja $X_0 \supseteq X_1 \supseteq \dots \supseteq 
 X_{|X|}$ uma cadeia tal que $X_0 = X$, $X_{|X|} = \emptyset$ e $X_{i} 
-\cup \{x_{I (i)}\} = X_{i - 1}$ para todo $0 < i \leq |X|$. Vale que:
+\cup \{x_i\} = X_{i - 1}$ para todo $0 < i \leq |X|$. Vale que:
 \begin{align*}
-    \{ Y \cup X\} \cup \bigcup_{i = 1}^{|X|} \{(X - (W \cup {x_{I(i)}})) \cup Y : W \in \powerset (X_i)\} = \{W \cup Y : W \in \powerset (X)\}.
+    \{ Y \cup X\} \cup \bigcup_{i = 1}^{|X|} \{(X - (W \cup {x_i})) \cup Y : W \in \powerset (X_i)\} = \{W \cup Y : W \in \powerset (X)\}.
 \end{align*}
 \end{mylemma} 
 
+%TODO: demonstração
+
 A figura ~\ref{fig:pfs:pfs_trees} mostra duas árvores do espaço de busca
 geradas pelo algoritmo. Note que estas árvores permitem o percorrimento
-do espaço de busca em duas direções.
+do espaço de busca em duas direções. Observe também que na construção
+da árvore que percorre o reticulado do conjunto menor para o maior 
+(figura ~\ref{fig:pfs:lower}), o conjunto de nós alcançáveis por $Y$ é 
+determinado pelo intervalo $[Y, X \cup Y]$, e na árvore dual (figura 
+~\ref{fig:pfs:upper}), construída por aplicações recursivas do lema 
+~\ref{lemma:upper_forest} o conjunto de nós alcançáveis por $Y$ é dado 
+pela intervalo $[X \setminus Y, Y]$.
 
 \begin{figure}[!ht]
   \centering 
@@ -204,15 +212,168 @@ do espaço de busca em duas direções.
 No algoritmo \algname{UBB} o controle do espaço de busca pode ser 
 facilmente implementado, pois basta não inserir a sub-árvore podada na 
 pilha de busca em profundidade. No \algname{PFS}, uma estratégia 
-equivalente é capaz apenas de restringir nós do espaço de busca que foi 
-utilizado para o percorrimento de cadeias, ou seja, uma poda neste 
+equivalente é capaz apenas de restringir nós da estrutura de dados que 
+foi utilizada para o percorrimento de cadeias, ou seja, uma poda neste 
 algoritmo implica na atualização das duas estruturas de dados que 
-controlam o espaço de busca. 
+controlam o espaço de busca. Então, quando removemos um intervalo
+de uma árvore, precisamos remover este mesmo intervalo da árvore dual; 
+como resultado, a árvore dual se torna uma {\bf floresta}. Portanto, o
+\algname{PFS} usa duas florestas para gerir o espaço de busca, uma
+com caminhos de conjuntos menores para maiores, $\forest_A$ e outra 
+dual, $\forest_B$. Um exemplo de atualização de árvore dual é
+apresentado na figura ~\ref{fig:pfs:forest_prune}.
+
+\begin{figure}[!ht]
+  \centering 
+  \begin{tabular}{c c}
+    \subfigure[] {\scalebox{0.4}{
+     \includegraphics[clip=true]{pfs/pfs/forest/lower_tree.pdf}}
+     \label{fig:pfs:forest_pruneA} }
+    & 
+    \subfigure[] {\scalebox{.4}{
+    \includegraphics[clip=true]{pfs/pfs/forest/upper_tree.pdf}}
+    \label{fig:pfs:forest_pruneB} }
+  \end{tabular}
+    \caption{Exemplo de atualização de árvore após remoção de intervalo.
+    Os nós em vermelho são removidos do espaço de busca enquanto os nós
+    amarelos são raízes dos grafos. Removemos o intervalo 
+    $[11100, 11111]$ da árvore da figura ~\ref{fig:pfs:forest_pruneA} e 
+    ao remover este mesmo intervalo da árvore dual, o grafo que 
+    representa o espaço na estrutura dual perde a raiz original 
+    $(11111)$ e ganha as três raízes em amarelo.}
+    \label{fig:pfs:forest_prune}
+\end{figure}
+
+O \algname{PFS} inicia escolhendo arbitrariamente uma direção de 
+percorrimento e uma raíz da floresta correspondente a direção escolhida.
+O passo seguinte é a ramificação, que similar ao \algname{UBB} percorre 
+uma cadeia da árvore escolhida enquanto o custo dos subconjuntos não 
+cresce e não chegamos em uma folha da árvore. Ao fim da fase de 
+ramificação, suponha que feita na floresta $\forest_A$ ($\forest_B$),
+teremos um intervalo $[Y, X \cup Y]$ ($[X \setminus Y, Y]$) que precisa
+ser removido da floresta dual. Esta atualização da floresta dual é 
+feita de acordo com as seguintes regras.
+
+\begin{mylemma}
+\label{lemma:upper_update}
+Sejam $T$ e $T'$ duas árvores tais que $T$ é complementar a $T'$. 
+Eliminar de $T'$ os vértices contidos no intervalo $[Y, X \cup Y]$ é 
+equivalente a remover de $T'$ todos os vértices do caminho $P$ de $T$ 
+com extremos $Y$ e $X \cup Y$ e também todos os vértices de $T'$ 
+contidos em intervalos $[Y, B]$ tais que $B$ contém propriamente $Y$ e 
+$B$ é adjacente inferior a um vértice de $P$.
+\end{mylemma}
+
+\begin{mylemma}
+\label{lemma:lower_update}
+Sejam $T$ e $T'$ duas árvores tais que $T$ é complementar a $T'$. 
+Eliminar de $T$ os vértices contidos no intervalo $[Y \setminus X, Y]$ 
+é equivalente a eliminar de $T$ todos os vértices do caminho $P$ em $T$
+com extremos $Y \setminus X$ e $Y$ e também todos os vértices de $T$
+contidos em intervalos $[A, Y]$ tais que $A$ é contido propriamente em
+$Y$ e $A$ é adjacente superior a um vértice de $P$.
+\end{mylemma}
+
+As demonstrações dos lemas ~\ref{lemma:upper_update} e 
+~\ref{lemma:lower_update} estão disponíveis em Reis ~\cite{Rei12}.
+
+O funcionamento do algoritmo deve seguir as seguintes regras:
+\begin{enumerate}[a)]
+    \item{\it Inicialização das florestas:} as florestas $\forest_A$ e 
+        $\forest_B$ são iniciadas com as raízes $\emptyset$ e $S$ 
+        respectivamente.
+    \item{\it Representação de árvores:} para todo nó do espaço de busca 
+        que não foi removido e não é raiz na floresta, a sub-árvore que
+        se inicia neste nó está completa no espaço de buscas. Desta 
+        forma, para representar a floresta precisamos apenas armazenar
+        as raízes da floresta e suas adjacências, pois sabemos que cada
+        vértice adjacente é raiz de uma subárvore completa.
+    \item{\it Gerenciamento das florestas:} durante a etapa de 
+        ramificação, um vértice visitado é podado ou torna-se raiz na 
+        floresta. Com isso, temos que todas arestas de um caminho 
+        percorrido são removidas da floresta.
+    \item{\it Condição de poda (dual):} no percorrimento de uma cadeia,
+        se o nó $Y$ da floresta $\forest_A$ ($\forest_B$) tem custo 
+        maior que o último nó visitado nesta cadeia, então podemos 
+        remover da floresta $\forest_A$ ($\forest_B$) a subárvore que
+        começa em $Y$, $[Y, X \cup Y]$ ($[Y \setminus X, Y]$).
+    \item{\it Atualização de floresta:} ao podar o intervalo 
+        $[Y, X \cup Y]$ ($[Y \setminus X, Y]$) da floresta $\forest_A$
+        ($\forest_B$), devemos remover os mesmos subconjuntos da outra
+        floresta de acordo com o lema ~\ref{lemma:upper_update}
+        (\ref{lemma:lower_update}).
+\end{enumerate}
+
+
+\subsection{Pseudo-código e detalhes de implementação do \algname{PFS}}
+Apresentamos nesta seção um pseudo-código para o algoritmo e ao mesmo
+tempo comentamos como algumas destas soluções foram implementadas por
+Reis no arcabouço \toolname{featsel}.
+
+\subsubsection{Definição de árvores de busca}
+Os algoritmos que descrevemos neste capítulo dependem da aplicação 
+recursiva dos lemas ~\ref{lemma:lower_forest} e 
+~\ref{lemma:upper_forest}, e para cada ordem de características $x_i$
+escolhida na aplicação do lema obtemos uma árvore diferente para 
+representar o espaço de busca (veja figura ~\ref{fig:pfs:tree_def}). A 
+implementação de Reis possui uma enumeração sobre as características 
+que nos permite fixar os resultados da aplicação recursiva destes lemas 
+e também facilita o controle das sub-árvores da floresta. Supomos então
+que o conjunto de características $S$ é uma lista ordenada 
+$\langle s_1, s_2, \dots, s_n \rangle$ e que é possível obter o índice 
+de um elemento. Assim, sempre que fazemos a decomposição do espaço em 
+uma árvore (com ambos lemas) escolhemos as variáveis do conjunto $X$ em
+ordem crescente de índice.
+
+\begin{figure}[!ht]
+  \centering 
+  \begin{tabular}{c c c}
+    \subfigure[] {\scalebox{0.7}{
+     \includegraphics[clip=true]{pfs/feature_enum/original_lattice.pdf}}
+     \label{fig:pfs:tree_def:A}}
+    & 
+    \subfigure[] {\scalebox{.7}{
+     \includegraphics[clip=true]{pfs/feature_enum/treeA.pdf}}
+    \label{fig:pfs:tree_def:B}}
+    & 
+    \subfigure[] {\scalebox{.7}{
+     \includegraphics[clip=true]{pfs/feature_enum/treeB.pdf}}
+    \label{fig:pfs:tree_def:C}}
+  \end{tabular}
+    \caption{Exemplos de aplicações recursivas do lema 
+    ~\ref{lemma:lower_forest} no reticulado booleano da figura 
+    ~\ref{fig:pfs:tree_def:A}. O conjunto $X$ indica para cada 
+    subconjunto $Y$ qual é o conjunto de nós de sua sub-árvore: 
+    exatamente os nós do intervalo $[Y, X \cup Y]$. Na figura 
+    ~\ref{fig:pfs:tree_def:B} a decomposição elimina de $X$ os elementos
+    na ordem $\langle a, b, c \rangle$ em todos os níveis de aplicação 
+    do lema, enquanto na figura ~\ref{fig:pfs:tree_def:C} a ordem é 
+    $\langle c, b, a \rangle$.}
+    \label{fig:pfs:tree_def}
+\end{figure}
+
 
 \section{Melhoramentos na escolha de raiz}
-% - aleatória
-% - "leftmost"
+% - começar falando sobre o problema... 
+%   a escolha era feita de maneira arbitrária. Estrutura de map guardava
+%   as raízes e escolhia-se o primeiro elemento do map, que de acordo com blabla
+%   será o menor elemento lexicograficamente ou o maior 
+% - por que mudar isso pode melhorar? Porque o critério é arbitrário
+% - aleatória: talvez traga melhoras se a abordagem anterior escolhesse 
+%   raízes ruins
+% - "leftmost": estamos priorizando percorrer as maiores árvores, em 
+%   tese
+
 \section{Melhoramentos no controle de raízes}
-% - uso de ROBDD com as outras variações de raízes
+% - quando o número de raízes é muito grande map é uma estrutura mais 
+%   cara para consultas e inserções, enquanto nas ROBDDs essa operação é 
+%   mais barata(?)
+%     - explicar ROBDDs
+% - uso de ROBDD
+%   com raíz aleatória e com raíz leftmost
 
 \section{Paralelização do código}
+% utilizando a biblioteca OpenMP
+% simplificação: paralelizamos iterações do código uma a uma
+% complicado: as coisas são intrínsecas
+%   -> o que é melhor: 

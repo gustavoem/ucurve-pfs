@@ -9,10 +9,8 @@
 \usetikzlibrary{arrows}
 
 
-\usepackage[paperheight=6.2in,paperwidth=6.7in,margin=0in]{geometry}
-
-\definecolor{myorange}{RGB}{100,200,100}
-
+\usepackage[paperheight=6.3in,paperwidth=6.7in,margin=0in]{geometry}
+\usepackage{my_colors}
 
 \begin{document}
 \begin{tikzpicture}
@@ -28,7 +26,9 @@
 % level 1
 
 \Vertex[x=0, y=0, LabelOut=true, Ldist=5pt]{}
+\SetVertexNormal[Shape = circle, FillColor = my_yellow, LineWidth=1pt]
 \Vertex[x=0, y=0]{$00000$}
+\SetVertexNormal[Shape = rectangle, FillColor = white, LineWidth=1pt]
 
 % level 2
 
@@ -72,8 +72,9 @@
 
 % level 4
 \Vertex[x=-7.2, y=9.5, LabelOut=true, Ldist=5pt]{}
+\SetVertexNormal[Shape = rectangle, FillColor = my_red, LineWidth=1pt]
 \Vertex[x=-7.2, y=9.5]{$11100$}
-\SetVertexNormal[Shape = rectangle, FillColor  = white]
+\SetVertexNormal[Shape = rectangle, FillColor = white, LineWidth=1pt]
 \Vertex[x=-2.4, y=9.5, LabelOut=true, Ldist=5pt]{}
 \Vertex[x=-2.4, y=9.5]{$11001$} 
 \Vertex[x=2.4, y=9.5, LabelOut=true, Ldist=5pt]{}
@@ -97,9 +98,11 @@
 % level 5
 
 \Vertex[x=-5, y=13.5, LabelOut=true, Ldist=5pt]{}
+\SetVertexNormal[Shape = rectangle, FillColor = my_red, LineWidth=1pt]
 \Vertex[x=-5, y=13.5]{$11110$} 
 \Vertex[x=-2.5, y=13.5, LabelOut=true, Ldist=5pt]{}
 \Vertex[x=-2.5, y=13.5]{$11101$}
+\SetVertexNormal[Shape = rectangle, FillColor = white, LineWidth=1pt]
 \Vertex[x=0, y=13.5, LabelOut=true, Ldist=5pt]{}
 \Vertex[x=0, y=13.5]{$11011$}
 \Vertex[x=2.5, y=13.5, LabelOut=true, Ldist=5pt]{}
@@ -110,6 +113,7 @@
 % level 6
 
 \Vertex[x=0, y=15, LabelOut=true, Ldist=5pt]{}
+\SetVertexNormal[Shape = rectangle, FillColor = my_red, LineWidth=1pt]
 \Vertex[x=0, y=15]{$11111$}
 
 %\SetVertexNormal[Shape      = rectangle,
@@ -128,8 +132,6 @@
 \Edges($00000$, $00010$) 
 \Edges($00000$, $00001$) 
 
-\Edges($11111$, $11110$) 
-
 % levels 1-2 and 4-3
 
 \Edges($10000$, $11000$)
@@ -145,12 +147,9 @@
 \Edges($01111$, $01110$) 
 \Edges($10111$, $10110$) 
 \Edges($11011$, $11010$) 
-\Edges($11101$, $11100$) 
-\Edges($11110$, $11100$) 
 
 
 % level 2-3
-\Edges($11000$, $11100$)
 \Edges($11000$, $11010$)
 \Edges($11000$, $11001$)
 \Edges($10100$, $10110$)

@@ -21,7 +21,7 @@
 \usepackage[font={small,it}]{caption}
 \usepackage{algpseudocode}
 \usepackage[plain]{algorithm}
-
+\usepackage[shortlabels]{enumitem}
 
 \pagestyle{fancy}
 
@@ -39,6 +39,7 @@
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
 \newcommand{\mathsc}[1]{{\normalfont\textsc{#1}}}
+\newcommand{\forest}{\mathcal{F}}
 
 \algrenewcommand\Return{\State \algorithmicreturn{} } % tirar os returns da mesma linha nos pseudocodigos 
 
@@ -54,6 +55,9 @@
 \newtheorem{mylemma}{Lema}
 \numberwithin{mylemma}{section}
 
+
+% TODO: 
+% incluir featsel nas referências
 
 \begin{document}
 
