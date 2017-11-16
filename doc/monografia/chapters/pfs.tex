@@ -29,7 +29,7 @@ Esta árvore é definida por aplicações recursivas do seguinte lema:
 
 \begin{mylemma}
 \label{lemma:lower_forest}
-Sejam $X$ e $Y$ conjunto, $X$ não-vazio e $x_i$ o $i$-ésimo 
+Sejam $X$ e $Y$ conjuntos, $X$ não-vazio e $x_i$ o $i$-ésimo 
 elemento de $X$. Seja $X_0 \supseteq X_1 \supseteq \dots \supseteq 
 X_{|X|}$ uma cadeia tal que $X_0 = X$, $X_{|X|} = \emptyset$ e $X_{i} 
 \cup \{x_i\} = X_{i - 1}$ para todo $0 < i \leq |X|$. Vale que:
@@ -84,9 +84,9 @@ outro nó. Agora suponha que estamos em um nó $Y$, então
 definimos $X_0 = X_Y$, $X_{Y_i} \cup \{x_i\} = X_{Y_{i - 1}}$, e 
 $Y_i = Y \cup \{x_i\}$ para $x_i \in X_Y$; então para criar a sub-árvore 
 com raiz $Y$ basta adicionar os arcos $(Y, Y_i)$ para cada $i$ e aplicar 
-o lema recursivamente para cada $Y_i$. A figura ~\ref{fig:pfs:ubb_tree} 
-mostra uma árvore arbitrária gerada pela aplicação recursiva do lema 
-~\ref{lemma:lower_forest}. 
+o lema recursivamente para cada $Y_i$ e $X_{Y_i}$. A figura 
+~\ref{fig:pfs:ubb_tree} mostra uma árvore arbitrária gerada pela 
+aplicação recursiva do lema. 
 
 \begin{figure}[!ht]
   \centering 
@@ -239,9 +239,8 @@ apresentado na figura ~\ref{fig:pfs:forest_prune}.
     Os nós em vermelho são removidos do espaço de busca enquanto os nós
     amarelos são raízes dos grafos. Removemos o intervalo 
     $[11100, 11111]$ da árvore da figura ~\ref{fig:pfs:forest_pruneA} e 
-    ao remover este mesmo intervalo da árvore dual, o grafo que 
-    representa o espaço na estrutura dual perde a raiz original 
-    $(11111)$ e ganha as três raízes em amarelo.}
+    ao remover este mesmo intervalo da árvore dual, o grafo perde a 
+    raiz original $(11111)$ e ganha as três raízes em amarelo.}
     \label{fig:pfs:forest_prune}
 \end{figure}
 
@@ -296,9 +295,11 @@ O funcionamento do algoritmo deve seguir as seguintes regras:
         percorrido são removidas da floresta. \label{pfs:rule:c}
     \item{\it Condição de poda (dual):} no percorrimento de uma cadeia,
         se o nó $Y$ da floresta $\forest_A$ ($\forest_B$) tem custo 
-        maior que o último nó visitado nesta cadeia, então podemos 
-        remover da floresta $\forest_A$ ($\forest_B$) a subárvore que
-        começa em $Y$, $[Y, X \cup Y]$ ($[Y \setminus X, Y]$). 
+        maior que o último nó visitado nesta cadeia, então removemos da
+        floresta $\forest_A$ ($\forest_B$) a subárvore que
+        começa em $Y$, $[Y, X \cup Y]$ ($[Y \setminus X, Y]$). Se um nó
+        $Y$ visitado não tem conjuntos adjacentes no espaço de busca, 
+        então $Y$ é removido do espaço de busca.
         \label{pfs:rule:d}
     \item{\it Atualização de floresta:} ao podar o intervalo 
         $[Y, X \cup Y]$ ($[Y \setminus X, Y]$) da floresta $\forest_A$
@@ -321,7 +322,7 @@ escolhida na aplicação do lema obtemos uma árvore diferente para
 representar o espaço de busca (veja figura ~\ref{fig:pfs:tree_def}). A 
 implementação de Reis possui uma enumeração sobre as características 
 que nos permite fixar os resultados da aplicação recursiva destes lemas 
-e também facilita o controle das sub-árvores da floresta. Supomos então
+e também facilita o controle das árvores da floresta. Supomos então
 que o conjunto de características $S$ é uma lista ordenada 
 $\langle s_1, s_2, \dots, s_n \rangle$ e que é possível obter o índice 
 de um elemento. Assim, sempre que fazemos a decomposição do espaço em 
@@ -373,8 +374,8 @@ nós das florestas. Um nó $\pfsnode{N}$ é composto por quatro campos:
         $[Y, X \cup Y]$, se $\pfsnode{N}$ é da floresta $\forest_A$, ou
         igual ao intervalo $[Y \setminus X, Y]$ se $\pfsnode{N}$ é da 
         floresta $\forest_B$. Lembrando que assumimos uma ordem no 
-        conjunto de características ($\langle s_1, s_2, \dots, s_n$), 
-        $X$ é definido como 
+        conjunto de características ($\langle s_1, s_2, \dots, 
+        s_n\rangle$), $X$ é definido como 
             $X = \bigcup_{i = leftmost}^{n} s_i$.
     \item{$\varname{cost}$:} um número em ponto flutuante que armazena
         o custo de $\pfsnode{N}[\varname{vertex}]$.
@@ -385,8 +386,7 @@ que para representar as florestas precisamos apenas armazenar as raízes
 das florestas e suas listas de adjacências. Desta maneira, as duas 
 florestas $\forest_A$ e $\forest_B$ são representadas por conjuntos de
 nós. Estes nós são armazenados na estrutura de \toolname{map} da 
-linguagem \langname{C++}, usando como chave de cada nó o vetor 
-característico de seu respectivo conjunto de características.
+linguagem \langname{C++}. 
 \newpage
 \subsubsection{Pseudo-código}
 Vamos agora apresentar um pseudo-código do \algname{PFS} em uma 
@@ -433,6 +433,7 @@ também é.
 \label{pfs:code:pfs:A}
 \end{algorithm}
 
+\newpage
 A etapa de ramificação da floresta $\forest_A$ é feita pela função 
 \textsc{Lower-Forest-Branch} e consiste no percorrimento, a partir de uma 
 raiz $Y$, de uma cadeia de sua sub-árvore. Nesta etapa, para manter 
@@ -495,7 +496,7 @@ menos $\pfsnode{N}$ tornam-se raízes. Esta função retorna o nó
 $\pfsnode{N}$, a floresta $\forest_B$ atualizada e o conjunto 
 $\mathcal{M}$ de subconjuntos percorridos que são candidatos a mínimo.
 
-
+\newpage
 A atualização da floresta $\forest_B$ após o percorrimento e poda da
 floresta $\forest_A$ é feito pela função \textsc{Upper-Forest-Prunning}.
 Esta função recebe um nó $\pfsnode{N}$ e deve remover os nós de 
@@ -563,13 +564,15 @@ destes nós devem ser podados ou não. Ao fim do caminho chamamos a função
 que alcança este caminho. Esta função devolve a floresta $\forest_A$
 atualizada.
 
+\newpage
 A função \textsc{Search-Lower-Children} é chamada para cada nó $M$ do 
 caminho $P$, como descrito no lema ~\ref{lemma:upper_update}. Esta 
 função verifica para todos os filhos $B$ de $M$ se $B$ contém 
 propriamente o conjunto $\pfsnode{N}[\varname{vertex}]$; se contém, o 
 nó de subconjunto $B$ deve ser removido da floresta, caso 
-contrário, como estamos removendo os pais de $B$ da floresta, um nó que
-representa este conjunto deve ser tornar raiz da floresta. Esta função
+contrário, um nó que representa este conjunto deve ser tornar raiz da 
+floresta, pois o pai de $B$ está sendo removido da floresta e isto 
+significa que não haverá raiz que alcance $B$. Esta função
 devolve a floresta $\forest_B$ atualizada.
 
 \begin{algorithm}[H]
@@ -618,7 +621,7 @@ percorrer um caminho de $M$ até uma raiz da floresta (de conjuntos
 menores para maiores), e esta raiz deve ter sua lista de adjacência 
 atualizada, removendo a aresta que a comunica com $M$. Para garantir que 
 removemos todas as arestas, devemos criar raízes para todos nós deste 
-caminho mas sem a adjacência que os leva a $M$. O funcionamento de 
+caminho mas sem a adjacência que os comunica com $M$. O funcionamento de 
 \textsc{Search-Lower-Root} é similar, mas deve ocorrer em outra direção
 (de conjuntos maiores para menores).
 
