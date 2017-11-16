@@ -7,6 +7,10 @@ pontos que ainda podem ser explorados para se criar uma modificação que
 tenha melhor desempenho computacional. Modificaremos então o 
 \algname{PFS}, explorando tais pontos.
 
+Baseamos nosso trabalho no código já feito por Reis, que é software 
+livre e está disponível no arcabouço \toolname{featsel} \cite{Reis+17} 
+sob a licença de uso \foreignword{GNU General Public License}.
+
 \section{Descrição do algoritmo}
 % - apresentar o UBB
 %   - organização do espaço de busca em uma árvore
@@ -664,6 +668,34 @@ caminho mas sem a adjacência que os comunica com $M$. O funcionamento de
 %   raízes ruins
 % - "leftmost": estamos priorizando percorrer as maiores árvores, em 
 %   tese
+Reis utilizou a estrutura de \toolname{map} para armazenar as raízes das 
+florestas do espaço de busca. Como chave das raízes, utiliza-se a 
+\toolname{string} que representa o vetor característico da raiz. A 
+estrutura de \toolname{map} em \langname{C++}, geralmente implementada
+com árvores binárias de busca, mantém os elementos ordenados pelo valor
+de sua chave, portanto as raízes são armazenadas de maneira ordenada
+lexicograficamente.
+
+A estratégia adotada por Reis na escolha de uma raiz da floresta 
+consiste em escolher de maneira equiprovável o primeiro ou o último 
+elemento do \toolname{map} de raízes. Esta estratégia é aleatória e é 
+viesada pois tende a escolher os primeiros ou últimos elementos de uma 
+ordenação. Como esta estratégia de ordenação é arbitrária e não existe 
+aparente fundamentação lógica que a justifique, acreditamos que novas 
+estratégias de escolhas de raízes podem trazer melhores resultados ao 
+algoritmo \algname{PFS}.
+
+\subsection{Escolha equiprovável}
+A primeira estratégia que testamos foi uma escolha também aleatória, mas
+com uma distribuição de probabilidade de escolhas igual para cada raíz
+da floresta. Como a estratégia de Reis é viesada, julgamos necessário
+investigar se este viés não leva o algoritmo a fazer ramificações ou 
+podas ruins, que comprometessem o tempo de execução do algoritmo. Se
+o tempo de execução com a nova estratégia é menor, então confirmamos
+esta hipótese.
+
+Para implementar esta nova escolha, utilizamos a mesma estrutura de 
+dados 
 
 \section{Melhoramentos no controle de raízes}
 % - quando o número de raízes é muito grande map é uma estrutura mais 
