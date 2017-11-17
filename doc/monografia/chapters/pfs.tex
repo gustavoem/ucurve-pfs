@@ -249,7 +249,7 @@ apresentado na figura ~\ref{fig:pfs:forest_prune}.
 \end{figure}
 
 O \algname{PFS} inicia escolhendo arbitrariamente uma direção de 
-percorrimento e uma raíz da floresta correspondente a direção escolhida.
+percorrimento e uma raiz da floresta correspondente a direção escolhida.
 O passo seguinte é a ramificação, que similar ao \algname{UBB} percorre 
 uma cadeia da árvore escolhida enquanto o custo dos subconjuntos não 
 cresce e não chegamos em uma folha da árvore. Ao fim da fase de 
@@ -380,7 +380,7 @@ nós das florestas. Um nó $\pfsnode{N}$ é composto por quatro campos:
         floresta $\forest_B$. Lembrando que assumimos uma ordem no 
         conjunto de características ($\langle s_1, s_2, \dots, 
         s_n\rangle$), $X$ é definido como 
-            $X = \bigcup_{i = leftmost}^{n} s_i$.
+            $X = \bigcup_{i = \pfsnode{N}[\varname{leftmost}]}^{n} s_i$.
     \item{$\varname{cost}$:} um número em ponto flutuante que armazena
         o custo de $\pfsnode{N}[\varname{vertex}]$.
 \end{itemize}
@@ -687,7 +687,7 @@ algoritmo \algname{PFS}.
 
 \subsection{Escolha equiprovável}
 A primeira estratégia que testamos foi uma escolha também aleatória, mas
-com uma distribuição de probabilidade de escolhas igual para cada raíz
+com uma distribuição de probabilidade de escolhas igual para cada raiz
 da floresta. Como a estratégia de Reis é viesada, julgamos necessário
 investigar se este viés não leva o algoritmo a fazer ramificações ou 
 podas ruins, que comprometessem o tempo de execução do algoritmo. Se
@@ -695,18 +695,156 @@ o tempo de execução com a nova estratégia é menor, então confirmamos
 esta hipótese.
 
 Para implementar esta nova escolha, utilizamos a mesma estrutura de 
-dados 
+dados utilizada por Reis com uma pequena modificação no código. Seja
+$\forest$ a floresta de percorrimento escolhida e suponha que existe
+uma ordenação das raízes dessa floresta, 
+$\langle r_1, r_2, ..., r_{|\forest|} \rangle$, então sorteamos um 
+número $i$ entre $1$ e $|\forest|$ e escolhemos a raiz $r_{i}$ para o
+percorrimento.
+
+
+\subsection{Escolha de maior árvore}
+A segunda estratégia que testamos para escolha de raízes é 
+determinística e se baseia em escolher a raiz que tem maior 
+sub-árvore. Acreditamos que este critério pode acelerar o algoritmo
+porque com podas maiores é possível que o algoritmo precise visitar 
+menos nós do reticulado e portanto fazer menos operações, incluindo 
+menos cálculos da função custo.
+
+A sub-árvore completa que tem como raiz o nó $\pfsnode{N}$ é composta 
+pelos nós do intervalo 
+$[\pfsnode{N}[\varname{vertex}], \pfsnode{N}[\varname{vertex}] \cup \pfsnode{N}[\varname{adjacent}]]$ e 
+portanto, o tamanho da árvore é dado por
+\begin{align*}
+|[\pfsnode{N}[\varname{vertex}], \pfsnode{N}[\varname{vertex}] \cup \pfsnode{N}[\varname{adjacent}]]| &= 
+|\{\pfsnode{N}[\varname{vertex}] \cup W : W \in \powerset (\pfsnode{N}[\varname{adjacent}])\}| \\
+    &= |\powerset(\pfsnode{N}[\varname{adjacent}])| \\
+    &= |\powerset(\cup_{i = \pfsnode{N}[\varname{leftmost}]}^{n} s_i)| \\
+    &= 2^{n - \pfsnode{N}[\varname{leftmost}]} 
+\end{align*}
+portanto, basta escolher a raiz com menor valor de $\varname{leftmost}$.
+Agora note que, para as raízes da floresta $\forest_A$, o valor de 
+$\varname{leftmost}$ é igual ao maior índice de uma característica
+presente no conjunto, enquanto na floresta $\forest_B$ é igual ao maior
+índice de uma característica não presente no conjunto.
+
+Se ordenamos as raízes de forma lexicográfica da direita
+para esquerda (da característica com maior índice para característica
+com menor índice). Então, a menor raiz é aquela que possui mais zeros
+da direita para esquerda, ou seja, o menor valor para o maior índice
+de uma característica presente e consequentemente o menor 
+$\varname{leftmost}$ da floresta $\forest_A$. Já a maior raiz é aquela 
+que possui mais uns da direita para esquerda, ou seja, o menor valor 
+para o maior índice de uma característica não presente e 
+consequentemente o maior $\varname{leftmost}$ da floresta $\forest_B$.
+
+% TODO: explicar que esta é a maior árvore >>completa<< ou seja, estamos
+% ignorando o conjunto de arestas da árvore
+
+Portanto, para implementar esta modificação devemos mudar o tipo de
+ordenação feito pelo \toolname{map}, que por padrão é feito 
+lexicograficamente da esquerda para direita (ordem alfabética), e 
+escolher para floresta $\forest_A$ o primeiro elemento do \toolname{map}
+e para a floresta $\forest_B$ o último elemento.
+
 
 \section{Melhoramentos no controle de raízes}
 % - quando o número de raízes é muito grande map é uma estrutura mais 
 %   cara para consultas e inserções, enquanto nas ROBDDs essa operação é 
 %   mais barata(?)
+% - o número de raízes na floresta pode crescer muito: no pior caso, 
+%   todos os nós do reticulado podem ser raízes!
 %     - explicar ROBDDs
 % - uso de ROBDD
 %   com raíz aleatória e com raíz leftmost
+A quantidade de raízes em uma floresta pode ser muito grande no decorrer 
+do algoritmo \algname{PFS}. Um pior caso, exagerado, é considerar que 
+os percorrimentos foram feitos sempre em uma das florestas e que a 
+função de custo é monótona tal que não houveram podas por conta de 
+aumento de custo; então, esta floresta poderá ter até $2^n - n + 1$ 
+raízes. Além disso, a estrutura \algname{map} ordena as raízes, o que 
+não é necessário para o funcionamento do algoritmo (exceto para a 
+abordagem que escolhe a raiz com maior sub-árvore).
+
+Introduzimos então o uso de diagramas de decisão binária ordenados 
+(Ordered Binary Decision Diagram (OBDD)). Esta estrutura representa uma
+função Booleana $f : \{0, 1\}^k \to {0, 1}$ através de uma árvore. 
+Para se encontrar o valor de um conjunto $X \in \{0, 1\}^n$, percorremos
+esta árvore ramificando de acordo com a presença ou não de uma variável
+e o valor deve ser encontrado em uma folha da árvore. Em nossa 
+implementação, precisamos modificar estes diagramas. Ao armazenar as
+raízes, precisamos que este diagrama permita armazenar nós ao invés de
+valores Booleanos; além disso, implementamos uma redução que ao 
+encontrar nós redundantes (duas folhas que indicam que o subconjunto 
+não é raiz), condensa-os para apenas um nó. A figura ~\ref{fig:pfs:obdd}
+mostra um exemplo de OBDD que representa uma floresta do algoritmo 
+\algname{PFS}.
+
+\begin{figure}[!ht]
+  \centering 
+  \begin{tabular}{c c}
+    \subfigure[] {\scalebox{.7}{
+     \includegraphics[clip=true]{pfs/obdd/lattice.pdf}}
+     \label{fig:pfs:obdd:A} }
+    & 
+      \subfigure[] {\scalebox{.9}{
+    \includegraphics[clip=true]{pfs/obdd/obdd.pdf}}
+    \label{fig:pfs:obdd:B} }
+  \end{tabular}
+    \caption{Exemplo de OBDD que representa uma floresta do 
+    \algname{PFS}. Esta OBDD contém os nós $\pfsnode{N}$, $\pfsnode{M}$
+    e $\pfsnode{R}$, que representam respectivamente os subconjuntos
+    $000$, $010$ e $100$. As folhas $NIL$ indicam que os subconjuntos 
+    de tal caminho na OBDD não são raízes na floresta, como por exemplo 
+    os subconjuntos $11X$}
+  \label{fig:pfs:obdd} 
+\end{figure}
+
+Para escolha das raízes, nesta estrutura de dados usamos a estratégia 
+de escolha aleatória com probabilidades igualmente distribuídas.
+
+\subsection{Testes com instâncias artificiais}
 
 \section{Paralelização do código}
+A dinâmica do algoritmo \algname{Poset-Forest-Search} transforma o
+reticulado Booleano em uma floresta, ou seja, em um conjunto de árvores
+que são disjuntas. Por isso, o percorrimento destas árvores pode ser
+feito de maneira paralela sem interferências. Desta maneira, propomos
+uma paralelização do código de Reis utilizando a biblioteca 
+\toolname{OpenMP}, que nos permite paralelizar blocos de instrução
+com anotações feitas ao compilador.
+
+O primeiro ponto que devemos nos atentar ao paralelizar este código é
+que as árvores do espaço de busca são disjuntas apenas se estamos 
+considerando uma floresta. Ambas florestas representam o mesmo espaço de
+busca, portanto é possível que duas árvores de florestas diferentes se 
+intersectem em alguns nós. Isto significa que fazer o percorrimento em
+ambas as direções pode causar recálculos, isto é, um nó pode ser 
+visitado desnecessariamente por mais de uma thread por mais de uma vez;
+além disso, é possível que uma árvore que foi podada em uma direção 
+ainda esteja sendo percorrida em outra direção.
+
+Visando simplificar o trabalho, definimos que a paralelização ocorre em
+iterações do procedimento principal do \algname{PFS}. Isto é, a escolha
+de uma direção deve ser feita por uma thread principal e, assim cada
+thread deve escolher uma raiz para ser percorrida em tal direção. Desta
+maneira cada thread faz a ramificação e atualização da floresta dual
+e pausam em uma barreira, que sincroniza todas as threads para o 
+finalização da iteração e começo da próxima.
+
+Entretanto, apesar desta simplificação tornar a fase de ramificação 
+quase independente entre as linhas de processamento, a fase de 
+atualização de floresta dual pode não ser. Como resultado, condições de
+corrida não tratadas podem causar inconsistências na atualização da 
+floresta. 
+
 % utilizando a biblioteca OpenMP
 % simplificação: paralelizamos iterações do código uma a uma
 % complicado: as coisas são intrínsecas
 %   -> o que é melhor: 
+%     - remover barreiras e manter uma lista de nós deletados
+%     - manter a barreira e, ter uma lista de nós deletados?
+%     >> se tivessemos paralelizado com ROBDD seria fácil verificar nós
+%     deletados :(
+
+\section{O algoritmo UBB-PFS}

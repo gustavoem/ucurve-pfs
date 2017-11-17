@@ -1,0 +1,103 @@
+\documentclass[]{article}
+
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{fullpage}
+\usepackage[upright]{fourier}
+\usepackage{tkz-graph}
+\usepackage{color}
+\usepackage{my_colors}
+\usetikzlibrary{arrows}
+
+\usepackage[paperheight=6in,paperwidth=6in,margin=0in]{geometry}
+
+\begin{document}
+\begin{tikzpicture}
+  \SetVertexNormal[Shape     = rectangle,
+                   FillColor = white,
+                  LineWidth  = 1pt]
+  \SetUpEdge[lw         = 1pt,
+             color      = black,
+             labelcolor = white,
+             labeltext  = red,
+             labelstyle = {sloped,draw,text=blue}]
+
+% level 0
+\SetVertexNormal[Shape = circle, FillColor = my_yellow]
+\Vertex[x=0, y=0, LabelOut=true, Ldist=5pt]{12}
+\Vertex[x=0, y=0]{$0000$}
+\SetVertexNormal[Shape = rectangle, FillColor = white]
+
+% level 1
+\Vertex[x=-3, y=2, LabelOut=true, Ldist=5pt]{}
+    \Vertex[x=-3, y=2]{$1000$}
+\SetVertexNormal[Shape = circle, FillColor = my_yellow]
+\Vertex[x=-1, y=2, LabelOut=true, Ldist=5pt]{10}
+    \Vertex[x=-1, y=2]{$0100$}
+\SetVertexNormal[Shape = rectangle, FillColor = white]
+\Vertex[x=1, y=2, LabelOut=true, Ldist=5pt]{11}
+    \Vertex[x=1, y=2]{$0010$}
+\SetVertexNormal[Shape = rectangle, FillColor = my_red]
+\Vertex[x=3, y=2, LabelOut=true, Ldist=5pt]{}
+    \Vertex[x=3, y=2]{$0001$}
+\SetVertexNormal[Shape = rectangle, FillColor = white]
+
+% level 2
+\Vertex[x=-5, y=4, LabelOut=true, Ldist=5pt]{}
+    \Vertex[x=-5, y=4]{$1100$}
+\Vertex[x=-3, y=4, LabelOut=true, Ldist=5pt]{}
+    \Vertex[x=-3, y=4]{$1010$}
+\Vertex[x=-1, y=4, LabelOut=true, Ldist=5pt]{}
+    \Vertex[x=-1, y=4]{$1001$}
+\Vertex[x=1, y=4, LabelOut=true, Ldist=5pt]{8}
+    \Vertex[x=1, y=4]{$0110$}
+\SetVertexNormal[Shape = rectangle, FillColor = my_red]
+\Vertex[x=3, y=4, LabelOut=true, Ldist=5pt]{}
+    \Vertex[x=3, y=4]{$0101$}
+\SetVertexNormal[Shape = rectangle, FillColor = white]
+\Vertex[x=5, y=4, LabelOut=true, Ldist=5pt]{14}
+    \Vertex[x=5, y=4]{$0011$}
+
+
+% level 3
+\Vertex[x=-3, y=6, LabelOut=true, Ldist=5pt]{}
+    \Vertex[x=-3, y=6]{$1110$}
+\Vertex[x=-1, y=6, LabelOut=true, Ldist=5pt]{}
+    \Vertex[x=-1, y=6]{$1101$}
+\Vertex[x=1, y=6, LabelOut=true, Ldist=5pt]{}
+    \Vertex[x=1, y=6]{$1011$}
+\Vertex[x=3, y=6, LabelOut=true, Ldist=5pt]{15}
+    \Vertex[x=3, y=6]{$0111$}
+    
+% level 4
+\Vertex[x=0, y=8, LabelOut=true, Ldist=5pt]{}
+\Vertex[x=0, y=8]{$1111$}
+
+
+\tikzset{EdgeStyle/.style={-}}
+
+\SetUpEdge[lw = 1pt, color= black]
+
+% 0-1
+\Edges($0000$, $0010$)
+\Edges($0000$, $1000$)
+
+% 1-2
+\Edges($1000$, $1100$)
+\Edges($1000$, $1010$)
+\Edges($1000$, $1001$)
+\Edges($0100$, $0110$)
+\Edges($0010$, $0011$)
+
+% 2-3
+\Edges($1100$, $1110$)
+\Edges($1100$, $1101$)
+\Edges($1010$, $1011$)
+\Edges($0110$, $0111$)
+
+% 3-4
+\Edges($1110$, $1111$)
+
+\end{tikzpicture}
+\end{document}
