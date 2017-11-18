@@ -748,6 +748,40 @@ escolher para floresta $\forest_A$ o primeiro elemento do \toolname{map}
 e para a floresta $\forest_B$ o último elemento.
 
 
+\subsection{Testes com instâncias artificiais}
+Testamos ambas abordagens para melhoramentos em escolhas de raízes no
+arcabouço \toolname{featsel} utilizando uma servidora de 64 cores. Os
+testes foram feitos com instâncias artificiais do problema U-Curve 
+usando a função de soma de subconjuntos.
+%TODO: server specs
+
+\begin{table}
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c cc c cc}
+\toprule
+\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)}  & \phantom{} & \multicolumn{2}{c}{\# Calls of cost function}\\
+\cline{1-2}\cline{4-5}\cline{7-8}\\
+$|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_RAND} && \algname{PFS} & \algname{PFS\_RAND} \\
+10 &    1024 &&  0.013 $\pm$ 0.003 & 0.014 $\pm$ 0.003 &&   590.8 $\pm$ 198.5 & 599.5 $\pm$ 177.5 \\
+11 &    2048 &&  0.019 $\pm$ 0.004 & 0.022 $\pm$ 0.007 &&   1114.8 $\pm$ 331.3 & 1090.1 $\pm$ 350.3 \\
+12 &    4096 &&  0.029 $\pm$ 0.008 & 0.036 $\pm$ 0.013 &&   1848.6 $\pm$ 600.8 & 1835.7 $\pm$ 683.0 \\
+13 &    8192 &&  0.060 $\pm$ 0.018 & 0.090 $\pm$ 0.039 &&   4314.4 $\pm$ 1496.4 & 4201.1 $\pm$ 1580.7 \\
+14 &   16384 &&  0.100 $\pm$ 0.041 & 0.191 $\pm$ 0.110 &&   7323.4 $\pm$ 3318.9 & 7333.8 $\pm$ 3161.0 \\
+15 &   32768 &&  0.180 $\pm$ 0.076 & 0.453 $\pm$ 0.311 &&   12958.1 $\pm$ 5654.0 & 12807.5 $\pm$ 5753.7 \\
+16 &   65536 &&  0.406 $\pm$ 0.185 & 1.715 $\pm$ 1.400 &&   27573.8 $\pm$ 12459.5 & 27036.9 $\pm$ 12687.5 \\
+17 &  131072 &&  0.717 $\pm$ 0.397 & 5.416 $\pm$ 5.266 &&   48176.2 $\pm$ 26938.3 & 47852.1 $\pm$ 26427.6 \\
+18 &  262144 &&  1.325 $\pm$ 0.754 & 15.890 $\pm$ 17.726 &&   84417.9 $\pm$ 48587.7 & 84025.0 $\pm$ 48882.4 \\
+19 &  524288 &&  2.771 $\pm$ 1.603 & 69.600 $\pm$ 82.342 &&   167659.1 $\pm$ 99686.7 & 164612.1 $\pm$ 102018.3 
+\end{tabular}%
+}
+\caption{Comparação entre o \algname{PFS} e \algname{PFS\_RAND}.
+O tempo de execução do segundo é maior do que o primeiro
+enquanto a quantidade de chamadas da função custo é parecida em 
+ambos.} \label{tab:pfs_vs_pfsrand}
+\end{table}
+
+
 \section{Melhoramentos no controle de raízes}
 % - quando o número de raízes é muito grande map é uma estrutura mais 
 %   cara para consultas e inserções, enquanto nas ROBDDs essa operação é 
@@ -825,18 +859,12 @@ além disso, é possível que uma árvore que foi podada em uma direção
 ainda esteja sendo percorrida em outra direção.
 
 Visando simplificar o trabalho, definimos que a paralelização ocorre em
-iterações do procedimento principal do \algname{PFS}. Isto é, a escolha
+iterações do procedimento principal do \algname{PFS}. Assim, a escolha
 de uma direção deve ser feita por uma thread principal e, assim cada
 thread deve escolher uma raiz para ser percorrida em tal direção. Desta
 maneira cada thread faz a ramificação e atualização da floresta dual
 e pausam em uma barreira, que sincroniza todas as threads para o 
 finalização da iteração e começo da próxima.
-
-Entretanto, apesar desta simplificação tornar a fase de ramificação 
-quase independente entre as linhas de processamento, a fase de 
-atualização de floresta dual pode não ser. Como resultado, condições de
-corrida não tratadas podem causar inconsistências na atualização da 
-floresta. 
 
 \begin{figure}[!ht]
   \centering 
@@ -848,6 +876,48 @@ floresta.
     \subfigure[] {\scalebox{.6}{
     \includegraphics[clip=true]{pfs/race_cond/raceB.pdf}}
     \label{fig:pfs:race_cond:B} } \\
+  \end{tabular}
+  \caption{Exemplo de espaço de busca do \algname{PFS}; a floresta da
+    figura ~\ref{fig:pfs:race_cond:A} é $\forest_A$ enquanto a da figura
+    ~\ref{fig:pfs:race_cond:B} é $\forest_B$. Estas florestas 
+    representam o espaço de busca após duas iterações do algoritmo, 
+    ambas feitas na direção de baixo para cima, ou seja, ramificando
+    a floresta $\forest_A$. Na primeira iteração, seleciona-se a raiz
+    $0000$ para percorrimento e remove-se o nó $0001$; na floresta dual,
+    a atualização remove o nó $0001$ e cria a raiz $0000$. Na segunda 
+    iteração, escolhe-se novamente a raiz $0000$ e a ramificação é feita 
+    para $0100$ (que se torna raiz) e para $0101$, que é removido do 
+    espaço; na floresta dual, remove-se o nó $0101$ e o nó $0100$ 
+    torna-se raiz.}
+  \label{fig:pfs:race_cond:part1} 
+\end{figure}
+
+Entretanto, apesar desta simplificação tornar a fase de ramificação 
+quase independente entre as linhas de processamento, a fase de 
+atualização de floresta dual pode não ser. Como resultado, condições de
+corrida não tratadas podem causar inconsistências na atualização da 
+floresta. As figuras 
+~\ref{fig:pfs:race_cond:part1}~-~\ref{fig:pfs:race_cond:part2} mostram
+um exemplo onde duas linhas de execução podem causar este tipo de 
+inconsistência. A figura ~\ref{fig:pfs:race_cond:part1} mostra o 
+espaço de busca do \algname{PFS} no começo de uma iteração, enquanto as
+figuras ~\ref{fig:pfs:race_cond:C}~-~\ref{fig:pfs:race_cond:D} e 
+~\ref{fig:pfs:race_cond:E}~-~\ref{fig:pfs:race_cond:F} mostram 
+respectivamente os resultados ao fim de uma iteração para duas 
+diferentes escolhas de raízes. Na figura ~\ref{fig:pfs:race_cond:D}, 
+que mostra a floresta $\forest_B$ quando a raiz escolhida é $0100$,
+o nó $0111$ é removido do espaço de busca; na figura 
+~\ref{fig:pfs:race_cond:F}, que mostra a floresta $\forest_B$ quando a 
+raiz escolhida é $0000$, o nó $0111$ torna-se raiz. Assuma então que
+esta iteração do algoritmo é feita com duas linhas de processamento 
+$P_1$ e $P_2$, que fazem o percorrimento, respectivamente, a partir de 
+$0000$ e $0100$. Se a thread $P_1$ cria o nó $0111$ antes de $P_2$ 
+removê-lo, então não há inconsistências, entretanto se o contrário
+acontece, criamos uma raiz espúria na floresta $\forest_B$.
+
+\begin{figure}[!ht]
+  \centering 
+  \begin{tabular}{c c}
     \subfigure[] {\scalebox{.6}{
     \includegraphics[clip=true]{pfs/race_cond/raceC.pdf}}
     \label{fig:pfs:race_cond:C} }
@@ -863,11 +933,32 @@ floresta.
     \includegraphics[clip=true]{pfs/race_cond/raceF.pdf}}
     \label{fig:pfs:race_cond:F} } \\
   \end{tabular}
-    \caption{Exemplo} 
-  \label{fig:pfs:race_cond} 
+  \caption{Continuação do exemplo da figura 
+    ~\ref{fig:pfs:race_cond:part1} para duas escolhas diferentes de 
+    raízes. As figuras ~\ref{fig:pfs:race_cond:C} e 
+    ~\ref{fig:pfs:race_cond:D} mostram o resultado da continuação da 
+    execução do algoritmo após escolha da raiz $0100$ de $\forest_A$ em 
+    um percorrimento de baixo para cima que ramifica até o nó 
+    $0111$, que é podado da floresta $\forest_A$; na floresta dual, o nó
+    $0111$ é removido e os nós $0110$ e $0011$ tornam-se raízes. As 
+    figuras ~\ref{fig:pfs:race_cond:E} e ~\ref{fig:pfs:race_cond:F} 
+    mostram a continuação da execução quando a raiz $0000$ de 
+    $\forest_A$ é escolhida para percorrimento, que ramifica até o nó
+    $0011$, que é podado da floresta $\forest_A$; na floresta dual, o nó
+    $0011$ é removido e o nó $0010$ torna-se raiz.} 
+  \label{fig:pfs:race_cond:part2} 
 \end{figure}
 
+Para contornar este problema, utilizamos uma outra estrutura de dados
+do \langname{C++} capaz de armazenar um conjunto. Neste conjunto 
+armazenamos todos os nós que foram removidos do espaço de busca e assim
+evitamos a criação de raízes espúrias. Voltando ao exemplo anterior, com
+a criação do conjunto de nós deletados, se a linha de processamento 
+$P_1$ deleta o nó $0111$ antes da criação em $P_2$, então o nó já estará
+no conjunto de nós deletados quando $P_2$ tentar adicioná-lo na 
+floresta e assim a criação desta raiz pode ser evitada.
 
+\subsection{Testes com instâncias artificiais}
 % utilizando a biblioteca OpenMP
 % simplificação: paralelizamos iterações do código uma a uma
 % complicado: as coisas são intrínsecas
@@ -878,3 +969,138 @@ floresta.
 %     deletados :(
 
 \section{O algoritmo UBB-PFS}
+Tendo em vista que o principal problema da paralelização do 
+$\algname{PFS}$ foi o fato de que há muito entrelace nas linhas de 
+execução, propomos um novo algoritmo baseado no $\algname{UBB}$ e 
+$\algname{PFS}$ que fosse também paralelo, mas com pouca ou nenhuma 
+interferência entre as linhas de execução, chamamos algoritmo de 
+\algname{UBB-PFS}.
+
+\subsection{Descrição}
+Este algoritmo tem duas etapas principais. A primeira etapa é idêntica
+ao \algname{UBB}, e faz o percorrimento de uma árvore do espaço de busca
+como em uma busca em profundidade, podando os nós em que o custo cresce.
+Depois de um certo número de iterações, a primeira etapa é finalizada e 
+então se dá início a segunda etapa, que deve resolver cada sub-árvore 
+do espaço de busca corrente utilizando o algoritmo \algname{PFS}. A 
+solução das sub-árvores deve ocorrer de maneira independente, 
+possibilitando a paralelização mais fácil do código.
+
+O pseudo-código \ref{pfs:code:ubbpfs:step1} mostra como é feita a 
+primeira etapa do algoritmo e também serve de base para a explicação da
+segunda etapa \algname{UBB-PFS} e da corretude do algoritmo, pois 
+possui os seguintes invariantes no final da linha 
+\ref{pfs:code:ubbpfs:invariant}:
+\begin{enumerate}[a)]
+    \item{Para todo nó do espaço de busca que não é raiz, existem três 
+        possibilidades: ou ele foi visitado e está em $\mathcal{M}$, ou 
+        podado, ou e está contido em uma sub-árvore tal que a raiz está 
+        na pilha $\mathcal{S}$. Todo nó que é raiz está em 
+        $\mathcal{M}$} \label{pfs:code:ubb:invariant:A}
+    \item{Todo nó na pilha $\mathcal{S}$ é raiz de uma sub-árvore 
+        completa.} \label{pfs:code:ubb:invariant:B}
+\end{enumerate}
+
+\begin{algorithm}[!ht]
+\textsc{UBB-PFS} $(S, c)$
+\begin{algorithmic}[1]
+    \State $\mathcal{M} \gets \emptyset$
+    \State inicialize a pilha $\mathcal{S}$ vazia
+    \State empilhe $(\emptyset, S, c(\emptyset))$ em $\mathcal{S}$
+    \While{$\mathcal{S}$ não vazia} \label{pfs:code:ubbpfs:step1:A}
+        \State desempilhe $(Y, X, cost_Y)$ de $\mathcal{S}$
+        \State $X_{Y_i} \gets \emptyset$
+        \While{$X \ne \emptyset$} 
+            \State remova $s_i$ de $X$
+            \State $Y_i \gets Y \cup \{s_i\}$
+            \State $cost_{Y_i} \gets c (Y_i)$
+            \If{$cost_{Y_i} \leq cost_Y$}
+                \State empilhe $(Y_i, X_{Y_i}, cost_{Y_i})$ em $\mathcal{S}$
+            \EndIf
+            \State $X_{Y_i} \gets {s_i}$
+        \EndWhile
+        \State $\mathcal{M} \gets \mathcal{M} \cup \{Y\}$ \label{pfs:code:ubbpfs:invariant}
+        \If{$\mathsc{FinishStepOne} ()$}
+            \State $\mathcal{N} \gets \mathsc{SolveTrees} (\mathcal{S}, S, c)$
+            \State esvazie $\mathcal{S}$
+        \EndIf
+    \EndWhile \label{pfs:code:ubbpfs:step1:B}
+    \State $\mathcal{M} \gets \mathcal{M} \cup \mathcal{N}$
+    \Return $\{M \in \mathcal{M} : c(M) \text{é mínimo}\}$
+\end{algorithmic}
+\caption{Pseudo-código do algoritmo \algname{UBB-PFS}. A primeira etapa 
+consiste no percorrimento feito nas linhas 
+\ref{pfs:code:ubbpfs:step1:A}~-~\ref{pfs:code:ubbpfs:step1:B}, de 
+maneira idêntica ao \algname{UBB}.}
+\label{pfs:code:ubbpfs:step1}
+\end{algorithm}
+
+
+O invariante \ref{pfs:code:ubb:invariant:A} nos garante que o mínimo
+global já está em $\mathcal{M}$ ou é minimo dentro de uma das árvores
+que tem raíz em $\mathcal{S}$, portanto, quando estamos na linha do 
+invariante, resolver o problema original é igual a achar o mínimo
+de cada uma das árvores e do conjunto $\mathcal{M}$. O invariante
+\ref{pfs:code:ubb:invariant:B} garante que toda árvore com raíz $Y$ 
+contém exatamente os subconjuntos do intervalo $[Y, X \cup Y]$. 
+
+Para resolver cada sub-árvore com raiz em $\mathcal{S}$, criamos o 
+seguinte problema U-Curve auxiliar. Seja $\langle S, c \rangle$ uma 
+instância do problema U-Curve e seja $Y$ uma raíz de uma sub-árvore do 
+problema e $X$ um conjunto de características tal que os nós desta 
+sub-árvore seja exatamente o intervalo $[Y, X \cup Y]$. Considerando que
+este intervalo é igual ao conjunto $\{Y \cup W : W \in \powerset(X)\}$,
+então, encontrar o mínimo dentro deste conjunto é exatamente resolver a 
+instância do problema U-Curve $\langle S_X, c_Y\rangle$ tal que:
+\begin{alignat*}{2}
+    S_X      & = X & \\
+    c_Y (X') & = c (X' \cup Y) & \text{, } ~X' \in \powerset(S_X) \\
+\end{alignat*}
+
+\begin{algorithm}[!ht]
+\textsc{SolveTrees}$(\mathcal{S}, S, c)$
+\begin{algorithmic}[1]
+    \State $\mathcal{N} \gets \emptyset$
+    \While{$\mathcal{S}$ não vazia}
+        \State desempilhe $(Y, X, cost_Y)$
+        \State $S_X \gets X$
+        \State seja $c_Y: X' \mapsto c (X' \cup Y)$
+        \State $N \gets \mathsc{Poset-Forest-Search} (S_X, c_Y)$
+        \State $\mathcal{N} \gets \mathcal{N} \cup N$
+    \EndWhile
+    \Return $\mathcal{N}$
+\end{algorithmic}
+\caption{Continuação do pseudo-código \ref{pfs:code:ubbpfs:step1}}
+\end{algorithm}
+
+A função \textsc{FinishStepOne} determina qual é a iteração em que o
+algoritmo deve terminar a primeira etapa. Esta função Booleana controla
+de certa forma a maneira com que o trabalho é dividido entre etapa 1 e 2
+do código. Se ela nunca for verdadeira, então o \algname{UBB-PFS} deve 
+se comportar exatamente como o \algname{UBB}. Além disso, a segunda 
+etapa deve ser rodada em linhas de processamento paralelos, portanto
+esta função também influencia a distribuição de trabalho e nível de 
+paralelização.
+
+\subsection{Paralelização}
+A paralelização deste algoritmo também foi feita com a biblioteca 
+\toolname{OpenMP}. Conseguimos paralelizar este código com apenas 
+algumas anotações para o compilador, que indicam que a função
+\textsc{SolveTrees} deve criar tarefas (\foreignword{tasks}) para cada 
+chamada do algoritmo \textsc{Poset-Forest-Search}, e também que deve 
+haver uma barreira que só permite o retorno da função 
+\textsc{SolveTrees} quando todas as tarefas criadas foram resolvidas.
+
+Para que a paralelização traga melhoras significativas é esperado que
+haja um número razoável de árvores na pilha $\mathcal{S}$. Um exemplo de
+número de raízes que é razoável para paralelização é a quantidade de
+processadores da máquina. A função \textsc{FinishStepOne} deve garantir
+que terminamos a primeira etapa do \algname{UBB-PFS} com um número
+razoável de raízes na pilha. Note que o número de raízes é limitado
+pela própria topologia do problema; se a função é, por exemplo, monótona
+crescente, então a única raiz empilhada é a do conjunto vazio.
+
+Em nossa implementação, definimos que a função \textsc{FinishStepOne} é
+verdadeira quando o número de raízes é maior que o número de cores da 
+máquina ou quando o número de iterações é maior do que duas vezes a 
+quantidade de características. 
