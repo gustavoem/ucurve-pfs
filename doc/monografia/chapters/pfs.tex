@@ -661,7 +661,7 @@ caminho mas sem a adjacência que os comunica com $M$. O funcionamento de
 \section{Melhoramentos na escolha de raiz}
 % - começar falando sobre o problema... 
 %   a escolha era feita de maneira arbitrária. Estrutura de map guardava
-%   as raízes e escolhia-se o primeiro elemento do map, que de acordo com blabla
+%   as raízes e escolhia-se o primeiro elemento do map, que de acordo com
 %   será o menor elemento lexicograficamente ou o maior 
 % - por que mudar isso pode melhorar? Porque o critério é arbitrário
 % - aleatória: talvez traga melhoras se a abordagem anterior escolhesse 
@@ -728,6 +728,15 @@ $\varname{leftmost}$ é igual ao maior índice de uma característica
 presente no conjunto, enquanto na floresta $\forest_B$ é igual ao maior
 índice de uma característica não presente no conjunto.
 
+Note que este número considera que a árvore está completa, o que não é
+necessariamente verdade para raízes da floresta, um cálculo exato 
+deveria considerar também o conjunto $\varname{adjacent}$ da raiz. 
+Entretanto, utilizamos esse cálculo como uma aproximação do tamanho da 
+floresta por motivos de simplicidade, pois como explicaremos a seguir,
+podemos ordenar as raízes de maneira rápida utilizando este cálculo 
+aproximado, o que não seria possível quando se considera o vetor de 
+adjacências.
+
 Se ordenamos as raízes de forma lexicográfica da direita
 para esquerda (da característica com maior índice para característica
 com menor índice). Então, a menor raiz é aquela que possui mais zeros
@@ -738,9 +747,6 @@ que possui mais uns da direita para esquerda, ou seja, o menor valor
 para o maior índice de uma característica não presente e 
 consequentemente o maior $\varname{leftmost}$ da floresta $\forest_B$.
 
-% TODO: explicar que esta é a maior árvore >>completa<< ou seja, estamos
-% ignorando o conjunto de arestas da árvore
-
 Portanto, para implementar esta modificação devemos mudar o tipo de
 ordenação feito pelo \toolname{map}, que por padrão é feito 
 lexicograficamente da esquerda para direita (ordem alfabética), e 
@@ -749,6 +755,7 @@ e para a floresta $\forest_B$ o último elemento.
 
 
 \subsection{Experimentos com instâncias artificiais}
+\label{pfs:root_choosing:experiments}
 Testamos ambas abordagens para melhoramentos em escolhas de raízes no
 arcabouço \toolname{featsel} utilizando uma servidora de 64 cores. Os
 experimentos foram feitos com instâncias artificiais que são reduções 
@@ -859,9 +866,6 @@ equivalente ao \algname{PFS} porque implica em um percorrimento
 diferente do espaço de busca, evidenciado por mais cálculos da função 
 custo.
 
-% número parecido de chamadas -> percorrimento parecido
-% + tempo de execução -> vem de outras operações adicionadas
-
 
 \section{Melhoramentos no controle de raízes}
 % - quando o número de raízes é muito grande map é uma estrutura mais 
@@ -887,13 +891,12 @@ função Booleana $f : \{0, 1\}^k \to {0, 1}$ através de uma árvore.
 Para se encontrar o valor de um conjunto $X \in \{0, 1\}^n$, percorremos
 esta árvore ramificando de acordo com a presença ou não de uma variável
 e o valor deve ser encontrado em uma folha da árvore. Em nossa 
-implementação, precisamos modificar estes diagramas. Ao armazenar as
-raízes, precisamos que este diagrama permita armazenar nós ao invés de
-valores Booleanos; além disso, implementamos uma redução que ao 
-encontrar nós redundantes (duas folhas que indicam que o subconjunto 
-não é raiz), condensa-os para apenas um nó. A figura ~\ref{fig:pfs:obdd}
-mostra um exemplo de OBDD que representa uma floresta do algoritmo 
-\algname{PFS}.
+implementação precisamos modificar estes diagramas para que eles 
+permitam armazenar nós ao invés de valores Booleanos. Além disso, a 
+nossa OBDD remove nós redundantes, assim sempre que um vértice tem dois
+filhos que são folhas vazias, este vértice torna-se uma folha vazia. A
+figura \ref{fig:pfs:obdd} mostra um exemplo de OBDD que representa uma 
+floresta do algoritmo \algname{PFS}.
 
 \begin{figure}[!ht]
   \centering 
@@ -915,8 +918,66 @@ mostra um exemplo de OBDD que representa uma floresta do algoritmo
   \label{fig:pfs:obdd} 
 \end{figure}
 
-Para escolha das raízes, nesta estrutura de dados usamos a estratégia 
-de escolha aleatória com probabilidades igualmente distribuídas.
+\subsection{Escolha de raiz}
+Ao deixar de utilizar a estrutura de \toolname{map} como era feito na
+implementação original do \algname{PFS}, precisamos definir uma regra
+para escolha de raízes. Decidimos utilizar a regra de escolha aleatória
+de raízes, dado que ela se mostrou semânticamente equivalente a
+implementação orignal (veja \ref{pfs:root_choosing:experiments}).
+
+Para escolher uma raiz em uma OBDD precisamos apenas descer um caminho
+da raíz até uma folha não vazia (que contenha um nó) guardando os 
+elementos que pertencem ao subconjunto que o caminho representa. A nossa
+estrutura sempre contrai folhas redundantes para apenas uma, ou seja, não existem 
+vértices na árvore que possuam dois filhos que são folhas vazias, 
+portanto ao descer um caminho pela árvore, é sempre possível escolher 
+a ramificação (ir a direita ou esquerda de um nó) que nos leve a uma
+folha com um nó. 
+
+Desta maneira a escolha da raiz é feita por uma sequência de escolhas
+de ramificação, para cada vértice da OBDD visitado, que levam da raiz
+da OBDD até um nó que é folha. Para fazer isto de maneira aleatória e
+identicamente distribuída entre os nós das folhas, basta armazenar em
+cada vértice da árvore quantas raízes estão a sua direita e quantos 
+estão a sua esquerda e então dar pesos de escolhas equivalentes a
+quantidade de raízes para cada lado de ramificação.
+
+\begin{algorithm}[H]
+\textsc{Get-OBDD-Node} $(X)$
+\begin{algorithmic}[1]
+    \State $v \gets root$
+    \While{$v$ não é folha}
+        \If{$v.\varname{element} \in X$}
+            \State $v \gets v.\varname{right\_child}$
+        \Else
+            \State $v \gets v.\varname{left\_child}$
+        \EndIf
+    \EndWhile
+    \Return $v.\varname{node}$
+\end{algorithmic}
+\vspace{1em}
+\textsc{Get-Random-OBDD-Node} $()$
+\begin{algorithmic}[1]
+    \State $v \gets root$
+    \While{$v$ não é folha}
+        \State $W \gets v.\varname{right\_child}.\varname{weight} + v.\varname{left\_child}.\varname{weight}$
+        \State seja $r$ um número aleatório entre 0 e $W$
+        \If{$r \leq v.\varname{right\_child}.\varname{weight}$}
+            \State $v \gets v.\varname{right\_child}$
+        \Else
+            \State $v \gets v.\varname{right\_child}$
+        \EndIf
+    \EndWhile
+    \Return $v.\varname{node}$
+\end{algorithmic}
+\caption{Algoritmos de OBDD que devolvem nós armazenados na estrutura.
+A função \textsc{Get-OBDD-Node} recebe um conjunto $X \in \powerset{S}$
+e devolve o nó que representa este conjunto, se estiver na árvore. A 
+função \textsc{Get-Random-OBDD-Node} devolve um nó aleatório da floresta
+de maneira identicamente provável.}
+\end{algorithm}
+
+
 
 \subsection{Testes com instâncias artificiais}
 
