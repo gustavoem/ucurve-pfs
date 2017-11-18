@@ -748,16 +748,29 @@ escolher para floresta $\forest_A$ o primeiro elemento do \toolname{map}
 e para a floresta $\forest_B$ o último elemento.
 
 
-\subsection{Testes com instâncias artificiais}
+\subsection{Experimentos com instâncias artificiais}
 Testamos ambas abordagens para melhoramentos em escolhas de raízes no
 arcabouço \toolname{featsel} utilizando uma servidora de 64 cores. Os
-testes foram feitos com instâncias artificiais do problema U-Curve 
-usando a função de soma de subconjuntos.
+experimentos foram feitos com instâncias artificiais que são reduções 
+do problema da soma de subconjuntos. Analisaremos o desempenho dos 
+algoritmos tanto quanto ao tempo médio de execução quanto a quantidade
+de nós computados.
 %TODO: server specs
+
+A tabela \ref{tab:pfsrand_vs_pfs} mostra os resultados dos 
+experimentos para os algoritmos \algname{PFS} e sua variante que 
+seleciona raízes de maneira aleatória e igualmente distribuída, o que 
+chamamos de \algname{PFS\_RAND}. Podemos perceber na tabela que o número
+de chamadas de função custo tem média e variância parecidas em ambos 
+algoritmos. O tempo médio de execução, por outro lado, é maior para o
+algoritmo \algname{PFS\_RAND}. Portanto, podemos concluir que a
+esta modificação do \algname{PFS} não trouxe melhorias nos quesitos
+que estamos avaliando.
 
 \begin{table}
 \centering
-\resizebox{\columnwidth}{!}{%
+\footnotesize
+ \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c cc c cc}
 \toprule
 \multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)}  & \phantom{} & \multicolumn{2}{c}{\# Calls of cost function}\\
@@ -772,14 +785,82 @@ $|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_RAND} && \algname{PFS} & \alg
 16 &   65536 &&  0.406 $\pm$ 0.185 & 1.715 $\pm$ 1.400 &&   27573.8 $\pm$ 12459.5 & 27036.9 $\pm$ 12687.5 \\
 17 &  131072 &&  0.717 $\pm$ 0.397 & 5.416 $\pm$ 5.266 &&   48176.2 $\pm$ 26938.3 & 47852.1 $\pm$ 26427.6 \\
 18 &  262144 &&  1.325 $\pm$ 0.754 & 15.890 $\pm$ 17.726 &&   84417.9 $\pm$ 48587.7 & 84025.0 $\pm$ 48882.4 \\
-19 &  524288 &&  2.771 $\pm$ 1.603 & 69.600 $\pm$ 82.342 &&   167659.1 $\pm$ 99686.7 & 164612.1 $\pm$ 102018.3 
+19 &  524288 &&  2.771 $\pm$ 1.603 & 69.600 $\pm$ 82.342 &&   167659.1 $\pm$ 99686.7 & 164612.1 $\pm$ 102018.3 \\
+\bottomrule
 \end{tabular}%
-}
-\caption{Comparação entre o \algname{PFS} e \algname{PFS\_RAND}.
-O tempo de execução do segundo é maior do que o primeiro
-enquanto a quantidade de chamadas da função custo é parecida em 
-ambos.} \label{tab:pfs_vs_pfsrand}
+ }
+\caption{Comparação entre os algoritmos \algname{PFS} e 
+\algname{PFS\_RAND}. O tempo de execução do segundo é maior do que o 
+primeiro enquanto a quantidade de chamadas da função custo é parecida
+em ambos.} \label{tab:pfsrand_vs_pfs}
 \end{table}
+ 
+A tabela \ref{tab:pfsleftmost_vs_pfs} mostra os resultados dos 
+experimentos para os algoritmos \algname{PFS} e sua variante que 
+seleciona a raiz com maior potencial de poda, o que chamamos de 
+\algname{PFS\_LEFTMOST}. A tabela mostra que o último algoritmo 
+teve desempenho pior em tempo de execução e fez mais chamadas da 
+função de custo, isto é, percorreu mais nós do que o \algname{PFS}.
+Assim, concluímos que esta modificação não foi vantajosa ao algoritmo.
+
+\begin{table}
+\centering
+\footnotesize
+ \resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c cc c cc}
+\toprule
+\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)}  & \phantom{} & \multicolumn{2}{c}{\# Calls of cost function}\\
+\cline{1-2}\cline{4-5}\cline{7-8}\\
+$|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_LEFTMOST} && \algname{PFS} & \algname{PFS\_LEFTMOST} \\
+10 &    1024 &&  0.013 $\pm$ 0.002 & 0.023 $\pm$ 0.004 &&  606.1 $\pm$ 133.5 & 665.0 $\pm$ 165.8 \\
+11 &    2048 &&  0.020 $\pm$ 0.004 & 0.042 $\pm$ 0.010 &&  1122.1 $\pm$ 351.2 & 1316.6 $\pm$ 382.2 \\
+12 &    4096 &&  0.032 $\pm$ 0.008 & 0.078 $\pm$ 0.024 &&  2183.7 $\pm$ 733.2 & 2515.8 $\pm$ 871.3 \\
+13 &    8192 &&  0.054 $\pm$ 0.017 & 0.160 $\pm$ 0.061 &&  3887.7 $\pm$ 1389.9 & 4716.8 $\pm$ 1777.8 \\
+14 &   16384 &&  0.107 $\pm$ 0.034 & 0.345 $\pm$ 0.133 &&  7851.2 $\pm$ 2793.0 & 9506.8 $\pm$ 3673.9 \\
+15 &   32768 &&  0.196 $\pm$ 0.085 & 0.672 $\pm$ 0.274 &&  13780.3 $\pm$ 6049.9 & 17071.6 $\pm$ 7005.1 \\
+16 &   65536 &&  0.348 $\pm$ 0.189 & 1.271 $\pm$ 0.661 &&  24106.5 $\pm$ 13159.9 & 30055.6 $\pm$ 15363.6 \\
+17 &  131072 &&  0.785 $\pm$ 0.361 & 3.137 $\pm$ 1.476 &&  52369.0 $\pm$ 24751.2 & 67585.6 $\pm$ 30978.4 \\
+18 &  262144 &&  1.445 $\pm$ 0.657 & 6.146 $\pm$ 3.032 &&  92095.9 $\pm$ 42566.6 & 120635.7 $\pm$ 58039.0 \\
+19 &  524288 &&  3.298 $\pm$ 1.883 & 13.881 $\pm$ 7.595 &&  199151.0 $\pm$ 112167.8 & 256078.6 $\pm$ 135958.4 \\
+20 & 1048576 &&  6.141 $\pm$ 3.728 & 28.733 $\pm$ 18.120 &&  356259.2 $\pm$ 218253.1 & 465255.8 $\pm$ 276843.3 \\
+21 & 2097152 &&  10.817 $\pm$ 7.714 & 52.374 $\pm$ 38.565 &&  608984.4 $\pm$ 432151.7 & 801620.2 $\pm$ 561000.7 \\
+\bottomrule 
+\end{tabular}%
+ }
+\caption{Comparação entre os algoritmos \algname{PFS} e 
+\algname{PFS\_LEFTMOST}. O tempo de execução e também o número de 
+chamadas da função custo é maior para o \algname{PFS\_LEFTMOST}.} 
+\label{tab:pfsleftmost_vs_pfs}
+\end{table}
+
+\subsection{Comentários sobre experimentos}
+Os experimentos mostraram que a modificação \algname{PFS\_RAND} teve um
+número parecido de chamadas da função custo. Pelo fato destes números
+serem parecidos, acreditamos que o percorrimento do reticulado também 
+seja parecido, o que implica que semanticamente esta modificação é 
+equivalente ao algoritmo original. Entretanto, observamos que o
+\algname{PFS\_RAND} teve tempo de execução médio maior. Na busca por
+entender como o algoritmo pode ter ficado mais caro computacionalmente
+se sua dinâmica é essencialmente a mesma, investigamos a estrutura de
+\algname{map} do \langname{C++} e descobrimos que a forma com que implementamos 
+a escolha aleatória de um elemento desta estrutura, avançando um 
+iterador por uma quantidade aleatória de passos, adiciona tempo de 
+complexidade linear (sobre o número de raízes) ao algoritmo, 
+justificando o aumento de tempo de execução.
+
+A outra modificação, \algname{PFS\_LEFTMOST}, não tem adições de 
+complexidade computacional na escolha de raízes, visto que ela é feita
+da mesma forma no algoritmo original, apenas com diferente regra de 
+ordenação. Esta modificação teve um número maior de cálculos da função
+de custo, o que significa que mais elementos do reticulado foram
+percorridos (menos foram podados) e também explica o maior tempo de 
+execução. Podemos concluir que esta modificação não é semanticamente 
+equivalente ao \algname{PFS} porque implica em um percorrimento 
+diferente do espaço de busca, evidenciado por mais cálculos da função 
+custo.
+
+% número parecido de chamadas -> percorrimento parecido
+% + tempo de execução -> vem de outras operações adicionadas
 
 
 \section{Melhoramentos no controle de raízes}
