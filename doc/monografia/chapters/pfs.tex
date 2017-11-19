@@ -5,7 +5,8 @@ and Bound} (\algname{UBB}) ser unidirecional. Apesar do \algname{PFS}
 ter solucionado tal problema com sucesso, este algoritmo apresenta 
 pontos que ainda podem ser explorados para se criar uma modificação que
 tenha melhor desempenho computacional. Modificaremos então o 
-\algname{PFS}, explorando tais pontos.
+\algname{PFS}, explorando tais pontos e, além disso, vamos criar uma
+versão paralela do algoritmo.
 
 Baseamos nosso trabalho no código já feito por Reis, que é software 
 livre e está disponível no arcabouço \toolname{featsel} \cite{Reis+17} 
@@ -88,8 +89,7 @@ outro nó. Agora suponha que estamos em um nó $Y$, então
 definimos $X_0 = X_Y$, $X_{Y_i} \cup \{x_i\} = X_{Y_{i - 1}}$, e 
 $Y_i = Y \cup \{x_i\}$ para $x_i \in X_Y$; então para criar a sub-árvore 
 com raiz $Y$ basta adicionar os arcos $(Y, Y_i)$ para cada $i$ e aplicar 
-o lema recursivamente para cada $Y_i$ e $X_{Y_i}$. A figura 
-~\ref{fig:pfs:ubb_tree} mostra uma árvore arbitrária gerada pela 
+o lema recursivamente para cada $Y_i$ e $X_{Y_i}$. A figura~\ref{fig:pfs:ubb_tree} mostra uma árvore arbitrária gerada pela 
 aplicação recursiva do lema. 
 
 \begin{figure}[!ht]
@@ -117,7 +117,8 @@ aumenta, podemos podar a sub-árvore que se inicia no nó onde o custo
 cresce. Por exemplo, em uma instância do problema U-Curve com três 
 características, se o custo do nó $Y = \{100\}$ é maior do que o custo 
 de $\{000\}$ e, ao visitar $Y$, $X = \{011\}$ então podemos remover do 
-espaço de busca todos os nós do intervalo $[100, 111]$.
+espaço de busca todos os nós do intervalo $[100, 111]$. O funcionamento
+do \algname{UBB} é apresentado no pseudo-código~\ref{pfs:code:ubb}.
 
 
 \begin{algorithm}[!ht]
@@ -143,6 +144,7 @@ espaço de busca todos os nós do intervalo $[100, 111]$.
     \Return $\mathcal{M}$
 \end{algorithmic}
 \caption{Pseudo-código do algoritmo \algname{UBB}}
+\label{pfs:code:ubb}
 \end{algorithm}
 
 Uma vez entendido como as podas acontecem, é fácil perceber que o 
@@ -186,13 +188,12 @@ X_{|X|}$ uma cadeia tal que $X_0 = X$, $X_{|X|} = \emptyset$ e $X_{i}
 
 A figura ~\ref{fig:pfs:pfs_trees} mostra duas árvores do espaço de busca
 geradas pelo algoritmo. Note que estas árvores permitem o percorrimento
-do espaço de busca em duas direções. Observe também que na construção
-da árvore que percorre o reticulado do conjunto menor para o maior 
-(figura ~\ref{fig:pfs:lower}), o conjunto de nós alcançáveis por $Y$ é 
-determinado pelo intervalo $[Y, X \cup Y]$, e na árvore dual (figura 
-~\ref{fig:pfs:upper}), construída por aplicações recursivas do lema 
-~\ref{lemma:upper_forest} o conjunto de nós alcançáveis por $Y$ é dado 
-pela intervalo $[Y \setminus X, Y]$.
+do espaço de busca em duas direções. Seja $Y$ um conjunto da árvore da 
+figura~\ref{fig:pfs:lower} e $X$ o conjunto usado para aplicação 
+recursiva do lema~\ref{lemma:lower_forest}, então os nós que compõe a 
+sub-árvore com raiz $Y$ é exatamente o intervalo $[Y, X \cup Y]$. Na 
+árvore dual, apresentada na figura~\ref{fig:pfs:lower}, os nós da 
+sub-árvore com raiz $Y$ é dado por $[Y \setminus X, Y]$.
 
 \begin{figure}[!ht]
   \centering 
@@ -214,19 +215,23 @@ pela intervalo $[Y \setminus X, Y]$.
   \label{fig:pfs:pfs_trees}
 \end{figure}
 
+
+
 No algoritmo \algname{UBB} o controle do espaço de busca pode ser 
-facilmente implementado, pois basta não inserir a sub-árvore podada na 
-pilha de busca em profundidade. No \algname{PFS}, uma estratégia 
-equivalente é capaz apenas de restringir nós da estrutura de dados que 
-foi utilizada para o percorrimento de cadeias, ou seja, uma poda neste 
-algoritmo implica na atualização das duas estruturas de dados que 
-controlam o espaço de busca. Então, quando removemos um intervalo
-de uma árvore, precisamos remover este mesmo intervalo da árvore dual; 
-como resultado, a árvore dual se torna uma {\bf floresta}. Portanto, o
-\algname{PFS} usa duas florestas para gerir o espaço de busca, uma
-com caminhos de conjuntos menores para maiores, $\forest_A$ e outra 
-dual, $\forest_B$. Um exemplo de atualização de árvore dual é
-apresentado na figura ~\ref{fig:pfs:forest_prune}.
+facilmente implementado, pois este começa completo e para cada poda
+que ocorre basta não ramificar a sub-árvore em que a condição de poda
+for verdadeira, eliminando o intervalo $[Y, X \cup Y]$ do espaço de
+busca. No \algname{PFS}, uma estratégia equivalente é capaz apenas de 
+restringir nós da estrutura de dados que foi utilizada para o 
+percorrimento de cadeias, ou seja, uma poda neste algoritmo implica
+na atualização das duas estruturas de dados que controlam o espaço de 
+busca. Então, quando removemos um intervalo de uma árvore, precisamos 
+remover este mesmo intervalo da árvore dual; como resultado, a árvore 
+dual se torna uma {\bf floresta}. Portanto, o \algname{PFS} usa duas
+florestas para gerir o espaço de busca, uma com caminhos de conjuntos 
+menores para maiores, $\forest_A$ e outra dual, $\forest_B$. Um exemplo
+de atualização de floresta dual após uma poda na floresta primal é 
+apresentado na figura~\ref{fig:pfs:forest_prune}.
 
 \begin{figure}[!ht]
   \centering 
@@ -512,8 +517,8 @@ um dos nós deste caminho (se existirem) e chamando a função
 \textsc{Search-Lower-Children} para verificar se os filhos destes nós
 devem ser podados ou não. Ao fim do caminho chamamos a função 
 \textsc{Search-Upper-Root} para achar, na floresta $\forest_B$, a raiz
-que alcança este caminho; fazemos isto para atualizar a adjacência desta 
-raiz e garantir que uma ramificação não vai inserir os nós removidos. 
+que alcança este caminho e atualizar a sua adjacência  para garantir que 
+uma ramificação não vai re-inserir os nós removidos. 
 Esta função devolve a floresta $\forest_B$ atualizada.
 
 \begin{algorithm}[H]
@@ -565,8 +570,9 @@ e $\pfsnode{N}[\varname{vertex}]$, e a função
 \textsc{Search-Upper-Children} é chamada para verificar se os filhos 
 destes nós devem ser podados ou não. Ao fim do caminho chamamos a função 
 \textsc{Search-Lower-Root} para achar, na floresta $\forest_A$, a raiz
-que alcança este caminho. Esta função devolve a floresta $\forest_A$
-atualizada.
+que alcança este caminho e atualizar a sua adjacência para garantir que 
+uma ramificação não vai re-inserir os nós removidos. Esta função devolve 
+a floresta $\forest_A$ atualizada.
 
 \newpage
 A função \textsc{Search-Lower-Children} é chamada para cada nó $M$ do 
@@ -706,13 +712,14 @@ percorrimento.
 \subsection{Escolha de maior árvore}
 A segunda estratégia que testamos para escolha de raízes é 
 determinística e se baseia em escolher a raiz que tem maior 
-sub-árvore. Acreditamos que este critério pode acelerar o algoritmo
-porque com podas maiores é possível que o algoritmo precise visitar 
-menos nós do reticulado e portanto fazer menos operações, incluindo 
-menos cálculos da função custo.
+sub-árvore completa. Acreditamos que este critério pode acelerar o
+algoritmo porque árvores maiores podem fazer podas maiores e, desta 
+maneira, é possível que o algoritmo precise visitar menos nós do 
+reticulado e portanto fazer menos operações, incluindo menos cálculos
+da função custo.
 
 A sub-árvore completa que tem como raiz o nó $\pfsnode{N}$ é composta 
-pelos nós do intervalo 
+pelos nós dos conjuntos do intervalo 
 $[\pfsnode{N}[\varname{vertex}], \pfsnode{N}[\varname{vertex}] \cup \pfsnode{N}[\varname{adjacent}]]$ e 
 portanto, o tamanho da árvore é dado por
 \begin{align*}
@@ -732,10 +739,10 @@ Note que este número considera que a árvore está completa, o que não é
 necessariamente verdade para raízes da floresta, um cálculo exato 
 deveria considerar também o conjunto $\varname{adjacent}$ da raiz. 
 Entretanto, utilizamos esse cálculo como uma aproximação do tamanho da 
-floresta por motivos de simplicidade, pois como explicaremos a seguir,
+floresta por motivos de simplicidade, pois, como explicaremos a seguir,
 podemos ordenar as raízes de maneira rápida utilizando este cálculo 
-aproximado, o que não seria possível quando se considera o vetor de 
-adjacências.
+aproximado; fazer esta ordenação com um cálculo que considera as 
+adjacências pode não ser simples.
 
 Se ordenamos as raízes de forma lexicográfica da direita
 para esquerda (da característica com maior índice para característica
@@ -761,7 +768,7 @@ arcabouço \toolname{featsel} utilizando uma servidora de 64 cores. Os
 experimentos foram feitos com instâncias artificiais que são reduções 
 do problema da soma de subconjuntos. Analisaremos o desempenho dos 
 algoritmos tanto quanto ao tempo médio de execução quanto a quantidade
-de nós computados.
+média de nós computados.
 %TODO: server specs
 
 A tabela \ref{tab:pfsrand_vs_pfs} mostra os resultados dos 
@@ -881,17 +888,21 @@ do algoritmo \algname{PFS}. Um pior caso, exagerado, é considerar que
 os percorrimentos foram feitos sempre em uma das florestas e que a 
 função de custo é monótona tal que não houveram podas por conta de 
 aumento de custo; então, esta floresta poderá ter até $2^n - n + 1$ 
-raízes. Além disso, a estrutura \algname{map} ordena as raízes, o que 
-não é necessário para o funcionamento do algoritmo (exceto para a 
-abordagem que escolhe a raiz com maior sub-árvore).
+raízes. Desta forma, a estrutura de dados utilizada para gerenciar a 
+floresta deve ser eficiente e capaz de armazenar muitas entradas.
+Por isso, acreditamos que outras estruturas além da \toolname{map} do 
+\langname{C++} devem ser consideradas para gerenciar as raízes das 
+florestas do \algname{PFS}. Desta maneira, podemos encontrar novas 
+estruturas mais eficientes para o problema.
 
 Introduzimos então o uso de diagramas de decisão binária ordenados 
 (Ordered Binary Decision Diagram (OBDD)). Esta estrutura representa uma
 função Booleana $f : \{0, 1\}^k \to {0, 1}$ através de uma árvore. 
 Para se encontrar o valor de um conjunto $X \in \{0, 1\}^n$, percorremos
-esta árvore ramificando de acordo com a presença ou não de uma variável
-e o valor deve ser encontrado em uma folha da árvore. Em nossa 
-implementação precisamos modificar estes diagramas para que eles 
+um caminho da árvore ramificando de acordo com a presença ou não de uma
+variável, e o valor deste conjunto deve ser encontrado em uma folha da
+árvore que é o último vértice do caminho. Em nossa implementação precisamos
+modificar estes diagramas para que eles 
 permitam armazenar nós ao invés de valores Booleanos. Além disso, a 
 nossa OBDD remove nós redundantes, assim sempre que um vértice tem dois
 filhos que são folhas vazias, este vértice torna-se uma folha vazia. A
@@ -922,11 +933,11 @@ floresta do algoritmo \algname{PFS}.
 Ao deixar de utilizar a estrutura de \toolname{map} como era feito na
 implementação original do \algname{PFS}, precisamos definir uma regra
 para escolha de raízes. Decidimos utilizar a regra de escolha aleatória
-de raízes, dado que ela se mostrou semânticamente equivalente a
+de raízes, dado que ela se mostrou semanticamente equivalente a
 implementação orignal (veja \ref{pfs:root_choosing:experiments}).
 
 Para escolher uma raiz em uma OBDD precisamos apenas descer um caminho
-da raíz até uma folha não vazia (que contenha um nó) guardando os 
+da raiz até uma folha não vazia (que contenha um nó) guardando os 
 elementos que pertencem ao subconjunto que o caminho representa. A nossa
 estrutura sempre contrai folhas redundantes para apenas uma, ou seja, não existem 
 vértices na árvore que possuam dois filhos que são folhas vazias, 
@@ -977,9 +988,53 @@ função \textsc{Get-Random-OBDD-Node} devolve um nó aleatório da floresta
 de maneira identicamente provável.}
 \end{algorithm}
 
-
-
 \subsection{Testes com instâncias artificiais}
+Testamos esta variação do \algname{PFS} que usa OBDDs no controle
+das florestas, algoritmo que chamamos de \algname{OPFS}, no arcabouço
+\toolname{featsel} usando uma servidora de 64 cores. Os experimentos
+foram feitos com instâncias artificiais que são reduções do problema de
+subconjuntos. Vamos analisar o desempenho desta variação quanto ao tempo
+de execução e número de chamadas da função custo.
+
+Como podemos ver na tabela \ref{tab:opfs_vs_pfs}, o número de chamadas
+da função de custo do algoritmo modificado é similar ao do 
+\algname{PFS}, o que indica que ambos são semanticamente equivalentes; o 
+que já tinha sido constatado na variante do \algname{PFS} que também
+escolhia raízes aleatoriamente, mas usando \toolname{map} para controle
+de floresta. Entretanto, a tabela também mostra que o tempo de execução
+da modificação é maior do que do algoritmo original. Desta maneira, o
+uso de OBDDs para o controle das florestas não foi vantajoso.
+
+\begin{table}
+\centering
+\footnotesize
+\begin{tabular}{cc c cc c cc}
+\toprule
+\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)}  & \phantom{} & \multicolumn{2}{c}{\# Calls of cost function}\\
+\cline{1-2}\cline{4-5}\cline{7-8}\\
+$|S|$ & $2^{|S|}$ && PFS & OPFS && PFS & OPFS \\
+10 &    1024 &&  0.013 $\pm$ 0.003 & 0.018 $\pm$ 0.003 &&  598.0 $\pm$ 192.8 & 635.5 $\pm$ 171.9 \\
+11 &    2048 &&  0.020 $\pm$ 0.004 & 0.029 $\pm$ 0.007 &&  1152.1 $\pm$ 314.7 & 1117.9 $\pm$ 336.4 \\
+12 &    4096 &&  0.031 $\pm$ 0.010 & 0.049 $\pm$ 0.013 &&  2024.1 $\pm$ 751.6 & 2048.2 $\pm$ 700.9 \\
+13 &    8192 &&  0.057 $\pm$ 0.017 & 0.097 $\pm$ 0.033 &&  3996.3 $\pm$ 1431.6 & 3973.4 $\pm$ 1462.6 \\
+14 &   16384 &&  0.094 $\pm$ 0.038 & 0.171 $\pm$ 0.063 &&  6634.8 $\pm$ 2944.0 & 6906.5 $\pm$ 2786.5 \\
+15 &   32768 &&  0.182 $\pm$ 0.079 & 0.323 $\pm$ 0.156 &&  13140.1 $\pm$ 6020.6 & 12711.2 $\pm$ 6319.7 \\
+16 &   65536 &&  0.370 $\pm$ 0.169 & 0.660 $\pm$ 0.314 &&  25658.2 $\pm$ 11606.7 & 25303.4 $\pm$ 12169.5 \\
+17 &  131072 &&  0.819 $\pm$ 0.370 & 1.480 $\pm$ 0.665 &&  53344.9 $\pm$ 24350.4 & 53217.2 $\pm$ 24154.5 \\
+18 &  262144 &&  1.515 $\pm$ 0.905 & 2.736 $\pm$ 1.626 &&  94677.6 $\pm$ 54496.3 & 94079.4 $\pm$ 55435.6 \\
+19 &  524288 &&  2.612 $\pm$ 1.869 & 4.818 $\pm$ 3.355 &&  156150.5 $\pm$ 107369.8 & 156021.8 $\pm$ 107516.8 \\
+20 & 1048576 &&  6.085 $\pm$ 3.900 & 11.550 $\pm$ 7.661 &&  344144.1 $\pm$ 212627.1 & 343229.2 $\pm$ 212624.4 \\
+21 & 2097152 &&  11.416 $\pm$ 8.296 & 21.818 $\pm$ 16.269 &&  616936.2 $\pm$ 436491.2 & 613526.2 $\pm$ 438580.0 \\
+22 & 4194304 &&  19.950 $\pm$ 17.799 & 42.112 $\pm$ 45.109 &&  960842.2 $\pm$ 785137.2 & 959905.4 $\pm$ 783257.3 \\
+23 & 8388608 &&  42.792 $\pm$ 35.622 & 87.262 $\pm$ 90.579 &&  2053472.4 $\pm$ 1690882.1 & 2060184.5 $\pm$ 1682011.0 \\
+24 & 16777216 &&  85.646 $\pm$ 79.186 & 149.567 $\pm$ 108.104 &&  4080290.8 $\pm$ 3166258.4 & 4100480.6 $\pm$ 3141423.9 \\
+\bottomrule 
+\end{tabular}%
+\caption{Comparação entre os algoritmos \algname{PFS} e \algname{OPFS}. 
+O número de chamadas médio da função custo é parecido enquanto o tempo
+de execução é maior para o \algname{OBDD}.}
+\label{tab:opfs_vs_pfs}
+\end{table}
 
 \section{Paralelização do código}
 A dinâmica do algoritmo \algname{Poset-Forest-Search} transforma o
@@ -1077,7 +1132,7 @@ acontece, criamos uma raiz espúria na floresta $\forest_B$.
   \end{tabular}
   \caption{Continuação do exemplo da figura 
     ~\ref{fig:pfs:race_cond:part1} para duas escolhas diferentes de 
-    raízes. As figuras ~\ref{fig:pfs:race_cond:C} e 
+    raízes. As figuras~\ref{fig:pfs:race_cond:C} e 
     ~\ref{fig:pfs:race_cond:D} mostram o resultado da continuação da 
     execução do algoritmo após escolha da raiz $0100$ de $\forest_A$ em 
     um percorrimento de baixo para cima que ramifica até o nó 
@@ -1093,12 +1148,23 @@ acontece, criamos uma raiz espúria na floresta $\forest_B$.
 
 Para contornar este problema, utilizamos uma outra estrutura de dados
 do \langname{C++} capaz de armazenar um conjunto. Neste conjunto 
-armazenamos todos os nós que foram removidos do espaço de busca e assim
-evitamos a criação de raízes espúrias. Voltando ao exemplo anterior, com
-a criação do conjunto de nós deletados, se a linha de processamento 
-$P_1$ deleta o nó $0111$ antes da criação em $P_2$, então o nó já estará
-no conjunto de nós deletados quando $P_2$ tentar adicioná-lo na 
-floresta e assim a criação desta raiz pode ser evitada.
+armazenamos todos os nós que foram removidos do espaço de busca em uma
+iteração e assim evitamos a criação de raízes espúrias. Note que esse 
+conjunto é esvaziado a cada iteração do \algname{PFS}, portanto não
+deve ocupar grande espaço de memória; se este conjunto não fosse limpo
+a cada iteração ele poderia atingir tamanhos exponenciais sobre o número
+de características do problema, comprometendo a escalabilidade do 
+algoritmo.
+
+
+Voltando ao exemplo anterior, das figuras 
+~\ref{fig:pfs:race_cond:part1}~-~\ref{fig:pfs:race_cond:part2}, com a 
+criação do conjunto de nós deletados, se a linha de processamento $P_1$
+deleta o nó $0111$ antes da criação em $P_2$, então o nó já estará no 
+conjunto de nós deletados quando $P_2$ tentar adicioná-lo na floresta e
+assim a criação desta raiz pode ser evitada. Se a ordem é contrária, 
+então o nó é criado e depois deletado, o que pode ser desnecessário, 
+porém consistente.
 
 \subsection{Testes com instâncias artificiais}
 % utilizando a biblioteca OpenMP
@@ -1115,7 +1181,7 @@ Tendo em vista que o principal problema da paralelização do
 $\algname{PFS}$ foi o fato de que há muito entrelace nas linhas de 
 execução, propomos um novo algoritmo baseado no $\algname{UBB}$ e 
 $\algname{PFS}$ que fosse também paralelo, mas com pouca ou nenhuma 
-interferência entre as linhas de execução, chamamos algoritmo de 
+interferência entre as linhas de execução, chamamos este algoritmo de 
 \algname{UBB-PFS}.
 
 \subsection{Descrição}
@@ -1128,11 +1194,10 @@ do espaço de busca corrente utilizando o algoritmo \algname{PFS}. A
 solução das sub-árvores deve ocorrer de maneira independente, 
 possibilitando a paralelização mais fácil do código.
 
-O pseudo-código \ref{pfs:code:ubbpfs:step1} mostra como é feita a 
+O pseudo-código~\ref{pfs:code:ubbpfs:step1} mostra como é feita a 
 primeira etapa do algoritmo e também serve de base para a explicação da
 segunda etapa \algname{UBB-PFS} e da corretude do algoritmo, pois 
-possui os seguintes invariantes no final da linha 
-\ref{pfs:code:ubbpfs:invariant}:
+possui os seguintes invariantes no final da linha~\ref{pfs:code:ubbpfs:invariant}:
 \begin{enumerate}[a)]
     \item{Para todo nó do espaço de busca que não é raiz, existem três 
         possibilidades: ou ele foi visitado e está em $\mathcal{M}$, ou 
@@ -1178,17 +1243,17 @@ maneira idêntica ao \algname{UBB}.}
 \end{algorithm}
 
 
-O invariante \ref{pfs:code:ubb:invariant:A} nos garante que o mínimo
+O invariante~\ref{pfs:code:ubb:invariant:A} nos garante que o mínimo
 global já está em $\mathcal{M}$ ou é minimo dentro de uma das árvores
-que tem raíz em $\mathcal{S}$, portanto, quando estamos na linha do 
+que tem raiz em $\mathcal{S}$, portanto, quando estamos na linha do 
 invariante, resolver o problema original é igual a achar o mínimo
-de cada uma das árvores e do conjunto $\mathcal{M}$. O invariante
-\ref{pfs:code:ubb:invariant:B} garante que toda árvore com raíz $Y$ 
-contém exatamente os subconjuntos do intervalo $[Y, X \cup Y]$. 
+de cada uma das árvores e do conjunto $\mathcal{M}$. O 
+invariante~\ref{pfs:code:ubb:invariant:B} garante que toda árvore com 
+raiz $Y$ contém exatamente os subconjuntos do intervalo $[Y, X \cup Y]$. 
 
 Para resolver cada sub-árvore com raiz em $\mathcal{S}$, criamos o 
 seguinte problema U-Curve auxiliar. Seja $\langle S, c \rangle$ uma 
-instância do problema U-Curve e seja $Y$ uma raíz de uma sub-árvore do 
+instância do problema U-Curve e seja $Y$ uma raiz de uma sub-árvore do 
 problema e $X$ um conjunto de características tal que os nós desta 
 sub-árvore seja exatamente o intervalo $[Y, X \cup Y]$. Considerando que
 este intervalo é igual ao conjunto $\{Y \cup W : W \in \powerset(X)\}$,
@@ -1212,13 +1277,13 @@ instância do problema U-Curve $\langle S_X, c_Y\rangle$ tal que:
     \EndWhile
     \Return $\mathcal{N}$
 \end{algorithmic}
-\caption{Continuação do pseudo-código \ref{pfs:code:ubbpfs:step1}}
+\caption{Continuação do pseudo-código~\ref{pfs:code:ubbpfs:step1}}
 \end{algorithm}
 
 A função \textsc{FinishStepOne} determina qual é a iteração em que o
-algoritmo deve terminar a primeira etapa. Esta função Booleana controla
-de certa forma a maneira com que o trabalho é dividido entre etapa 1 e 2
-do código. Se ela nunca for verdadeira, então o \algname{UBB-PFS} deve 
+algoritmo deve terminar a primeira etapa. Esta função Booleana controla,
+de certa forma, a maneira com que o trabalho é dividido entre etapa 1 e 
+2 do código. Se ela nunca for verdadeira, então o \algname{UBB-PFS} deve 
 se comportar exatamente como o \algname{UBB}. Além disso, a segunda 
 etapa deve ser rodada em linhas de processamento paralelos, portanto
 esta função também influencia a distribuição de trabalho e nível de 
@@ -1246,3 +1311,134 @@ Em nossa implementação, definimos que a função \textsc{FinishStepOne} é
 verdadeira quando o número de raízes é maior que o número de cores da 
 máquina ou quando o número de iterações é maior do que duas vezes a 
 quantidade de características. 
+
+\subsection{Experimentos com instâncias artificiais}
+Testamos o algoritmo \algname{UBB-PFS} no arcabouço \toolname{featsel}
+utilizando uma servidora de 64 núcleos. Os experimentos foram feitos com 
+instâncias artificiais que são reduções do problema da soma de
+subconjuntos. Analisaremos o desempenho dos algoritmos tanto quanto ao 
+tempo médio de execução quanto a quantidade de nós computados.
+
+A tabela~\ref{tab:ubbpfs_vs_ubb_vs_pfs_time} mostra o tempo de execução
+dos algoritmos \algname{PFS}, \algname{UBB-PFS} e \algname{UBB}. O 
+\algname{UBB-PFS} teve tempos de execuções médios menores do que o 
+\algname{PFS}, portanto precisamo investigar se ele é melhor também do
+que um outro algoritmo mais rápido que o \algname{PFS}, o \algname{UBB}.
+Este último mostrou ter melhor desempenho nesta tabela, entretanto, 
+por conta da paralelização, é possível que o \algname{UBB-PFS} se torne 
+mais rápido para instâncias maiores. Investigamos isto com instâncias
+maiores na tabela~\ref{tab:ubbpfs_vs_ubb_time} e constatamos que 
+para estas instâncias o \algname{UBB} ainda é mais rápido.
+
+A tabela~\ref{tab:ubbpfs_vs_ubb_vs_pfs_computed_nodes} mostra o número
+médio de nós computados pelos mesmos algoritmos. Podemos observar nesta
+tabela que o \algname{UBB}, apesar de ser mais rápido, precisa computar
+mais nós que os outros algoritmos. O \algname{PFS} é o algoritmo que 
+precisa calcular menos nós, enquanto o \algname{UBB-PFS} é 
+intermediário, mas com desempenho mais próximo do \algname{PFS}.
+
+Dado que o tempo de execução do \algname{UBB-PFS} foi menor do que o
+tempo do \algname{PFS} e que o número de nós computados foi menor do
+que o necessário pelo \algname{UBB}, que é o mais rápido dos três, 
+concluímos que existem instâncias em que o \algname{UBB-PFS} é o 
+algoritmo mais apropriado entre os três. Este tipo de instância é tal
+que o tempo de percorrimento é tão relevante quanto o tempo de 
+computação da função custo, desta maneira o número maior de cálculos
+do \algname{UBB} e o tempo maior de percorrimento do \algname{PFS} 
+tornariam o \algname{UBB-PFS} a melhor opção, porque é intermediário no 
+consumo de tempo e próximo do melhor dos três quanto ao número de 
+cálculos da função custo.
+
+\begin{table}
+\centering
+\footnotesize
+% \resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c ccc}
+\toprule
+\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{3}{c}{Total time (sec)}\\
+\cline{1-2}\cline{4-6}\\
+$|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS  \\
+10 &    1024 &&  0.006 $\pm$ 0.001 & 0.011 $\pm$ 0.002 & 0.023 $\pm$ 0.004 \\
+11 &    2048 &&  0.007 $\pm$ 0.001 & 0.017 $\pm$ 0.004 & 0.026 $\pm$ 0.004 \\
+12 &    4096 &&  0.010 $\pm$ 0.003 & 0.029 $\pm$ 0.009 & 0.034 $\pm$ 0.006 \\
+13 &    8192 &&  0.013 $\pm$ 0.006 & 0.047 $\pm$ 0.016 & 0.044 $\pm$ 0.011 \\
+14 &   16384 &&  0.024 $\pm$ 0.013 & 0.094 $\pm$ 0.034 & 0.068 $\pm$ 0.023 \\
+15 &   32768 &&  0.043 $\pm$ 0.026 & 0.186 $\pm$ 0.074 & 0.113 $\pm$ 0.042 \\
+16 &   65536 &&  0.083 $\pm$ 0.060 & 0.339 $\pm$ 0.168 & 0.187 $\pm$ 0.082 \\
+17 &  131072 &&  0.161 $\pm$ 0.122 & 0.650 $\pm$ 0.347 & 0.326 $\pm$ 0.175 \\
+18 &  262144 &&  0.321 $\pm$ 0.233 & 1.482 $\pm$ 0.768 & 0.703 $\pm$ 0.380 \\
+19 &  524288 &&  0.620 $\pm$ 0.447 & 2.711 $\pm$ 1.562 & 1.309 $\pm$ 0.729 \\
+20 & 1048576 &&  1.312 $\pm$ 0.970 & 5.007 $\pm$ 3.302 & 2.478 $\pm$ 1.547 \\
+21 & 2097152 &&  2.494 $\pm$ 1.893 & 11.125 $\pm$ 6.749 & 5.458 $\pm$ 3.294 \\
+22 & 4194304 &&  4.589 $\pm$ 4.122 & 19.085 $\pm$ 15.147 & 8.832 $\pm$ 6.846 \\
+23 & 8388608 &&  12.228 $\pm$ 7.922 & 40.323 $\pm$ 29.649 & 18.891 $\pm$ 12.786 \\
+24 & 16777216 &&  24.273 $\pm$ 16.277 & 113.332 $\pm$ 76.688 & 67.178 $\pm$ 46.516 \\
+\end{tabular}
+% }
+\caption{Comparação de tempo médio de execução entre os algoritmos
+\algname{UBB}, \algname{PFS} e \algname{UBB-PFS}. Podemos observar que
+o \algname{PFS} foi o mais lento enquanto o \algname{UBB} foi o mais
+rápido e o \algname{UBB-PFS} teve desempenho itermediário para estas
+instâncias. Este teste continua na tabela~\ref{tab:ubbpfs_vs_ubb_time},
+que mostra apenas o \algname{UBB} e o \algname{UBB-PFS} já que o 
+\algname{PFS} mostrou ter desempenho pior.}
+\label{tab:ubbpfs_vs_ubb_vs_pfs_time}
+\end{table}
+
+\begin{table}
+\centering
+\footnotesize
+\begin{tabular}{cc c cc}
+\toprule
+\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)} \\
+\cline{1-2}\cline{4-5}\\
+$|S|$ & $2^{|S|}$ && UBB & UBB-PFS \\
+20 & 1048576 &&  1.245 $\pm$ 0.861 & 5.106 $\pm$ 3.017 \\
+21 & 2097152 &&  2.332 $\pm$ 1.900 & 9.178 $\pm$ 6.330 \\
+22 & 4194304 &&  5.653 $\pm$ 3.904 & 17.405 $\pm$ 11.754 \\
+23 & 8388608 &&  9.432 $\pm$ 8.938 & 28.746 $\pm$ 26.387 \\
+24 & 16777216 &&  20.293 $\pm$ 16.147 & 77.392 $\pm$ 59.976 \\
+25 & 33554432 &&  46.215 $\pm$ 35.837 & 144.196 $\pm$ 110.583 \\
+\end{tabular}
+\caption{Comparação de tempo médio de execução entre os algoritmos 
+\algname{UBB} e \algname{UBB-PFS}. O algoritmo \algname{UBB-PFS} mostrou
+maior tempo médio de execução.}
+\label{tab:ubbpfs_vs_ubb_time}
+\end{table}
+
+\begin{table}
+\centering
+\footnotesize
+% \resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c ccc}
+\toprule
+\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{3}{c}{\# Calls of cost function}\\
+\cline{1-2}\cline{4-6} \\
+$|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS  \\
+10 &    1024  && 699.4 $\pm$ 361.3 & 611.3 $\pm$ 178.8 & 634.7 $\pm$ 209.8 \\
+11 &    2048  && 1217.2 $\pm$ 747.1 & 1145.4 $\pm$ 358.9 & 1178.8 $\pm$ 484.1 \\
+12 &    4096  && 2898.0 $\pm$ 1380.4 & 2103.1 $\pm$ 793.6 & 2363.0 $\pm$ 760.4 \\
+13 &    8192  && 4422.6 $\pm$ 3293.8 & 3650.9 $\pm$ 1371.9 & 3934.4 $\pm$ 1487.7 \\
+14 &   16384  && 10089.4 $\pm$ 6452.1 & 7536.3 $\pm$ 2926.1 & 8012.2 $\pm$ 3387.4 \\
+15 &   32768  && 19097.5 $\pm$ 12793.8 & 14546.5 $\pm$ 6081.0 & 15299.2 $\pm$ 6598.4 \\
+16 &   65536  && 37663.1 $\pm$ 28321.2 & 25744.0 $\pm$ 12795.4 & 27028.4 $\pm$ 13031.9 \\
+17 &  131072  && 73373.3 $\pm$ 55994.3 & 46808.9 $\pm$ 24533.5 & 49348.6 $\pm$ 24556.7 \\
+18 &  262144  && 150035.2 $\pm$ 108299.3 & 103166.6 $\pm$ 52464.7 & 105306.4 $\pm$ 53472.0 \\
+19 &  524288  && 292561.2 $\pm$ 210771.2 & 183125.7 $\pm$ 104965.4 & 189545.7 $\pm$ 102145.9 \\
+20 & 1048576  && 617049.5 $\pm$ 450468.2 & 323097.4 $\pm$ 213634.3 & 340694.2 $\pm$ 202389.6 \\
+21 & 2097152  && 1172641.6 $\pm$ 879148.5 & 691991.3 $\pm$ 413262.9 & 704790.2 $\pm$ 407143.8 \\
+22 & 4194304  && 2099973.2 $\pm$ 1863285.8 & 1133395.1 $\pm$ 874492.0 & 1156564.2 $\pm$ 862152.0 \\
+23 & 8388608  && 5435778.8 $\pm$ 3468245.3 & 2276694.5 $\pm$ 1621342.2 & 2345648.2 $\pm$ 1558258.5 \\
+24 & 16777216 && 10146842.9 $\pm$ 6673018.3 & 5527504.2 $\pm$ 3413432.3 & 5609052.7 $\pm$ 3337059.1 \\
+\end{tabular}
+\caption{Comparação sobre o número de chamadas de função custo entre
+os algoritmos \algname{UBB}, \algname{PFS} e \algname{UBB-PFS}. Vemos
+nesta tabela que o número de nós computados pelo \algname{UBB} é o maior
+enquanto o do \algname{PFS} é o menor; o \algname{UBB-PFS} tem 
+desempenho intermediário, porém próximo ao do \algname{PFS}.}
+\label{tab:ubbpfs_vs_ubb_vs_pfs_computed_nodes}
+% }
+\end{table}
+
+
+
