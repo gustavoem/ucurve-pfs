@@ -523,5 +523,54 @@ características; utilizam-se para estas algoritmos sub-ótimos,
 heurísticas.
 
 \subsubsection{Instâncias pequenas}
+% -> p e l não interferem na qualidade da solução
+% -> criar muitas partes implica em um número grande de tasks pequenas
+% -> criar poucas partes não usa o maximo potencial da maquina
+% -> graficos de tempo por p e l
+Instâncias pequenas podem ser resolvidas otimamente por algoritmos
+como o \algname{UBB}, \algname{PFS} ou até a busca exaustiva. Portanto, 
+para estas instâncias, vamos usar parâmetros no \algname{PUCS} que 
+garantem que ele será ótimo. Para fazer isto, basta utilizar como 
+algoritmo base um algoritmo ótimo. A decisão de qual algoritmo ótimo
+usar como base depende dos recursos computacionais disponíveis e da 
+topologia do problema; se, por exemplo, a função de custo é complicada, 
+devemos escolher um algoritmo que faz poucos cálculos de custo, como o 
+\algname{PFS} ou \algname{UBB-PFS}.
+
+Para os outros dois parâmetros, $p$ e $l$, devemos escolher de forma
+que a granularidade da partição seja moderada. Como estas instâncias 
+são pequenas, uma partição muito fina pode criar muitas partes pequenas,
+fazendo com que o trabalho de se criar e escalonar estas várias tarefas 
+pequenas comprometa o tempo total de execução. Por outro lado, se 
+utilizarmos valores pequenos para $p$ e $l$ é possível que o 
+particionamento seja muito pouco fino, não gerando um número de tarefas
+que use todo o poder computacional da máquina usada.
+
+% TODO: qual algoritmo base usaremos? Quais valores de p e l?
+
 
 \subsubsection{Instâncias grandes}
+Instâncias grandes costumam não ser resolvidas por algoritmos ótimos, 
+pois estes demandam recursos computacionais as vezes não disponíveis. 
+Desta forma, resolve-se o problema U-Curve com heurísticas, como o 
+\algname{Sequential Forward Floating Selection} 
+(\algname{SFFS})~\cite{PNK94} ou \algname{Best-First Search} 
+(\algname{BFS})~\cite{KJ97}. Para o \algname{PUCS} se tornar uma 
+heurística, basta utilizar um destes algoritmos como algoritmo base.
+
+Quando o \algname{PUCS} é ótimo, os parâmetros $p$ e $l$ interferem 
+apenas no tempo de execução do algoritmo, mas quando tornamos este 
+algoritmo uma heurística, estes parâmetros passam a interferir também
+na qualidade das soluções obtidas. Quanto mais fino é o particionamento
+feito, mais partes são geradas e resolvidas pelo \algname{PUCS}, e como
+cada parte é resolvida com uma chamada do algoritmo base, temos que 
+quanto mais granular é o particionamento, mais percorrimentos 
+disjuntos acontecerão no reticulado. Desta maneira, quando 
+aumentamos o $p$ e $l$, mais buscas são feitas e é provável que a 
+solução encontrada seja melhor.
+
+Entretanto, não podemos nos esquecer que estes parâmetros ainda 
+influenciam o tempo de execução do algoritmo. Desta maneira não podemos
+aumentar os valores destes parâmetros arbitrariamente até atingir a 
+solução com qualidade necessária, e sim aumentar estes parâmetros 
+enquanto houverem recursos computacionais compatíveis.

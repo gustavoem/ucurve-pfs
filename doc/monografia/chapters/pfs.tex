@@ -1024,10 +1024,10 @@ $|S|$ & $2^{|S|}$ && PFS & OPFS && PFS & OPFS \\
 18 &  262144 &&  1.515 $\pm$ 0.905 & 2.736 $\pm$ 1.626 &&  94677.6 $\pm$ 54496.3 & 94079.4 $\pm$ 55435.6 \\
 19 &  524288 &&  2.612 $\pm$ 1.869 & 4.818 $\pm$ 3.355 &&  156150.5 $\pm$ 107369.8 & 156021.8 $\pm$ 107516.8 \\
 20 & 1048576 &&  6.085 $\pm$ 3.900 & 11.550 $\pm$ 7.661 &&  344144.1 $\pm$ 212627.1 & 343229.2 $\pm$ 212624.4 \\
-21 & 2097152 &&  11.416 $\pm$ 8.296 & 21.818 $\pm$ 16.269 &&  616936.2 $\pm$ 436491.2 & 613526.2 $\pm$ 438580.0 \\
-22 & 4194304 &&  19.950 $\pm$ 17.799 & 42.112 $\pm$ 45.109 &&  960842.2 $\pm$ 785137.2 & 959905.4 $\pm$ 783257.3 \\
-23 & 8388608 &&  42.792 $\pm$ 35.622 & 87.262 $\pm$ 90.579 &&  2053472.4 $\pm$ 1690882.1 & 2060184.5 $\pm$ 1682011.0 \\
-24 & 16777216 &&  85.646 $\pm$ 79.186 & 149.567 $\pm$ 108.104 &&  4080290.8 $\pm$ 3166258.4 & 4100480.6 $\pm$ 3141423.9 \\
+% 21 & 2097152 &&  11.416 $\pm$ 8.296 & 21.818 $\pm$ 16.269 &&  616936.2 $\pm$ 436491.2 & 613526.2 $\pm$ 438580.0 \\
+% 22 & 4194304 &&  19.950 $\pm$ 17.799 & 42.112 $\pm$ 45.109 &&  960842.2 $\pm$ 785137.2 & 959905.4 $\pm$ 783257.3 \\
+% 23 & 8388608 &&  42.792 $\pm$ 35.622 & 87.262 $\pm$ 90.579 &&  2053472.4 $\pm$ 1690882.1 & 2060184.5 $\pm$ 1682011.0 \\
+% 24 & 16777216 &&  85.646 $\pm$ 79.186 & 149.567 $\pm$ 108.104 &&  4080290.8 $\pm$ 3166258.4 & 4100480.6 $\pm$ 3141423.9 \\
 \bottomrule 
 \end{tabular}%
 \caption{Comparação entre os algoritmos \algname{PFS} e \algname{OPFS}. 
@@ -1167,14 +1167,77 @@ então o nó é criado e depois deletado, o que pode ser desnecessário,
 porém consistente.
 
 \subsection{Testes com instâncias artificiais}
-% utilizando a biblioteca OpenMP
-% simplificação: paralelizamos iterações do código uma a uma
-% complicado: as coisas são intrínsecas
-%   -> o que é melhor: 
-%     - remover barreiras e manter uma lista de nós deletados
-%     - manter a barreira e, ter uma lista de nós deletados?
-%     >> se tivessemos paralelizado com ROBDD seria fácil verificar nós
-%     deletados :(
+Testamos esta versão paralela do \algname{PFS}, que chamamos aqui de
+\algname{PPFS}, no arcabouço \toolname{featsel} usando uma servidora de
+64 cores. Os experimentos foram feitos com instâncias artificiais que 
+são reduções do problema de subconjuntos. Vamos analisar o desempenho 
+deste algoritmo quanto ao tempo de execução e número de chamadas da 
+função custo.
+
+\begin{table}
+\centering
+\footnotesize
+% \resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c cc c cc}
+\toprule
+\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)} & \phantom{} & \multicolumn{2}{c}{\# Calls of cost function} \\
+\cline{1-2}\cline{4-5}\cline{7-8}\\
+$|S|$ & $2^{|S|}$ && PFS & PPFS && PFS & PPFS \\
+ % 1 &       2 && 0.005 $\pm$ 0.004 & 0.028 $\pm$ 0.006 &&  2.0 $\pm$  0.0 &  2.0 $\pm$  0.0 \\
+ % 2 &       4 && 0.004 $\pm$ 0.000 & 0.038 $\pm$ 0.008 &&  3.9 $\pm$  0.3 &  3.9 $\pm$  0.3 \\
+ % 3 &       8 && 0.004 $\pm$ 0.000 & 0.039 $\pm$ 0.007 &&  7.0 $\pm$  1.2 &  7.0 $\pm$  1.2 \\
+ % 4 &      16 && 0.004 $\pm$ 0.000 & 0.047 $\pm$ 0.008 && 12.8 $\pm$  3.0 & 13.2 $\pm$  3.3 \\
+ % 5 &      32 && 0.005 $\pm$ 0.000 & 0.058 $\pm$ 0.009 && 26.8 $\pm$  4.5 & 26.9 $\pm$  3.0 \\
+ % 6 &      64 && 0.005 $\pm$ 0.000 & 0.061 $\pm$ 0.010 && 52.7 $\pm$  7.3 & 50.5 $\pm$  6.4 \\
+ % 7 &     128 && 0.005 $\pm$ 0.000 & 0.070 $\pm$ 0.013 && 87.3 $\pm$ 20.5 & 82.8 $\pm$ 23.5 \\
+ % 8 &     256 && 0.006 $\pm$ 0.000 & 0.079 $\pm$ 0.013 && 177.0 $\pm$ 32.1 & 171.2 $\pm$ 36.2 \\
+ % 9 &     512 && 0.008 $\pm$ 0.001 & 0.104 $\pm$ 0.021 && 333.8 $\pm$ 93.9 & 344.5 $\pm$ 95.2 \\
+10 &    1024 && 0.011 $\pm$ 0.001 & 0.146 $\pm$ 0.027 && 643.6 $\pm$ 133.0 & 626.5 $\pm$ 151.1 \\
+11 &    2048 && 0.017 $\pm$ 0.004 & 0.227 $\pm$ 0.062 && 1151.0 $\pm$ 359.7 & 1135.6 $\pm$ 381.1 \\
+12 &    4096 && 0.029 $\pm$ 0.007 & 0.385 $\pm$ 0.113 && 2173.1 $\pm$ 652.5 & 2139.2 $\pm$ 710.3 \\
+13 &    8192 && 0.049 $\pm$ 0.015 & 0.640 $\pm$ 0.237 && 3839.8 $\pm$ 1376.6 & 3743.5 $\pm$ 1532.9 \\
+14 &   16384 && 0.104 $\pm$ 0.037 & 1.337 $\pm$ 0.513 && 8175.9 $\pm$ 3037.4 & 8026.4 $\pm$ 3303.7 \\
+15 &   32768 && 0.163 $\pm$ 0.078 & 2.010 $\pm$ 1.096 && 12459.6 $\pm$ 6164.5 & 12062.2 $\pm$ 6897.2 \\
+16 &   65536 && 0.360 $\pm$ 0.163 & 4.483 $\pm$ 2.030 && 27027.3 $\pm$ 12397.0 & 26835.7 $\pm$ 12446.9 \\
+17 &  131072 && 0.664 $\pm$ 0.362 & 8.072 $\pm$ 4.370 && 48001.9 $\pm$ 26149.2 & 48093.4 $\pm$ 26233.2 \\
+18 &  262144 && 1.250 $\pm$ 0.690 & 14.341 $\pm$ 8.062 && 85880.9 $\pm$ 47950.8 & 86050.8 $\pm$ 49186.8 \\
+19 &  524288 && 2.936 $\pm$ 1.629 & 34.639 $\pm$ 19.074 && 198503.0 $\pm$ 108116.1 & 197832.5 $\pm$ 110659.6 \\
+20 & 1048576 && 5.024 $\pm$ 3.097 & 61.038 $\pm$ 38.250 && 321495.8 $\pm$ 198004.3 & 318507.0 $\pm$ 199354.3 \\
+% 21 & 2097152 && 11.997 $\pm$ 7.637 & 144.610 $\pm$ 89.521 && 754636.3 $\pm$ 478683.6 & 759129.7 $\pm$ 472831.1 \\
+\end{tabular}
+\caption{Comparação entre os algoritmos \algname{PFS} e \algname{PPFS}.
+O algoritmo \algname{PPFS} apresenta um número similar de média de 
+chamadas da função custo ao \algname{PFS}, mas possui tempo de execução 
+médio maior.}
+\label{tab:ppfs_vs_pfs}
+% }
+\end{table}
+
+Podemos observar na tabela~\ref{tab:ppfs_vs_pfs} que os números de 
+chamadas da função custo dos algoritmos \algname{PFS} e \algname{PPFS}
+são parecidos. Isto quer dizer que a nossa paralelização não trouxe 
+grandes modificações semanticas ao algoritmo. Entretanto, o tempo médio
+de execução teve diferenças na versão paralela, que gastou mais tempo
+do que o algoritmo original em todas as instâncias. A tabela mostra
+que o \algname{PPFS} foi pelo menos 10 vezes mais lento que a 
+implementação serial para as instâncias vistas.
+
+
+\subsection{Comentários sobre experimentos}
+Acreditamos que os resultados pobres do algoritmo \algname{PPFS} se 
+deram por conta da complexidade da atualização da floresta dual. 
+Apesar das ramificações serem feitas em paralelo com pouco ou nenhum
+entrelace de linhas de processamento, esta rotina consome tempo de
+execução pequeno comparado com a rotina de atualização de florestas.
+Com a paralelização, esta atualização tornou necessária uma nova 
+estrutura de dados ao algoritmo para tratar condições de corrida 
+que podiam adicionar inconsistências as florestas. Além disso, a 
+atualização depende de adições, remoções e verificações nas 
+florestas que não podem ser feitas em paralelo, criando muitas seções
+críticas no código, o que deve ter sido a principal causa da piora
+de tempo, pois estes blocos de código implicam em uma troca constante
+de contextos pelos processadores, que não podem processar blocos
+críticos ao mesmo tempo.
 
 \section{O algoritmo UBB-PFS}
 Tendo em vista que o principal problema da paralelização do 
@@ -1337,6 +1400,7 @@ mais nós que os outros algoritmos. O \algname{PFS} é o algoritmo que
 precisa calcular menos nós, enquanto o \algname{UBB-PFS} é 
 intermediário, mas com desempenho mais próximo do \algname{PFS}.
 
+\subsection{Comentários sobre os experimentos}
 Dado que o tempo de execução do \algname{UBB-PFS} foi menor do que o
 tempo do \algname{PFS} e que o número de nós computados foi menor do
 que o necessário pelo \algname{UBB}, que é o mais rápido dos três, 
@@ -1439,6 +1503,3 @@ desempenho intermediário, porém próximo ao do \algname{PFS}.}
 \label{tab:ubbpfs_vs_ubb_vs_pfs_computed_nodes}
 % }
 \end{table}
-
-
-

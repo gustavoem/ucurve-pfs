@@ -35,6 +35,7 @@
 #include "../PartitionNode.h"
 #include "PosetForestSearch.h"
 #include "ExhaustiveSearch.h"
+#include "UcurveBranchandBound.h"
 #include "SFS.h"
 #include <omp.h>
 
