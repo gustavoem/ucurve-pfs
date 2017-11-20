@@ -787,7 +787,7 @@ que estamos avaliando.
  \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c cc c cc}
 \toprule
-\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)}  & \phantom{} & \multicolumn{2}{c}{\# Calls of cost function}\\
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)}  & \phantom{} & \multicolumn{2}{c}{Número médio de cálculos de custo}\\
 \cline{1-2}\cline{4-5}\cline{7-8}\\
 $|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_RAND} && \algname{PFS} & \algname{PFS\_RAND} \\
 10 &    1024 &&  0.013 $\pm$ 0.003 & 0.014 $\pm$ 0.003 &&   590.8 $\pm$ 198.5 & 599.5 $\pm$ 177.5 \\
@@ -823,7 +823,7 @@ Assim, concluímos que esta modificação não foi vantajosa ao algoritmo.
  \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c cc c cc}
 \toprule
-\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)}  & \phantom{} & \multicolumn{2}{c}{\# Calls of cost function}\\
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)}  & \phantom{} & \multicolumn{2}{c}{Número médio de cálculos de custo}\\
 \cline{1-2}\cline{4-5}\cline{7-8}\\
 $|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_LEFTMOST} && \algname{PFS} & \algname{PFS\_LEFTMOST} \\
 10 &    1024 &&  0.013 $\pm$ 0.002 & 0.023 $\pm$ 0.004 &&  606.1 $\pm$ 133.5 & 665.0 $\pm$ 165.8 \\
@@ -1010,7 +1010,7 @@ uso de OBDDs para o controle das florestas não foi vantajoso.
 \footnotesize
 \begin{tabular}{cc c cc c cc}
 \toprule
-\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)}  & \phantom{} & \multicolumn{2}{c}{\# Calls of cost function}\\
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)}  & \phantom{} & \multicolumn{2}{c}{Número médio de cálculos de custo}\\
 \cline{1-2}\cline{4-5}\cline{7-8}\\
 $|S|$ & $2^{|S|}$ && PFS & OPFS && PFS & OPFS \\
 10 &    1024 &&  0.013 $\pm$ 0.003 & 0.018 $\pm$ 0.003 &&  598.0 $\pm$ 192.8 & 635.5 $\pm$ 171.9 \\
@@ -1180,7 +1180,7 @@ função custo.
 % \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c cc c cc}
 \toprule
-\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)} & \phantom{} & \multicolumn{2}{c}{\# Calls of cost function} \\
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)} & \phantom{} & \multicolumn{2}{c}{Número médio de cálculos de custo} \\
 \cline{1-2}\cline{4-5}\cline{7-8}\\
 $|S|$ & $2^{|S|}$ && PFS & PPFS && PFS & PPFS \\
  % 1 &       2 && 0.005 $\pm$ 0.004 & 0.028 $\pm$ 0.006 &&  2.0 $\pm$  0.0 &  2.0 $\pm$  0.0 \\
@@ -1204,6 +1204,7 @@ $|S|$ & $2^{|S|}$ && PFS & PPFS && PFS & PPFS \\
 19 &  524288 && 2.936 $\pm$ 1.629 & 34.639 $\pm$ 19.074 && 198503.0 $\pm$ 108116.1 & 197832.5 $\pm$ 110659.6 \\
 20 & 1048576 && 5.024 $\pm$ 3.097 & 61.038 $\pm$ 38.250 && 321495.8 $\pm$ 198004.3 & 318507.0 $\pm$ 199354.3 \\
 % 21 & 2097152 && 11.997 $\pm$ 7.637 & 144.610 $\pm$ 89.521 && 754636.3 $\pm$ 478683.6 & 759129.7 $\pm$ 472831.1 \\
+\bottomrule
 \end{tabular}
 \caption{Comparação entre os algoritmos \algname{PFS} e \algname{PPFS}.
 O algoritmo \algname{PPFS} apresenta um número similar de média de 
@@ -1240,6 +1241,7 @@ de contextos pelos processadores, que não podem processar blocos
 críticos ao mesmo tempo.
 
 \section{O algoritmo UBB-PFS}
+\label{sec:ubbpfs}
 Tendo em vista que o principal problema da paralelização do 
 $\algname{PFS}$ foi o fato de que há muito entrelace nas linhas de 
 execução, propomos um novo algoritmo baseado no $\algname{UBB}$ e 
@@ -1419,7 +1421,7 @@ cálculos da função custo.
 % \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c ccc}
 \toprule
-\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{3}{c}{Total time (sec)}\\
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{3}{c}{Tempo de execução médio (s)}\\
 \cline{1-2}\cline{4-6}\\
 $|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS  \\
 10 &    1024 &&  0.006 $\pm$ 0.001 & 0.011 $\pm$ 0.002 & 0.023 $\pm$ 0.004 \\
@@ -1437,6 +1439,7 @@ $|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS  \\
 22 & 4194304 &&  4.589 $\pm$ 4.122 & 19.085 $\pm$ 15.147 & 8.832 $\pm$ 6.846 \\
 23 & 8388608 &&  12.228 $\pm$ 7.922 & 40.323 $\pm$ 29.649 & 18.891 $\pm$ 12.786 \\
 24 & 16777216 &&  24.273 $\pm$ 16.277 & 113.332 $\pm$ 76.688 & 67.178 $\pm$ 46.516 \\
+\bottomrule
 \end{tabular}
 % }
 \caption{Comparação de tempo médio de execução entre os algoritmos
@@ -1454,7 +1457,7 @@ que mostra apenas o \algname{UBB} e o \algname{UBB-PFS} já que o
 \footnotesize
 \begin{tabular}{cc c cc}
 \toprule
-\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{2}{c}{Total time (sec)} \\
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)} \\
 \cline{1-2}\cline{4-5}\\
 $|S|$ & $2^{|S|}$ && UBB & UBB-PFS \\
 20 & 1048576 &&  1.245 $\pm$ 0.861 & 5.106 $\pm$ 3.017 \\
@@ -1463,12 +1466,15 @@ $|S|$ & $2^{|S|}$ && UBB & UBB-PFS \\
 23 & 8388608 &&  9.432 $\pm$ 8.938 & 28.746 $\pm$ 26.387 \\
 24 & 16777216 &&  20.293 $\pm$ 16.147 & 77.392 $\pm$ 59.976 \\
 25 & 33554432 &&  46.215 $\pm$ 35.837 & 144.196 $\pm$ 110.583 \\
+\bottomrule
 \end{tabular}
+
 \caption{Comparação de tempo médio de execução entre os algoritmos 
 \algname{UBB} e \algname{UBB-PFS}. O algoritmo \algname{UBB-PFS} mostrou
 maior tempo médio de execução.}
 \label{tab:ubbpfs_vs_ubb_time}
 \end{table}
+
 
 \begin{table}
 \centering
@@ -1476,7 +1482,7 @@ maior tempo médio de execução.}
 % \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c ccc}
 \toprule
-\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{3}{c}{\# Calls of cost function}\\
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{3}{c}{Número médio de cálculos de custo}\\
 \cline{1-2}\cline{4-6} \\
 $|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS  \\
 10 &    1024  && 699.4 $\pm$ 361.3 & 611.3 $\pm$ 178.8 & 634.7 $\pm$ 209.8 \\
@@ -1494,6 +1500,7 @@ $|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS  \\
 22 & 4194304  && 2099973.2 $\pm$ 1863285.8 & 1133395.1 $\pm$ 874492.0 & 1156564.2 $\pm$ 862152.0 \\
 23 & 8388608  && 5435778.8 $\pm$ 3468245.3 & 2276694.5 $\pm$ 1621342.2 & 2345648.2 $\pm$ 1558258.5 \\
 24 & 16777216 && 10146842.9 $\pm$ 6673018.3 & 5527504.2 $\pm$ 3413432.3 & 5609052.7 $\pm$ 3337059.1 \\
+\bottomrule
 \end{tabular}
 \caption{Comparação sobre o número de chamadas de função custo entre
 os algoritmos \algname{UBB}, \algname{PFS} e \algname{UBB-PFS}. Vemos

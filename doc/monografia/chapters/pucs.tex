@@ -504,13 +504,8 @@ partes candidatas, o que pode ser caro computacionalmente; além disso,
 como o passeio é feito apenas por uma thread, todas as outras seriam
 subutilizadas durante o passeio. 
 
-\section{Testes com instâncias artificiais}
-Nesta seção apresentamos testes feitos com o \algname{PUCS} ao  
-solucionar instâncias artificiais do problema U-Curve onde função de 
-custo utilizada é a de soma de subconjuntos. Estes testes foram feitos
-em uma servidora % TODO: configuração da servidora do butantan
 
-\subsection{Ajuste de parâmetros}
+\section{Ajuste de parâmetros}
 Antes de discutir o desempenho do algoritmo, precisamos entender como
 os parâmetros devem ser ajustados para cada tipo de instância do 
 problema U-Curve. Consideramos instâncias pequenas aquelas que podem ser
@@ -546,8 +541,33 @@ utilizarmos valores pequenos para $p$ e $l$ é possível que o
 particionamento seja muito pouco fino, não gerando um número de tarefas
 que use todo o poder computacional da máquina usada.
 
-% TODO: qual algoritmo base usaremos? Quais valores de p e l?
+\begin{figure}[!ht]
+    \begin{center}
+    \begin{tabular}{l r}
+    \centering
+        \subfigure[] {
+        \label{fig:pucs:parameters:small:A}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/parameters/pucsubb_k20_n20_time.png}
+    }
+    &
+        \subfigure[] {
+        \label{fig:pucs:parameters:small:B}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/parameters/pucsubb_k20_n25_time.png}
+    }
+    \end{tabular}   
+    \end{center}
+    \caption{Gráficos com o tempo de execução médio de acordo com os
+    parâmetros $p$ e $l$. A figura~\ref{fig:pucs:parameters:small:A} 
+    mostra este valor para uma instância artificial com 20 
+    características enquanto a figura~\ref{fig:pucs:parameters:small:B}
+    mostra este valor para uma instância de 25 características.}
+    \label{fig:pucs:parameters:small}
+\end{figure}
 
+% TODO: esses graficos ficaram ruins
+
+A figura~\ref{fig:pucs:parameters:small} mostra como o tempo de 
+execução evolui quando aumentamos o valor dos parâmetros $p$ e $l$.
 
 \subsubsection{Instâncias grandes}
 Instâncias grandes costumam não ser resolvidas por algoritmos ótimos, 
@@ -574,3 +594,148 @@ influenciam o tempo de execução do algoritmo. Desta maneira não podemos
 aumentar os valores destes parâmetros arbitrariamente até atingir a 
 solução com qualidade necessária, e sim aumentar estes parâmetros 
 enquanto houverem recursos computacionais compatíveis.
+
+\begin{figure}[!ht]
+    \begin{center}
+    \begin{tabular}{l r}
+    \centering
+        \subfigure[] {
+        \label{fig:pucs:parameters:big:A}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/parameters/n200-20-3_time.png}
+    }
+    &
+        \subfigure[] {
+        \label{fig:pucs:parameters:big:B}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/parameters/n200-20-3_error.png}
+    }
+    \end{tabular}   
+    \end{center}
+    \caption{Desempenho do algoritmo \algname{PUCS} para uma 
+    instância artificial de 200 características utilizando o 
+    \algname{SFFS} como algoritmo base e variando os parâmetros
+    $p$ e $l$. A figura~\ref{fig:pucs:parameters:big:A} mostra o tempo
+    médio de execução, note que este aumenta quando aumentamos os 
+    parâmetros. A figura~\ref{fig:pucs:parameters:big:B} mostra a 
+    diferença absoluta média entre o custo do conjunto obtido e do 
+    conjunto ótimo.}
+    \label{fig:pucs:parameters:big}
+\end{figure}
+
+A figura~\ref{fig:pucs:parameters:big} mostra como o tempo de execução
+e qualidade da solução se comportam quando aumentamos os valores de 
+$p$ e $l$. Confirmando as nossas expectativas, quando amentamos $p$ e
+$l$ a qualidade da solução encontrada é mais perto da ótima (o erro 
+diminui, no gráfico da figura ~\ref{fig:pucs:parameters:big:B}), e o 
+tempo de execução aumenta.
+
+\section{Experimentos com instâncias artificiais}
+Nesta seção apresentamos testes feitos com o \algname{PUCS} ao  
+solucionar instâncias artificiais do problema U-Curve onde função de 
+custo utilizada é a de soma de subconjuntos. Estes testes foram feitos
+no arcabouço \toolname{featsel} e foram rodados em uma servidora de 
+64 cores.
+
+Para o parâmetro $p$ utilizamos um valor tal que o número de variáveis
+fixas é sempre 10, o que julgamos ser o suficiente para o 
+particionamento ser fino sem comprometer a escalabilidade do algoritmo.
+
+\subsection{Experimentos ótimos}
+Estes experimentos são feitos em instâncias do problema U-Curve de 
+tamanho pequeno, que podem ser resolvidos por algoritmos ótimos. 
+Comparamos o \algname{PUCS} com o \algname{UBB}, \algname{PFS} e
+também o algoritmo criado na seção ~\ref{sec:ubbpfs}, o 
+\algname{UBB-PFS}. Como parâmetros para estas instâncias, fixamos. 
+Utilizamos como parâmetros: $p$ tal que número de variáveis fixas é 10;
+$l = 2$; e o \algname{UBB} como algoritmo base.
+
+\begin{table}
+\centering
+\footnotesize
+% \resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c cccc}
+\toprule
+\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{4}{c}{Total time (sec)} \\
+\cline{1-2}\cline{4-7}\\
+$|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS & PUCS \\
+ % 1 &       2 &&  0.004 $\pm$ 0.000 & 0.004 $\pm$ 0.001 & 0.004 $\pm$ 0.000 & 0.018 $\pm$ 0.004 \\
+ % 2 &       4 &&  0.004 $\pm$ 0.000 & 0.004 $\pm$ 0.001 & 0.004 $\pm$ 0.000 & 0.018 $\pm$ 0.003 \\
+ % 3 &       8 &&  0.004 $\pm$ 0.000 & 0.004 $\pm$ 0.000 & 0.011 $\pm$ 0.007 & 0.018 $\pm$ 0.003 \\
+ % 4 &      16 &&  0.005 $\pm$ 0.002 & 0.004 $\pm$ 0.000 & 0.016 $\pm$ 0.006 & 0.017 $\pm$ 0.003 \\
+ % 5 &      32 &&  0.004 $\pm$ 0.001 & 0.005 $\pm$ 0.002 & 0.017 $\pm$ 0.005 & 0.018 $\pm$ 0.003 \\
+ % 6 &      64 &&  0.004 $\pm$ 0.000 & 0.004 $\pm$ 0.000 & 0.017 $\pm$ 0.004 & 0.018 $\pm$ 0.003 \\
+ % 7 &     128 &&  0.004 $\pm$ 0.000 & 0.005 $\pm$ 0.001 & 0.018 $\pm$ 0.005 & 0.018 $\pm$ 0.003 \\
+ % 8 &     256 &&  0.005 $\pm$ 0.000 & 0.006 $\pm$ 0.001 & 0.019 $\pm$ 0.005 & 0.020 $\pm$ 0.003 \\
+ % 9 &     512 &&  0.005 $\pm$ 0.000 & 0.007 $\pm$ 0.001 & 0.020 $\pm$ 0.004 & 0.020 $\pm$ 0.004 \\
+10 &    1024 &&  0.008 $\pm$ 0.017 & 0.013 $\pm$ 0.014 & 0.024 $\pm$ 0.004 & 0.026 $\pm$ 0.023 \\
+11 &    2048 &&  0.007 $\pm$ 0.002 & 0.017 $\pm$ 0.004 & 0.027 $\pm$ 0.005 & 0.631 $\pm$ 0.316 \\
+12 &    4096 &&  0.010 $\pm$ 0.003 & 0.025 $\pm$ 0.008 & 0.034 $\pm$ 0.007 & 0.814 $\pm$ 0.570 \\
+13 &    8192 &&  0.015 $\pm$ 0.006 & 0.052 $\pm$ 0.017 & 0.048 $\pm$ 0.012 & 1.099 $\pm$ 0.562 \\
+14 &   16384 &&  0.025 $\pm$ 0.013 & 0.095 $\pm$ 0.039 & 0.074 $\pm$ 0.023 & 1.816 $\pm$ 1.145 \\
+15 &   32768 &&  0.039 $\pm$ 0.029 & 0.179 $\pm$ 0.075 & 0.114 $\pm$ 0.042 & 2.088 $\pm$ 1.107 \\
+16 &   65536 &&  0.106 $\pm$ 0.053 & 0.386 $\pm$ 0.159 & 0.214 $\pm$ 0.078 & 3.591 $\pm$ 1.874 \\
+17 &  131072 &&  0.222 $\pm$ 0.105 & 0.708 $\pm$ 0.368 & 0.358 $\pm$ 0.181 & 3.370 $\pm$ 2.228 \\
+18 &  262144 &&  0.311 $\pm$ 0.240 & 1.302 $\pm$ 0.762 & 0.666 $\pm$ 0.346 & 5.683 $\pm$ 3.479 \\
+19 &  524288 &&  0.731 $\pm$ 0.447 & 2.867 $\pm$ 1.661 & 1.381 $\pm$ 0.794 & 7.158 $\pm$ 7.202 \\
+20 & 1048576 &&  1.542 $\pm$ 0.886 & 6.119 $\pm$ 3.403 & 2.873 $\pm$ 1.537 & 15.634 $\pm$ 24.817 \\
+% 21 & 2097152 &&  2.597 $\pm$ 2.009 & 9.872 $\pm$ 7.279 & 4.789 $\pm$ 3.351 & 9.460 $\pm$ 6.545 \\
+% 22 & 4194304 &&  4.885 $\pm$ 4.147 & 20.100 $\pm$ 13.499 & 9.488 $\pm$ 6.079 & 14.816 $\pm$ 24.232 \\
+% 23 & 8388608 &&  10.351 $\pm$ 8.382 & 45.253 $\pm$ 35.499 & 21.499 $\pm$ 16.087 & 50.933 $\pm$ 152.947 \\
+% 24 & 16777216 &&  26.998 $\pm$ 16.076 & 95.824 $\pm$ 74.523 & 46.868 $\pm$ 36.055 & 114.238 $\pm$ 321.363 \\
+\end{tabular}
+\caption{Comparação de tempo de execução de algoritmos ótimos para o
+problema U-Curve. O \algname{PUCS} foi o algoritmo mais lento para 
+estas instâncias.}
+\label{tab:pucs:small:time}
+% }
+\end{table}
+
+
+A tabela ~\ref{tab:pucs:small:time} mostra o tempo de execução médio
+dos algoritmos \algname{UBB}, \algname{PFS}, \algname{UBB-PFS} e
+\algname{PUCS}. O último foi o algoritmo que gastou mais tempo para 
+estas instâncias. A tabela ~\ref{tab:pucs:small:cost} mostra, para os
+mesmos algoritmos, o número médio de chamadas da função custo. O
+\algname{PUCS} computou menos nós do que o \algname{UBB}, e computou
+pouco mais nós do que o \algname{PFS} e \algname{UBB-PFS}.
+
+
+\begin{table}
+\centering
+\footnotesize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c cccc}
+\toprule
+\multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{4}{c}{\# Calls of cost function} \\
+\cline{1-2}\cline{4-7}\\
+$|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS & PUCS \\
+ % 1 &       2 && 2.0 $\pm$  0.0 &  2.0 $\pm$  0.0 &  2.0 $\pm$  0.0 &  5.0 $\pm$  0.0 \\
+ % 2 &       4 && 3.8 $\pm$  0.4 &  3.8 $\pm$  0.4 &  3.8 $\pm$  0.4 &  7.1 $\pm$  1.0 \\
+ % 3 &       8 && 7.2 $\pm$  1.2 &  7.2 $\pm$  1.1 &  7.2 $\pm$  1.2 & 10.7 $\pm$  1.9 \\
+ % 4 &      16 && 13.2 $\pm$  3.2 & 14.4 $\pm$  2.0 & 13.2 $\pm$  3.2 & 22.4 $\pm$  4.6 \\
+ % 5 &      32 && 25.6 $\pm$  8.2 & 27.5 $\pm$  3.1 & 24.5 $\pm$  7.5 & 33.8 $\pm$  9.7 \\
+ % 6 &      64 && 52.0 $\pm$ 16.7 & 51.7 $\pm$  6.0 & 49.1 $\pm$ 13.9 & 61.2 $\pm$ 17.4 \\
+ % 7 &     128 && 88.9 $\pm$ 38.7 & 90.6 $\pm$ 18.7 & 88.0 $\pm$ 30.2 & 113.0 $\pm$ 37.1 \\
+ % 8 &     256 && 152.5 $\pm$ 93.9 & 174.7 $\pm$ 39.2 & 158.1 $\pm$ 71.5 & 194.5 $\pm$ 91.4 \\
+ % 9 &     512 && 328.9 $\pm$ 188.7 & 311.2 $\pm$ 77.6 & 308.8 $\pm$ 124.0 & 367.8 $\pm$ 158.4 \\
+10 &    1024 && 617.7 $\pm$ 368.0 & 621.5 $\pm$ 147.1 & 603.3 $\pm$ 228.1 & 730.6 $\pm$ 319.4 \\
+11 &    2048 && 1225.5 $\pm$ 748.6 & 1125.1 $\pm$ 354.9 & 1163.5 $\pm$ 450.5 & 1268.4 $\pm$ 782.2 \\
+12 &    4096 && 2396.1 $\pm$ 1724.9 & 1811.1 $\pm$ 680.9 & 1982.7 $\pm$ 772.1 & 1693.9 $\pm$ 1501.7 \\
+13 &    8192 && 5144.4 $\pm$ 3182.5 & 3982.3 $\pm$ 1399.0 & 4292.6 $\pm$ 1592.1 & 4125.2 $\pm$ 2859.2 \\
+14 &   16384 && 9777.9 $\pm$ 6350.5 & 7559.3 $\pm$ 3308.7 & 8262.6 $\pm$ 3395.1 & 7879.4 $\pm$ 6534.4 \\
+15 &   32768 && 16496.8 $\pm$ 13431.8 & 13866.9 $\pm$ 6098.5 & 14390.0 $\pm$ 6576.1 & 14693.8 $\pm$ 11279.2 \\
+16 &   65536 && 46811.7 $\pm$ 23795.2 & 28667.9 $\pm$ 12109.5 & 31038.2 $\pm$ 11381.7 & 30742.6 $\pm$ 22862.0 \\
+17 &  131072 && 99140.0 $\pm$ 46959.9 & 49896.5 $\pm$ 26087.6 & 53171.0 $\pm$ 26159.2 & 54582.4 $\pm$ 47866.6 \\
+18 &  262144 && 141399.9 $\pm$ 108893.4 & 89345.1 $\pm$ 50833.7 & 96310.4 $\pm$ 47545.5 & 95279.0 $\pm$ 88709.4 \\
+19 &  524288 && 339805.7 $\pm$ 206774.3 & 186964.7 $\pm$ 108756.5 & 199350.3 $\pm$ 101879.9 & 201333.1 $\pm$ 174767.8 \\
+20 & 1048576 && 709486.2 $\pm$ 404264.5 & 390060.3 $\pm$ 218822.5 & 406496.1 $\pm$ 208354.8 & 445381.0 $\pm$ 358644.6 \\
+% 21 & 2097152 && 1179350.5 $\pm$ 902364.9 & 612193.4 $\pm$ 443434.1 & 641281.9 $\pm$ 430795.7 & 495856.8 $\pm$ 557003.6 \\
+% 22 & 4194304 && 2158571.7 $\pm$ 1803870.4 & 1177778.6 $\pm$ 760294.0 & 1229632.4 $\pm$ 729938.0 & 912024.8 $\pm$ 986652.4 \\
+% 23 & 8388608 && 4520728.7 $\pm$ 3608416.8 & 2514970.7 $\pm$ 1890287.4 & 2580020.9 $\pm$ 1844122.5 & 2403719.7 $\pm$ 2700661.7 \\
+% 24 & 16777216 && 11320530.0 $\pm$ 6635797.7 & 5114808.2 $\pm$ 3822782.2 & 5239475.8 $\pm$ 3737450.0 & 5412420.9 $\pm$ 5372754.1 \\
+\end{tabular}
+}
+\caption{Legenda}
+\label{tab:pucs:small:cost}
+\end{table}
+
+\subsection{Experimentos sub-ótimos}

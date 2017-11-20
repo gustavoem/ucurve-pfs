@@ -1,0 +1,111 @@
+% testar algoritmos de seleção de características com instâncias reais
+% tipo de instância: aprendizado de máquina
+% função de custo utilizada
+%   -> usamos a MCE
+%   -> hipótese u-curve não vale
+%   -> adequação dos dados as função de custo MCE
+% como avaliar? Validando o modelo
+% o modelo usado é o de support vector machine
+%   -> C-SVC
+%   -> kernel linear
+%   -> C = 100
+% validação cruzada:
+%   -> 10-fold se +100 amostras
+%   -> leave-one-out caso contrário
+% datasets utilizados
+% resultados dos experimentos
+
+Com o objetivo de testar os algoritmos de seleção de características
+em problemas reais, decidimos aplicá-los a problemas de seleção de 
+modelos de aprendizado computacional. Usamos as características 
+selecionadas para definir um modelo de aprendizado e calculamos o erro
+de classificação médio para este modelo, usando validação cruzada. Os
+dados utilizados estão disponíveis no 
+University of California Irvine Machine Learning 
+Repository~\cite{Lic13}.
+
+\section{Seleção de características em aprendizado de máquina}
+Os dados disponíveis no repositório UCI Machine Learning Repository
+são dados de treinamento e teste de aprendizado de máquina 
+supervisionado. Estes dados são compostos por múltiplos exemplos de 
+tuplas com valores de características do conjunto $S$ e o rótulo da 
+tupla observada, $Y$. Um modelo de aprendizado determina um conjunto de 
+possíveis classificadores para o problema; quando usamos seleção de 
+características, indicando que um conjunto $X \in \powerset(S)$ descreve
+melhor os dados, estamos escolhendo como modelo de aprendizado o 
+conjunto de classificadores que leva em consideração apenas as 
+características de $X$.
+
+Para que o conjunto $X$ de características selecionadas de fato 
+determine um bom conjunto de classificadores, precisamos construir
+o problema de seleção de características de maneira que isto aconteça.
+Então, além de determinar que o conjunto de características seja $S$,
+precisamos escolher a função de custo $c$ para o problema. 
+Como discutido na seção~\ref{fund_concept:mce}, a função de custo
+entropia condicional média (MCE) faz bem este papel. Além disso, a 
+função MCE induz curvas em U, com poucas violações, nas cadeias do 
+reticulado Booleano. Por conta das violações, este problema não é o
+U-Curve, porém, como visto em ~\cite{Rei12}, podemos aproximar
+a solução do problema original pela solução encontrada assumindo que
+estamos no caso U-Curve.
+
+A função de custo MCE que utilizamos neste trabalho, disponível no
+arcabouço \toolname{featsel}~\cite{Reis+17}, assume que os valores
+das características são discretos, portanto ainda é necessário 
+discretizar os dados de treinamento do UCI que têm variáveis contínuas 
+para fazermos a seleção de características no arcabouço.
+A estratégia que utilizamos para tal tarefa é de 
+discretizar os valores de características contínuas por quartis, 
+mapeando seus valores para um inteiro entre 0 e 3. Existem entretanto 
+outras estratégias mais elaboradas, como a de Fayyad e Irani~\cite{FI93}
+que separa dados por classes minimizando a entropia média.
+
+\section{Support Vector Machine com kernel linear}
+A seleção de características é apenas uma etapa da seleção de modelo
+de aprendizado. Vamos então especificar mais o conjunto de possíveis
+classificadores para os problemas que trataremos neste capítulo. Fazemos
+isto ao decidir que o modelo de aprendizado que usaremos é o de
+Support Vector Machine (SVM)~\cite{CL11}.
+
+Mais especificamente, vamos trabalhar com classificadores SVM com kernel
+linear e multi-classe. O funcionamento de um classificador SVM binário
+(duas classes) é simples: dado um conjunto de dados de treinamento com 
+dois rótulos possíveis, o classificador determina um hiperplano que 
+separa no espaço os dados de treinamento, assim para classificar um dado, 
+basta responder em qual lado do hiperplano este dado está localizado.
+Se houverem $k$ classes, então podemos criar $k(k-1)$ classificadores
+binários para cada par de classes e então, para rotular um dado,
+utilizamos um esquema de votação em que a classe mais votada dentre 
+todos os estes classificadores dá o rótulo ao ponto.
+
+O modelo de SVM linear tem um parâmetro $C$ que determina como o 
+hiperplano é posicionado no espaço de pontos de treinamento. Para 
+valores pequenos de $C$ o hiperplano será posicionado dando preferência
+a ter uma margem grande para pontos de treinamento corretamente 
+classificados, mesmo que isto implique em pontos de treinamento mal 
+classificados; para valores maiores de $C$, a preferência é dada para 
+classificar corretamente os dados de treinamento, mesmo que a margem do
+hiperplano seja pequena. Em nosso trabalho, utilizamos $C = 100$, pois
+este parâmetro é regulador, isto é, diminui a complexidade do modelo
+para se obter melhores resultados com poucas amostras; mas isto é o que
+queremos fazer também com seleção de características, portanto o valor
+alto de $C$ garante que a diminuição da complexidade do modelo é feita
+de fato pela seleção de características.
+
+\section{Validação de modelos}
+Para fazer a validação dos modelos de aprendizado gerados, precisamos
+estimar o erro médio de classificadores treinados em cada um destes
+modelos. Para fazer isto é necessário separar os dados entre dados de
+treinamento e dados de teste, mas como o número de amostras é geralmente
+pequeno, fazemos o procedimento de classificação e estimação de erro
+para várias escolhas de conjuntos de treinamento e teste; chamamos este
+tipo de validação, que usa o mesmo exemplo como teste e treinamento, de
+validação cruzada.
+
+Para as instâncias em que o número de exemplos é superior a 100, 
+usaremos a validação cruzada 10-\foreignword{fold}, para outras 
+utilizaremos a validação \foreignword{leave-one-out}. A validação
+cruzada 10-\foreignword{fold} separa as amostras em 10 grupos e usa
+cada um deles para calcular o erro do classificador treinado com os 
+outros nove. Na abordagem \foreignword{leave-one-out} separamos as
+$n$ amostras em $n$ grupos e fazemos o mesmo procedimento.
