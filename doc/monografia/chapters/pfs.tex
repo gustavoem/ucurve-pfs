@@ -1,6 +1,6 @@
-Neste capítulo apresentamos o algoritmo \algname{Poset Forest Search} 
-(\algname{PFS}), um algoritmo ótimo para o problema U-Curve que foi 
-criado para enfrentar a limitação do algoritmo \algname{U-Curve Branch 
+Neste capítulo apresentamos o algoritmo \algname{Poset-Forest-Search} 
+(\algname{PFS}), um algoritmo ótimo para o problema U-curve que foi 
+criado para enfrentar a limitação do algoritmo \algname{U-curve Branch 
 and Bound} (\algname{UBB}) ser unidirecional. Apesar do \algname{PFS}
 ter solucionado tal problema com sucesso, este algoritmo apresenta 
 pontos que ainda podem ser explorados para se criar uma modificação que
@@ -8,9 +8,8 @@ tenha melhor desempenho computacional. Modificaremos então o
 \algname{PFS}, explorando tais pontos e, além disso, vamos criar uma
 versão paralela do algoritmo.
 
-Baseamos nosso trabalho no código já feito por Reis, que é software 
-livre e está disponível no arcabouço \toolname{featsel} \cite{Reis+17} 
-sob a licença de uso \foreignword{GNU General Public License}.
+Baseamos nosso trabalho no código-fonte do arcabouço featsel~\cite{Reis+17}, que é software 
+livre e \href{https://github.com/msreis/featsel}{está disponível no GitHub} sob a licença de uso \foreignword{GNU General Public License}. Todos os experimentos computacionais deste capítulo foram feitos utilizando algoritmos e funções de custo implementados no featsel, em uma servidora com 64 núcleos, 256 GB de memória RAM e sistema operacional Ubuntu server 14.04 LTS. Em todos os experimentos foi utilizada como função de custo a redução polinomial do problema da soma de subconjuntos (equação~\ref{cost_function:subset_sum}); instâncias artificiais foram geradas escolhendo aleatoriamente $n + 1$ números inteiros, onde $n$ é o número de características.
 
 \section{Descrição do algoritmo}
 % - apresentar o UBB
@@ -25,8 +24,8 @@ sob a licença de uso \foreignword{GNU General Public License}.
 %   - pseudo-código com as duas etapas
 %   - indicar quais são os pontos que podem ser explorados
 
-\subsection{O caso simples: \algname{U-Curve Branch and Bound}}
-O algoritmo \algname{U-Curve Branch and Bound} (\algname{UBB}), que é 
+\subsection{O caso simples: o algoritmo \algname{U-curve-Branch-and-Bound} (\algname{UBB})}
+O algoritmo \algname{U-curve Branch and Bound} (\algname{UBB}), que é 
 uma versão simplificada do \algname{PFS}, percorre o espaço de busca 
 fazendo uma busca em profundidade em uma árvore que é subgrafo do 
 diagrama de Hasse do reticulado Booleano ($\powerset (S), \subseteq$). 
@@ -54,19 +53,17 @@ Reis ~\cite{Rei12}.
     \{Y\} \cup \{W \cup Y \cup \{x_1\} : W \in \powerset (X_1)\} & \\
     & = \{Y\} \cup \{Y \cup \{x_1\}\} \tag{Como $X_1 = \emptyset$} \\
     & = \{Y, Y \cup \{x_1\}\} \\
-    & = \{W \cup Y : W \in \powerset (X)\}
+    & = \{W \cup Y : W \in \powerset (X)\}.
 \end{align*}
 
 \item{Suponha que o lema é verdadeiro para todo $X$ com $|X| < k$, 
     então:}
 \begin{align*}
     & \{Y\} \cup \bigcup_{i = 1}^{k} \{W \cup Y \cup \{x_i\} : W \in \powerset (X_i)\} = \\
-    & \{Y\} \cup \bigcup_{i = 2}^{k} \{W \cup Y \cup \{x_i\} : W \in \powerset (X_i)\} \cup \{W \cup Y \cup \{x_1\} : W \in \powerset (X_1) \}\\
+    & \{Y\} \cup \bigcup_{i = 2}^{k} \{W \cup Y \cup \{x_i\} : W \in \powerset (X_i)\} \cup \{W \cup Y \cup \{x_1\} : W \in \powerset (X_1) \}.
 \end{align*}
 Seja $Z = Z_0 = X_1, Z_1 = X_2, \dots Z_{|Z|} = X_{|X|}$, então
-$|Z| = k - 1$ e $z_1 = x_2, z_2 = x_3, \dots, z_{|Z|} = x_{|X|}$, e
-\end{itemize}
-
+$|Z| = k - 1$ e $z_1 = x_2, z_2 = x_3, \dots, z_{|Z|} = x_{|X|}$, e:
 \begin{align*}
     & \{Y\} \cup \bigcup_{i = 2}^{k} \{W \cup Y \cup \{x_i\} : W \in \powerset (X_i)\} \cup \{W \cup Y \cup \{x_1\} : W \in \powerset (X_1) \} =\\
     & \{Y\} \cup \bigcup_{j = 1}^{k - 1} \{W \cup Y \cup \{z_j\} : W \in \powerset (Z_i)\} \cup \{W \cup Y \cup \{x_1\} : W \in \powerset (X_1) \} =\\
@@ -74,8 +71,9 @@ $|Z| = k - 1$ e $z_1 = x_2, z_2 = x_3, \dots, z_{|Z|} = x_{|X|}$, e
     & \{Y \cup W : W \in \powerset (Z)\} \cup \{W \cup Y \cup \{x_1\} : W \in \powerset (X_1) \} =  \\
     & \{Y \cup W : W \in \powerset (X_1)\} \cup \{W \cup Y \cup \{x_1\} : W \in \powerset (X_1) \} =  \\
     & \{Y \cup W : W \in \powerset (X_1 \cup {x_1})\} = \\
-    & \{Y \cup W : W \in \powerset (X)\} \\
+    & \{Y \cup W : W \in \powerset (X)\}.
 \end{align*}
+\end{itemize}
 \end{proof}
 
 Para representar o espaço de busca como uma árvore, devemos aplicar o
@@ -114,7 +112,7 @@ A dinâmica do \algname{UBB} é simples. Aplica-se o lema
 ~\ref{lemma:lower_forest} para percorrer o espaço de busca enquanto o 
 custo dos subconjuntos visitados se mantém ou diminui; quando o custo 
 aumenta, podemos podar a sub-árvore que se inicia no nó onde o custo 
-cresce. Por exemplo, em uma instância do problema U-Curve com três 
+cresce. Por exemplo, em uma instância do problema U-curve com três 
 características, se o custo do nó $Y = \{100\}$ é maior do que o custo 
 de $\{000\}$ e, ao visitar $Y$, $X = \{011\}$ então podemos remover do 
 espaço de busca todos os nós do intervalo $[100, 111]$. O funcionamento
@@ -122,7 +120,7 @@ do \algname{UBB} é apresentado no pseudo-código~\ref{pfs:code:ubb}.
 
 
 \begin{algorithm}[!ht]
-\textsc{U-Curve-Branch-and-Bound} $(S, c)$
+\textsc{U-curve-Branch-and-Bound} $(S, c)$
 \begin{algorithmic}[1]
     \State $\mathcal{M} \gets \mathsc{Branch} (S, \emptyset, c, c (\emptyset))$
     \Return $\{M \in \mathcal{M} : c(M) \text{é mínimo}\}$
@@ -156,7 +154,7 @@ todo o espaço de busca será visitado, como em uma busca exaustiva. Esta
 é a maior limitação do algoritmo \algname{UBB} e foi para enfrentá-la 
 que o algoritmo \algname{PFS} foi criado.
 
-\subsection{O algoritmo \algname{Poset-Forest-Search}}
+\subsection{Princípios de funcionamento do algoritmo \algname{PFS}}
 % - criação das duas árvores
 % - percorrimento e poda
 % - como manter as duas árvores representando o mesmo espaço de busca?
@@ -171,7 +169,7 @@ Para fazer isso, o \algname{PFS} inicia sua busca com duas árvores
 complementares, uma gerada por 
 aplicações recursivas do lema ~\ref{lemma:lower_forest} e outra, que 
 representa o reticulado Booleano dual ($\powerset (S), \supseteq$), 
-gerada por aplicações recursivas do lema ~\ref{lemma:upper_forest}.
+gerada por aplicações recursivas do lema a seguir.
 
 \begin{mylemma}
 \label{lemma:upper_forest}
@@ -186,7 +184,7 @@ X_{|X|}$ uma cadeia tal que $X_0 = X$, $X_{|X|} = \emptyset$ e $X_{i}
 
 %TODO: demonstração
 
-A figura ~\ref{fig:pfs:pfs_trees} mostra duas árvores do espaço de busca
+Na figura~\ref{fig:pfs:pfs_trees} mostramos duas árvores do espaço de busca
 geradas pelo algoritmo. Note que estas árvores permitem o percorrimento
 do espaço de busca em duas direções. Seja $Y$ um conjunto da árvore da 
 figura~\ref{fig:pfs:lower} e $X$ o conjunto usado para aplicação 
@@ -320,8 +318,7 @@ O funcionamento do algoritmo deve seguir as seguintes regras:
 
 \subsection{Pseudo-código e detalhes de implementação do \algname{PFS}}
 Apresentamos nesta seção um pseudo-código para o algoritmo e ao mesmo
-tempo comentamos como algumas destas soluções foram implementadas por
-Reis em \toolname{C++} no arcabouço \toolname{featsel}.
+tempo comentamos como algumas destas soluções foram implementadas em \toolname{C++} no arcabouço \toolname{featsel}.
 
 \subsubsection{Definição de árvores de busca}
 Os algoritmos que descrevemos neste capítulo dependem da aplicação 
@@ -354,7 +351,7 @@ ordem crescente de índice.
     \label{fig:pfs:tree_def:C}}
   \end{tabular}
     \caption{Exemplos de aplicações recursivas do lema 
-    ~\ref{lemma:lower_forest} no reticulado booleano da figura 
+    ~\ref{lemma:lower_forest} no reticulado Booleano da figura 
     ~\ref{fig:pfs:tree_def:A}. O conjunto $X$ indica para cada 
     subconjunto $Y$ qual é o conjunto de nós de sua sub-árvore: 
     exatamente os nós do intervalo $[Y, X \cup Y]$. Na figura 
@@ -366,7 +363,7 @@ ordem crescente de índice.
 \end{figure}
 
 \subsubsection{Estrutura de dados}
-Vamos definir a estrutura de dados utilizada por Reis para representar
+Vamos definir a estrutura de dados utilizada originalmente para representar
 nós das florestas. Um nó $\pfsnode{N}$ é composto por quatro campos:
 \begin{itemize}
     \item{\varname{vertex}:} armazena o conjunto de características que 
@@ -396,24 +393,12 @@ das florestas e suas listas de adjacências. Desta maneira, as duas
 florestas $\forest_A$ e $\forest_B$ são representadas por conjuntos de
 nós. Estes nós são armazenados na estrutura de \toolname{map} da 
 linguagem \langname{C++}. 
-\newpage
+
 \subsubsection{Pseudo-código}
 Vamos agora apresentar um pseudo-código do \algname{PFS} em uma 
-abordagem que mostra primeiro o todo e depois cada parte.
+abordagem ``top down", ou seja, começando pelo algoritmo principal (Algoritmo~\ref{pfs:code:pfs:A}) e descrevendo funções conforme as mesmas são chamadas em um dado pseudo-código.
 
-Uma iteração qualquer do \algname{PFS} começa com a inicialização das 
-florestas do espaço de busca. A floresta $\forest_A$, que permite 
-percorrimentos de baixo para cima no reticulado, é inicializada com 
-a raiz $\emptyset$ enquanto a floresta $\forest_B$, de percorrimentos
-de cima para baixo, é inicializada com a raiz $S$. Assim que 
-inicializadas as florestas, repetimos as etapas de escolha de direção
-de percorrimento, ramificação e poda das florestas até que ambas 
-estejam vazias. Note que não importa qual floresta devemos verificar
-para terminar as iterações do algoritmo, já que ambas representam o 
-mesmo espaço de busca, ou seja, quando uma floresta é vazia a outra 
-também é.
-
-\begin{algorithm}[H]
+\begin{algorithm}[]
 \textsc{Poset-Forest-Search} $(S, c)$
 \begin{algorithmic}[1]
     \State $\mathcal{M} \gets \emptyset$
@@ -424,7 +409,7 @@ também é.
     \State $\pfsnode{T}[\varname{leftmost}] \gets \pfsnode{T'}[\varname{leftmost}] \gets 1$
     \State $\forest_A \gets \{\pfsnode{T}\}$
     \State $\forest_B \gets \{\pfsnode{T'}\}$
-    \While{$\forest_A \ne \emptyset$} \Comment{idêntico a $\forest_B \ne \emptyset$}
+    \While{$\forest_A \ne \emptyset$} \Comment{equivalent to $\forest_B \ne \emptyset$}
         \State $direction \gets \mathsc{Choose-Direction}$
         \If{$direction$}
             \State $\langle \mathcal{N}, \forest_A, \pfsnode{N} \rangle \gets \mathsc{Lower-Forest-Branch} (\forest_A, \forest_B, c)$
@@ -435,18 +420,30 @@ também é.
         \EndIf
         \State $\mathcal{M} \gets \mathcal{M} \cup \mathcal{N}$
     \EndWhile
-    \Return $\{M \in \mathcal{M} : c(M) \text{é mínimo}\}$
+    \Return $\{M \in \mathcal{M} : c(M) \text{ is minimum}\}$
 \end{algorithmic}
 \vspace{1em}
-\caption{Pseudo-código do algoritmo \algname{PFS}}
+\caption{Pseudo-código da rotina principal do algoritmo \algname{PFS}.}
 \label{pfs:code:pfs:A}
 \end{algorithm}
 
-\newpage
+Uma iteração qualquer do \algname{PFS} começa com a inicialização das 
+florestas do espaço de busca. A floresta $\forest_A$, que permite 
+percorrimentos de baixo para cima no reticulado, é inicializada com 
+a raiz $\emptyset$, enquanto que a floresta $\forest_B$, de percorrimentos
+de cima para baixo, é inicializada com a raiz $S$. Assim que 
+inicializadas as florestas, repetimos as etapas de escolha de direção
+de percorrimento, ramificação e poda das florestas até que ambas 
+estejam vazias. Note que não importa qual floresta devemos verificar
+para terminar as iterações do algoritmo, já que ambas representam o 
+mesmo espaço de busca, ou seja, quando uma floresta é vazia a outra 
+também é.
+
+
 A etapa de ramificação da floresta $\forest_A$ é feita pela função 
-\textsc{Lower-Forest-Branch} e consiste no percorrimento, a partir de uma 
+\textsc{Lower-Forest-Branch} (Algoritmo~\ref{pfs:code:pfs:B}) e consiste no percorrimento, a partir de uma 
 raiz $Y$, de uma cadeia de sua sub-árvore. Nesta etapa, para manter 
-válida a regra ~\ref{pfs:rule:c} devemos remover todas as arestas do 
+válida a regra~\ref{pfs:rule:c} devemos remover todas as arestas do 
 caminho percorrido e transformar todos os nós visitados e não podados em 
 raízes da floresta. O percorrimento termina ao atingir um nó 
 $\pfsnode{N}$ que é folha ou que possui custo maior do que seu 
@@ -455,17 +452,6 @@ $[\pfsnode{N}[\varname{vertex}], \pfsnode{N}[\varname{vertex}] \cup \pfsnode{N}[
 deve ser removido da floresta $\forest_A$. Esta função retorna o nó 
 $\pfsnode{N}$, a floresta $\forest_A$ atualizada, e o conjunto 
 $\mathcal{M}$ de subconjuntos percorridos que são candidatos a mínimo.
-
-\begin{algorithm}[H]
-\textsc{Calc-Node-Cost} $(\forest, \pfsnode{N})$
-\begin{algorithmic}[1]
-\If{$\pfsnode{N}[\varname{cost}] = \infty$ e existe $\pfsnode{M} \in \forest$ tal que $\pfsnode{M}[\varname{vertex}] = \pfsnode{N}[\varname{vertex}]$ e $\pfsnode{M}[\varname{cost}] \ne \infty$}
-    \Return $\pfsnode{M}[\varname{cost}]$
-\Else
-    \Return $c(\pfsnode{R}[\varname{vertex}])$
-\EndIf
-\end{algorithmic}
-\end{algorithm}
 
 \begin{algorithm}[ht]
 \textsc{Lower-Forest-Branch} $(\forest_A, \forest_B, c)$
@@ -487,11 +473,24 @@ $\mathcal{M}$ de subconjuntos percorridos que são candidatos a mínimo.
     \EndWhile
     \Return $\langle \mathcal{M}, \forest_A, \pfsnode{N}\rangle$
 \end{algorithmic}
-\caption{Continuação do pseudo-código ~\ref{pfs:code:pfs:A}, com a função
-que faz o percorrimento da floresta $\forest_A$.}
+\caption{Pseudo-código da função que faz o percorrimento da floresta $\forest_A$.}
 \label{pfs:code:pfs:B}
 \end{algorithm}
 
+Durante a execução do \algname{PFS}, o custo de um subconjunto é calculado uma única vez; o recálculo é evitado com a função \algname{Calc-Node-Cost} (Algoritmo~\ref{alg:Calc-Node-Cost}).
+
+\begin{algorithm}[H]
+\textsc{Calc-Node-Cost} $(\forest, \pfsnode{N})$
+\begin{algorithmic}[1]
+\If{$\pfsnode{N}[\varname{cost}] = \infty$ e existe $\pfsnode{M} \in \forest$ tal que $\pfsnode{M}[\varname{vertex}] = \pfsnode{N}[\varname{vertex}]$ e $\pfsnode{M}[\varname{cost}] \ne \infty$}
+    \Return $\pfsnode{M}[\varname{cost}]$
+\Else
+    \Return $c(\pfsnode{R}[\varname{vertex}])$
+\EndIf
+\end{algorithmic}
+\caption{Pseudo-código da função \algname{Calc-Node-Cost}.}
+\label{alg:Calc-Node-Cost}
+\end{algorithm}
 
 A ramificação dual, da floresta $\forest_B$ é feita pela função 
 \textsc{Upper-Forest-Branch} e é similar a função 
@@ -505,16 +504,15 @@ menos $\pfsnode{N}$ tornam-se raízes. Esta função retorna o nó
 $\pfsnode{N}$, a floresta $\forest_B$ atualizada e o conjunto 
 $\mathcal{M}$ de subconjuntos percorridos que são candidatos a mínimo.
 
-\newpage
 A atualização da floresta $\forest_B$ após o percorrimento e poda da
-floresta $\forest_A$ é feito pela função \textsc{Upper-Forest-Prunning}.
+floresta $\forest_A$ é feito pela função \textsc{Upper-Forest-Prunning} (Algoritmo~\ref{pfs:code:pfs:C}).
 Esta função recebe um nó $\pfsnode{N}$ e deve remover os nós de 
 $\forest_B$ de acordo com a regra ~\ref{pfs:rule:e}. Para fazer isto, 
 percorremos o caminho $P$ que liga os nós de subconjuntos 
 $\pfsnode{N}[\varname{vertex}]$ e $\pfsnode{N}[\varname{vertex}] \cup 
 \pfsnode{N}[\varname{adjacent}]$ na floresta $\forest_B$, removendo cada
-um dos nós deste caminho (se existirem) e chamando a função 
-\textsc{Search-Lower-Children} para verificar se os filhos destes nós
+um dos nós deste caminho (se existirem, o que é verificado pela função descrita no algoritmo~\ref{alg:Get-Node}) e chamando a função 
+\textsc{Search-Lower-Children} (Algoritmo~\ref{pfs:code:pfs:D}) para verificar se os filhos destes nós
 devem ser podados ou não. Ao fim do caminho chamamos a função 
 \textsc{Search-Upper-Root} para achar, na floresta $\forest_B$, a raiz
 que alcança este caminho e atualizar a sua adjacência  para garantir que 
@@ -522,15 +520,6 @@ uma ramificação não vai re-inserir os nós removidos.
 Esta função devolve a floresta $\forest_B$ atualizada.
 
 \begin{algorithm}[H]
-    \textsc{Get-Node} ($\forest, N$)
-    \begin{algorithmic}[1]
-        \If{existe $\pfsnode{N} \in \forest$ tal que $\pfsnode{N}[\varname{vertex}] = N$}
-            \Return $\pfsnode{N}$
-        \Else
-            \Return $NIL$
-        \EndIf
-    \end{algorithmic}
-    \vspace{1em}
     \textsc{Uppper-Forest-Prunning} ($\forest_A, \forest_B, \pfsnode{N}$)
     \begin{algorithmic}[1]
         \State $M \gets \pfsnode{N}[\varname{vertex}]$
@@ -552,38 +541,23 @@ Esta função devolve a floresta $\forest_B$ atualizada.
         \State $\forest_B \gets \mathsc{Search-Lower-Children} (\forest_B, \pfsnode{M}, M, \pfsnode{N}[\varname{vertex}])$
         \Return $\forest_B$
     \end{algorithmic}
-    \caption{Continuação do pseudo-código ~\ref{pfs:code:pfs:B}, com a
-    função que faz a atualização da floresta $\forest_B$ depois de um 
+    \caption{Pseudo-código da função que faz a atualização da floresta $\forest_B$ depois de um 
     percorrimento em $\forest_A$.}
     \label{pfs:code:pfs:C}
 \end{algorithm}
 
-
-
-A atualização dual, da floresta $\forest_A$, após o percorrimento e 
-poda da floresta $\forest_B$ é feito pela função 
-\textsc{Lower-Forest-Pruning} e seu funcionamento é parecido com o de
-\textsc{Upper-Forest-Pruning}. O caminho $P$ de $\forest_A$ que deve 
-ser removido tem as pontas 
-$\pfsnode{N}[\varname{vertex}] \setminus \pfsnode{N}[\varname{adjacent}]$
-e $\pfsnode{N}[\varname{vertex}]$, e a função 
-\textsc{Search-Upper-Children} é chamada para verificar se os filhos 
-destes nós devem ser podados ou não. Ao fim do caminho chamamos a função 
-\textsc{Search-Lower-Root} para achar, na floresta $\forest_A$, a raiz
-que alcança este caminho e atualizar a sua adjacência para garantir que 
-uma ramificação não vai re-inserir os nós removidos. Esta função devolve 
-a floresta $\forest_A$ atualizada.
-
-\newpage
-A função \textsc{Search-Lower-Children} é chamada para cada nó $M$ do 
-caminho $P$, como descrito no lema ~\ref{lemma:upper_update}. Esta 
-função verifica para todos os filhos $B$ de $M$ se $B$ contém 
-propriamente o conjunto $\pfsnode{N}[\varname{vertex}]$; se contém, o 
-nó de subconjunto $B$ deve ser removido da floresta, caso 
-contrário, um nó que representa este conjunto deve ser tornar raiz da 
-floresta, pois o pai de $B$ está sendo removido da floresta e isto 
-significa que não haverá raiz que alcance $B$. Esta função
-devolve a floresta $\forest_B$ atualizada.
+\begin{algorithm}[H]
+    \textsc{Get-Node} ($\forest, N$)
+    \begin{algorithmic}[1]
+        \If{existe $\pfsnode{N} \in \forest$ tal que $\pfsnode{N}[\varname{vertex}] = N$}
+            \Return $\pfsnode{N}$
+        \Else
+            \Return $NIL$
+        \EndIf
+    \end{algorithmic}
+\caption{Pseudo-código da função \algname{Get-Node}.}
+\label{alg:Get-Node}
+\end{algorithm}
 
 \begin{algorithm}[H]
 \textsc{Search-Lower-Children} $(\forest_B, \pfsnode{M}, M, Y)$
@@ -608,12 +582,33 @@ devolve a floresta $\forest_B$ atualizada.
         \Return $\forest_B$
     \EndWhile
 \end{algorithmic}
-\caption{Continuação do pseudo-código ~\ref{pfs:code:pfs:C}}
+\caption{Pseudo-código da função \algname{Search-Lower-Children}.}
 \label{pfs:code:pfs:D}
 \end{algorithm}
 
+A atualização dual, da floresta $\forest_A$, após o percorrimento e 
+poda da floresta $\forest_B$ é feito pela função 
+\textsc{Lower-Forest-Pruning} e seu funcionamento é parecido com o de
+\textsc{Upper-Forest-Pruning}. O caminho $P$ de $\forest_A$ que deve 
+ser removido tem as pontas 
+$\pfsnode{N}[\varname{vertex}] \setminus \pfsnode{N}[\varname{adjacent}]$
+e $\pfsnode{N}[\varname{vertex}]$, e a função 
+\textsc{Search-Upper-Children} é chamada para verificar se os filhos 
+destes nós devem ser podados ou não. Ao fim do caminho chamamos a função 
+\textsc{Search-Lower-Root} para achar, na floresta $\forest_A$, a raiz
+que alcança este caminho e atualizar a sua adjacência para garantir que 
+uma ramificação não vai re-inserir os nós removidos. Esta função devolve 
+a floresta $\forest_A$ atualizada.
 
-\textsc{Search-Upper-Children} é a função dual de 
+A função \textsc{Search-Lower-Children} é chamada para cada nó $M$ do 
+caminho $P$, como descrito no lema ~\ref{lemma:upper_update}. Esta 
+função verifica para todos os filhos $B$ de $M$ se $B$ contém 
+propriamente o conjunto $\pfsnode{N}[\varname{vertex}]$; se contém, o 
+nó de subconjunto $B$ deve ser removido da floresta, caso 
+contrário, um nó que representa este conjunto deve ser tornar raiz da 
+floresta, pois o pai de $B$ está sendo removido da floresta e isto 
+significa que não haverá raiz que alcance $B$. Esta função
+devolve a floresta $\forest_B$ atualizada. \textsc{Search-Upper-Children} é a função dual de 
 \textsc{Search-Lower-Children} e faz um procedimento similar, para 
 cada nó $\pfsnode{M}$ do caminho $P$, como descrito no lema 
 ~\ref{lemma:lower_update}. Esta função verifica para todos os filhos $A$
@@ -624,7 +619,7 @@ $A$ deve se tornar raiz da floresta. Esta função devolve a floresta
 $\forest_A$ atualizada.
 
 
-A função \textsc{Search-Upper-Root} recebe um subconjunto $M$ e a 
+Por fim, a função \textsc{Search-Upper-Root} (Algoritmo~\ref{alg:Search-Upper-Root}) recebe um subconjunto $M$ e a 
 floresta $\forest_B$. O objetivo desta função é remover arestas da 
 floresta que podem levar ao conjunto $M$. Para isto, a função deve 
 percorrer um caminho de $M$ até uma raiz da floresta (de conjuntos 
@@ -662,6 +657,8 @@ caminho mas sem a adjacência que os comunica com $M$. O funcionamento de
         \Return $\forest_B$
     \EndWhile
 \end{algorithmic}
+\caption{Pseudo-código da função~\algname{Search-Upper-Root}.}
+\label{alg:Search-Upper-Root}
 \end{algorithm}
 
 \section{Melhoramentos na escolha de raiz}
@@ -674,7 +671,7 @@ caminho mas sem a adjacência que os comunica com $M$. O funcionamento de
 %   raízes ruins
 % - "leftmost": estamos priorizando percorrer as maiores árvores, em 
 %   tese
-Reis utilizou a estrutura de \toolname{map} para armazenar as raízes das 
+Na implementação original do \algname{PFS} foi utilizada a estrutura de \toolname{map} para armazenar as raízes das 
 florestas do espaço de busca. Como chave das raízes, utiliza-se a 
 \toolname{string} que representa o vetor característico da raiz. A 
 estrutura de \toolname{map} em \langname{C++}, geralmente implementada
@@ -682,19 +679,15 @@ com árvores binárias de busca, mantém os elementos ordenados pelo valor
 de sua chave, portanto as raízes são armazenadas de maneira ordenada
 lexicograficamente.
 
-A estratégia adotada por Reis na escolha de uma raiz da floresta 
+A estratégia adotada na implementação original para a escolha de uma raiz da floresta 
 consiste em escolher de maneira equiprovável o primeiro ou o último 
-elemento do \toolname{map} de raízes. Esta estratégia é aleatória e é 
-viesada pois tende a escolher os primeiros ou últimos elementos de uma 
-ordenação. Como esta estratégia de ordenação é arbitrária e não existe 
-aparente fundamentação lógica que a justifique, acreditamos que novas 
-estratégias de escolhas de raízes podem trazer melhores resultados ao 
-algoritmo \algname{PFS}.
+elemento do \toolname{map} de raízes. Esta estratégia é aleatória, porém viesada, uma vez que escolhe apenas os primeiros ou últimos elementos de uma ordenação. Como esta estratégia de ordenação é arbitrária, não existindo fundamentação teórica que a justifique, acreditamos que novas 
+estratégias de escolhas de raízes podem trazer melhores resultados ao algoritmo \algname{PFS}.
 
 \subsection{Escolha equiprovável}
 A primeira estratégia que testamos foi uma escolha também aleatória, mas
 com uma distribuição de probabilidade de escolhas igual para cada raiz
-da floresta. Como a estratégia de Reis é viesada, julgamos necessário
+da floresta. Como a estratégia da implementação original de Reis é viesada, julgamos necessário
 investigar se este viés não leva o algoritmo a fazer ramificações ou 
 podas ruins, que comprometessem o tempo de execução do algoritmo. Se
 o tempo de execução com a nova estratégia é menor, então confirmamos
@@ -722,21 +715,23 @@ A sub-árvore completa que tem como raiz o nó $\pfsnode{N}$ é composta
 pelos nós dos conjuntos do intervalo 
 $[\pfsnode{N}[\varname{vertex}], \pfsnode{N}[\varname{vertex}] \cup \pfsnode{N}[\varname{adjacent}]]$ e 
 portanto, o tamanho da árvore é dado por
+\begin{subequations}
 \begin{align*}
 |[\pfsnode{N}[\varname{vertex}], \pfsnode{N}[\varname{vertex}] \cup \pfsnode{N}[\varname{adjacent}]]| &= 
 |\{\pfsnode{N}[\varname{vertex}] \cup W : W \in \powerset (\pfsnode{N}[\varname{adjacent}])\}| \\
     &= |\powerset(\pfsnode{N}[\varname{adjacent}])| \\
     &= |\powerset(\cup_{i = \pfsnode{N}[\varname{leftmost}]}^{n} s_i)| \\
-    &= 2^{n - \pfsnode{N}[\varname{leftmost}]} 
+    &= 2^{n - \pfsnode{N}[\varname{leftmost}]}.
 \end{align*}
-portanto, basta escolher a raiz com menor valor de $\varname{leftmost}$.
+\end{subequations}
+Portanto, basta escolher a raiz com menor valor de $\varname{leftmost}$.
 Agora note que, para as raízes da floresta $\forest_A$, o valor de 
 $\varname{leftmost}$ é igual ao maior índice de uma característica
 presente no conjunto, enquanto na floresta $\forest_B$ é igual ao maior
 índice de uma característica não presente no conjunto.
 
 Note que este número considera que a árvore está completa, o que não é
-necessariamente verdade para raízes da floresta, um cálculo exato 
+necessariamente verdade para raízes da floresta; um cálculo exato 
 deveria considerar também o conjunto $\varname{adjacent}$ da raiz. 
 Entretanto, utilizamos esse cálculo como uma aproximação do tamanho da 
 floresta por motivos de simplicidade, pois, como explicaremos a seguir,
@@ -763,13 +758,9 @@ e para a floresta $\forest_B$ o último elemento.
 
 \subsection{Experimentos com instâncias artificiais}
 \label{pfs:root_choosing:experiments}
-Testamos ambas abordagens para melhoramentos em escolhas de raízes no
-arcabouço \toolname{featsel} utilizando uma servidora de 64 cores. Os
-experimentos foram feitos com instâncias artificiais que são reduções 
-do problema da soma de subconjuntos. Analisaremos o desempenho dos 
+Testamos ambas abordagens em experimentos computacionais. Analisaremos agora o desempenho dos 
 algoritmos tanto quanto ao tempo médio de execução quanto a quantidade
 média de nós computados.
-%TODO: server specs
 
 A tabela \ref{tab:pfsrand_vs_pfs} mostra os resultados dos 
 experimentos para os algoritmos \algname{PFS} e sua variante que 
@@ -784,6 +775,10 @@ que estamos avaliando.
 \begin{table}
 \centering
 \footnotesize
+\caption{Comparação entre os algoritmos \algname{PFS} e 
+\algname{PFS\_RAND}. O tempo de execução do segundo é maior do que o 
+primeiro enquanto a quantidade de chamadas da função custo é parecida
+em ambos.} \label{tab:pfsrand_vs_pfs}
  \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c cc c cc}
 \toprule
@@ -803,10 +798,7 @@ $|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_RAND} && \algname{PFS} & \alg
 \bottomrule
 \end{tabular}%
  }
-\caption{Comparação entre os algoritmos \algname{PFS} e 
-\algname{PFS\_RAND}. O tempo de execução do segundo é maior do que o 
-primeiro enquanto a quantidade de chamadas da função custo é parecida
-em ambos.} \label{tab:pfsrand_vs_pfs}
+
 \end{table}
  
 A tabela \ref{tab:pfsleftmost_vs_pfs} mostra os resultados dos 
@@ -820,6 +812,10 @@ Assim, concluímos que esta modificação não foi vantajosa ao algoritmo.
 \begin{table}
 \centering
 \footnotesize
+\caption{Comparação entre os algoritmos \algname{PFS} e 
+\algname{PFS\_LEFTMOST}. O tempo de execução e também o número de 
+chamadas da função custo é maior para o \algname{PFS\_LEFTMOST}.} 
+\label{tab:pfsleftmost_vs_pfs}
  \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c cc c cc}
 \toprule
@@ -841,10 +837,6 @@ $|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_LEFTMOST} && \algname{PFS} & 
 \bottomrule 
 \end{tabular}%
  }
-\caption{Comparação entre os algoritmos \algname{PFS} e 
-\algname{PFS\_LEFTMOST}. O tempo de execução e também o número de 
-chamadas da função custo é maior para o \algname{PFS\_LEFTMOST}.} 
-\label{tab:pfsleftmost_vs_pfs}
 \end{table}
 
 \subsection{Comentários sobre experimentos}
@@ -890,8 +882,8 @@ função de custo é monótona tal que não houveram podas por conta de
 aumento de custo; então, esta floresta poderá ter até $2^n - n + 1$ 
 raízes. Desta forma, a estrutura de dados utilizada para gerenciar a 
 floresta deve ser eficiente e capaz de armazenar muitas entradas.
-Por isso, acreditamos que outras estruturas além da \toolname{map} do 
-\langname{C++} devem ser consideradas para gerenciar as raízes das 
+A estrurura \toolname{map} do 
+\langname{C++} é implementada através de uma árvore rubro-negra, uma árvore de busca binária que é balanceada mas não ordenada. Por isso, acreditamos que outras estruturas devem ser consideradas para gerenciar as raízes das 
 florestas do \algname{PFS}. Desta maneira, podemos encontrar novas 
 estruturas mais eficientes para o problema.
 
@@ -934,7 +926,7 @@ Ao deixar de utilizar a estrutura de \toolname{map} como era feito na
 implementação original do \algname{PFS}, precisamos definir uma regra
 para escolha de raízes. Decidimos utilizar a regra de escolha aleatória
 de raízes, dado que ela se mostrou semanticamente equivalente a
-implementação orignal (veja \ref{pfs:root_choosing:experiments}).
+implementação original (veja \ref{pfs:root_choosing:experiments}).
 
 Para escolher uma raiz em uma OBDD precisamos apenas descer um caminho
 da raiz até uma folha não vazia (que contenha um nó) guardando os 
@@ -943,17 +935,9 @@ estrutura sempre contrai folhas redundantes para apenas uma, ou seja, não exist
 vértices na árvore que possuam dois filhos que são folhas vazias, 
 portanto ao descer um caminho pela árvore, é sempre possível escolher 
 a ramificação (ir a direita ou esquerda de um nó) que nos leve a uma
-folha com um nó. 
+folha com um nó (Algoritmo~\ref{alg:Get-OBDD-Node}). 
 
-Desta maneira a escolha da raiz é feita por uma sequência de escolhas
-de ramificação, para cada vértice da OBDD visitado, que levam da raiz
-da OBDD até um nó que é folha. Para fazer isto de maneira aleatória e
-identicamente distribuída entre os nós das folhas, basta armazenar em
-cada vértice da árvore quantas raízes estão a sua direita e quantos 
-estão a sua esquerda e então dar pesos de escolhas equivalentes a
-quantidade de raízes para cada lado de ramificação.
-
-\begin{algorithm}[H]
+\begin{algorithm}[]
 \textsc{Get-OBDD-Node} $(X)$
 \begin{algorithmic}[1]
     \State $v \gets root$
@@ -966,7 +950,20 @@ quantidade de raízes para cada lado de ramificação.
     \EndWhile
     \Return $v.\varname{node}$
 \end{algorithmic}
-\vspace{1em}
+\caption{Pseudo-código de uma função que recebe um conjunto $X \in \powerset{S}$
+e devolve o nó que representa este conjunto, se estiver na árvore.}
+\label{alg:Get-OBDD-Node}
+\end{algorithm}
+
+Desta maneira a escolha da raiz é feita por uma sequência de escolhas
+de ramificação, para cada vértice da OBDD visitado, que levam da raiz
+da OBDD até um nó que é folha. Para fazer isto de maneira aleatória e
+identicamente distribuída entre os nós das folhas, basta armazenar em
+cada vértice da árvore quantas raízes estão a sua direita e quantos 
+estão a sua esquerda e então dar pesos de escolhas equivalentes a
+quantidade de raízes para cada lado de ramificação (Algoritmo~\ref{alg:Get-Random-OBDD-Node}).
+
+\begin{algorithm}[]
 \textsc{Get-Random-OBDD-Node} $()$
 \begin{algorithmic}[1]
     \State $v \gets root$
@@ -981,20 +978,14 @@ quantidade de raízes para cada lado de ramificação.
     \EndWhile
     \Return $v.\varname{node}$
 \end{algorithmic}
-\caption{Algoritmos de OBDD que devolvem nós armazenados na estrutura.
-A função \textsc{Get-OBDD-Node} recebe um conjunto $X \in \powerset{S}$
-e devolve o nó que representa este conjunto, se estiver na árvore. A 
-função \textsc{Get-Random-OBDD-Node} devolve um nó aleatório da floresta
+\caption{Pseudo-código de uma função que devolve um nó aleatório da floresta
 de maneira identicamente provável.}
+\label{alg:Get-Random-OBDD-Node}
 \end{algorithm}
 
 \subsection{Testes com instâncias artificiais}
-Testamos esta variação do \algname{PFS} que usa OBDDs no controle
-das florestas, algoritmo que chamamos de \algname{OPFS}, no arcabouço
-\toolname{featsel} usando uma servidora de 64 cores. Os experimentos
-foram feitos com instâncias artificiais que são reduções do problema de
-subconjuntos. Vamos analisar o desempenho desta variação quanto ao tempo
-de execução e número de chamadas da função custo.
+Testamos experimentalmente esta variação do \algname{PFS} que usa OBDDs no controle
+das florestas. Vamos analisar o desempenho desta variação quanto ao tempo de execução e número de chamadas da função de custo.
 
 Como podemos ver na tabela \ref{tab:opfs_vs_pfs}, o número de chamadas
 da função de custo do algoritmo modificado é similar ao do 
@@ -1008,6 +999,10 @@ uso de OBDDs para o controle das florestas não foi vantajoso.
 \begin{table}
 \centering
 \footnotesize
+\caption{Comparação entre os algoritmos \algname{PFS} e \algname{OPFS}. 
+O número de chamadas médio da função custo é parecido enquanto o tempo
+de execução é maior para o \algname{OBDD}.}
+\label{tab:opfs_vs_pfs}
 \begin{tabular}{cc c cc c cc}
 \toprule
 \multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)}  & \phantom{} & \multicolumn{2}{c}{Número médio de cálculos de custo}\\
@@ -1030,10 +1025,6 @@ $|S|$ & $2^{|S|}$ && PFS & OPFS && PFS & OPFS \\
 % 24 & 16777216 &&  85.646 $\pm$ 79.186 & 149.567 $\pm$ 108.104 &&  4080290.8 $\pm$ 3166258.4 & 4100480.6 $\pm$ 3141423.9 \\
 \bottomrule 
 \end{tabular}%
-\caption{Comparação entre os algoritmos \algname{PFS} e \algname{OPFS}. 
-O número de chamadas médio da função custo é parecido enquanto o tempo
-de execução é maior para o \algname{OBDD}.}
-\label{tab:opfs_vs_pfs}
 \end{table}
 
 \section{Paralelização do código}
@@ -1075,8 +1066,7 @@ finalização da iteração e começo da próxima.
     \label{fig:pfs:race_cond:B} } \\
   \end{tabular}
   \caption{Exemplo de espaço de busca do \algname{PFS}; a floresta da
-    figura ~\ref{fig:pfs:race_cond:A} é $\forest_A$ enquanto a da figura
-    ~\ref{fig:pfs:race_cond:B} é $\forest_B$. Estas florestas 
+    figura~\ref{fig:pfs:race_cond:A} é $\forest_A$ enquanto a da figura~\ref{fig:pfs:race_cond:B} é $\forest_B$. Estas florestas 
     representam o espaço de busca após duas iterações do algoritmo, 
     ambas feitas na direção de baixo para cima, ou seja, ramificando
     a floresta $\forest_A$. Na primeira iteração, seleciona-se a raiz
@@ -1093,18 +1083,15 @@ Entretanto, apesar desta simplificação tornar a fase de ramificação
 quase independente entre as linhas de processamento, a fase de 
 atualização de floresta dual pode não ser. Como resultado, condições de
 corrida não tratadas podem causar inconsistências na atualização da 
-floresta. As figuras 
-~\ref{fig:pfs:race_cond:part1}~-~\ref{fig:pfs:race_cond:part2} mostram
+floresta. As figuras~\ref{fig:pfs:race_cond:part1}--\ref{fig:pfs:race_cond:part2} mostram
 um exemplo onde duas linhas de execução podem causar este tipo de 
-inconsistência. A figura ~\ref{fig:pfs:race_cond:part1} mostra o 
+inconsistência. A figura~\ref{fig:pfs:race_cond:part1} mostra o 
 espaço de busca do \algname{PFS} no começo de uma iteração, enquanto as
-figuras ~\ref{fig:pfs:race_cond:C}~-~\ref{fig:pfs:race_cond:D} e 
-~\ref{fig:pfs:race_cond:E}~-~\ref{fig:pfs:race_cond:F} mostram 
+figuras~\ref{fig:pfs:race_cond:C}--\ref{fig:pfs:race_cond:D} e~\ref{fig:pfs:race_cond:E}--\ref{fig:pfs:race_cond:F} mostram 
 respectivamente os resultados ao fim de uma iteração para duas 
-diferentes escolhas de raízes. Na figura ~\ref{fig:pfs:race_cond:D}, 
+diferentes escolhas de raízes. Na figura~\ref{fig:pfs:race_cond:D}, 
 que mostra a floresta $\forest_B$ quando a raiz escolhida é $0100$,
-o nó $0111$ é removido do espaço de busca; na figura 
-~\ref{fig:pfs:race_cond:F}, que mostra a floresta $\forest_B$ quando a 
+o nó $0111$ é removido do espaço de busca; na figura~\ref{fig:pfs:race_cond:F}, que mostra a floresta $\forest_B$ quando a 
 raiz escolhida é $0000$, o nó $0111$ torna-se raiz. Assuma então que
 esta iteração do algoritmo é feita com duas linhas de processamento 
 $P_1$ e $P_2$, que fazem o percorrimento, respectivamente, a partir de 
@@ -1130,15 +1117,13 @@ acontece, criamos uma raiz espúria na floresta $\forest_B$.
     \includegraphics[clip=true]{pfs/race_cond/raceF.pdf}}
     \label{fig:pfs:race_cond:F} } \\
   \end{tabular}
-  \caption{Continuação do exemplo da figura 
-    ~\ref{fig:pfs:race_cond:part1} para duas escolhas diferentes de 
-    raízes. As figuras~\ref{fig:pfs:race_cond:C} e 
-    ~\ref{fig:pfs:race_cond:D} mostram o resultado da continuação da 
+  \caption{Continuação do exemplo da figura~\ref{fig:pfs:race_cond:part1} para duas escolhas diferentes de 
+    raízes. As figuras~\ref{fig:pfs:race_cond:C} e~\ref{fig:pfs:race_cond:D} mostram o resultado da continuação da 
     execução do algoritmo após escolha da raiz $0100$ de $\forest_A$ em 
     um percorrimento de baixo para cima que ramifica até o nó 
     $0111$, que é podado da floresta $\forest_A$; na floresta dual, o nó
     $0111$ é removido e os nós $0110$ e $0011$ tornam-se raízes. As 
-    figuras ~\ref{fig:pfs:race_cond:E} e ~\ref{fig:pfs:race_cond:F} 
+    figuras~\ref{fig:pfs:race_cond:E} e~\ref{fig:pfs:race_cond:F} 
     mostram a continuação da execução quando a raiz $0000$ de 
     $\forest_A$ é escolhida para percorrimento, que ramifica até o nó
     $0011$, que é podado da floresta $\forest_A$; na floresta dual, o nó
@@ -1157,8 +1142,7 @@ de características do problema, comprometendo a escalabilidade do
 algoritmo.
 
 
-Voltando ao exemplo anterior, das figuras 
-~\ref{fig:pfs:race_cond:part1}~-~\ref{fig:pfs:race_cond:part2}, com a 
+Voltando ao exemplo anterior, das figuras~\ref{fig:pfs:race_cond:part1}--\ref{fig:pfs:race_cond:part2}, com a 
 criação do conjunto de nós deletados, se a linha de processamento $P_1$
 deleta o nó $0111$ antes da criação em $P_2$, então o nó já estará no 
 conjunto de nós deletados quando $P_2$ tentar adicioná-lo na floresta e
@@ -1167,16 +1151,19 @@ então o nó é criado e depois deletado, o que pode ser desnecessário,
 porém consistente.
 
 \subsection{Testes com instâncias artificiais}
-Testamos esta versão paralela do \algname{PFS}, que chamamos aqui de
-\algname{PPFS}, no arcabouço \toolname{featsel} usando uma servidora de
-64 cores. Os experimentos foram feitos com instâncias artificiais que 
-são reduções do problema de subconjuntos. Vamos analisar o desempenho 
+Testamos experimentalmente esta versão paralela do \algname{PFS}, que chamamos aqui de
+\algname{PPFS}. Vamos agora analisar o desempenho 
 deste algoritmo quanto ao tempo de execução e número de chamadas da 
-função custo.
+função de custo.
 
 \begin{table}
 \centering
 \footnotesize
+\caption{Comparação entre os algoritmos \algname{PFS} e \algname{PPFS}.
+O algoritmo \algname{PPFS} apresenta um número similar de média de 
+chamadas da função custo ao \algname{PFS}, mas possui tempo de execução 
+médio maior.}
+\label{tab:ppfs_vs_pfs}
 % \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c cc c cc}
 \toprule
@@ -1206,18 +1193,13 @@ $|S|$ & $2^{|S|}$ && PFS & PPFS && PFS & PPFS \\
 % 21 & 2097152 && 11.997 $\pm$ 7.637 & 144.610 $\pm$ 89.521 && 754636.3 $\pm$ 478683.6 & 759129.7 $\pm$ 472831.1 \\
 \bottomrule
 \end{tabular}
-\caption{Comparação entre os algoritmos \algname{PFS} e \algname{PPFS}.
-O algoritmo \algname{PPFS} apresenta um número similar de média de 
-chamadas da função custo ao \algname{PFS}, mas possui tempo de execução 
-médio maior.}
-\label{tab:ppfs_vs_pfs}
 % }
 \end{table}
 
 Podemos observar na tabela~\ref{tab:ppfs_vs_pfs} que os números de 
 chamadas da função custo dos algoritmos \algname{PFS} e \algname{PPFS}
 são parecidos. Isto quer dizer que a nossa paralelização não trouxe 
-grandes modificações semanticas ao algoritmo. Entretanto, o tempo médio
+grandes modificações semânticas ao algoritmo. Entretanto, o tempo médio
 de execução teve diferenças na versão paralela, que gastou mais tempo
 do que o algoritmo original em todas as instâncias. A tabela mostra
 que o \algname{PPFS} foi pelo menos 10 vezes mais lento que a 
@@ -1259,7 +1241,7 @@ do espaço de busca corrente utilizando o algoritmo \algname{PFS}. A
 solução das sub-árvores deve ocorrer de maneira independente, 
 possibilitando a paralelização mais fácil do código.
 
-O pseudo-código~\ref{pfs:code:ubbpfs:step1} mostra como é feita a 
+O pseudo-código do algoritmo~\ref{pfs:code:ubbpfs:step1} mostra como é feita a 
 primeira etapa do algoritmo e também serve de base para a explicação da
 segunda etapa \algname{UBB-PFS} e da corretude do algoritmo, pois 
 possui os seguintes invariantes no final da linha~\ref{pfs:code:ubbpfs:invariant}:
@@ -1268,7 +1250,7 @@ possui os seguintes invariantes no final da linha~\ref{pfs:code:ubbpfs:invariant
         possibilidades: ou ele foi visitado e está em $\mathcal{M}$, ou 
         podado, ou e está contido em uma sub-árvore tal que a raiz está 
         na pilha $\mathcal{S}$. Todo nó que é raiz está em 
-        $\mathcal{M}$} \label{pfs:code:ubb:invariant:A}
+        $\mathcal{M}$}; \label{pfs:code:ubb:invariant:A}
     \item{Todo nó na pilha $\mathcal{S}$ é raiz de uma sub-árvore 
         completa.} \label{pfs:code:ubb:invariant:B}
 \end{enumerate}
@@ -1317,18 +1299,20 @@ invariante~\ref{pfs:code:ubb:invariant:B} garante que toda árvore com
 raiz $Y$ contém exatamente os subconjuntos do intervalo $[Y, X \cup Y]$. 
 
 Para resolver cada sub-árvore com raiz em $\mathcal{S}$, criamos o 
-seguinte problema U-Curve auxiliar. Seja $\langle S, c \rangle$ uma 
-instância do problema U-Curve e seja $Y$ uma raiz de uma sub-árvore do 
+seguinte problema U-curve auxiliar. Seja $\langle S, c \rangle$ uma 
+instância do problema U-curve e seja $Y$ uma raiz de uma sub-árvore do 
 problema e $X$ um conjunto de características tal que os nós desta 
 sub-árvore seja exatamente o intervalo $[Y, X \cup Y]$. Considerando que
 este intervalo é igual ao conjunto $\{Y \cup W : W \in \powerset(X)\}$,
 então, encontrar o mínimo dentro deste conjunto é exatamente resolver a 
-instância do problema U-Curve $\langle S_X, c_Y\rangle$ tal que:
+instância do problema U-curve $\langle S_X, c_Y\rangle$ tal que:
+\begin{subequations}
 \begin{alignat*}{2}
     S_X      & = X & \\
-    c_Y (X') & = c (X' \cup Y) & \text{, } ~X' \in \powerset(S_X) \\
+    c_Y (X') & = c (X' \cup Y) & \text{, } ~X' \in \powerset(S_X).
 \end{alignat*}
-
+\end{subequations}
+Cada uma dessas instâncias é resolvida utilizando a função \algname{SolveTrees} (Algoritmo~\ref{alg:Solve-Trees}).
 \begin{algorithm}[!ht]
 \textsc{SolveTrees}$(\mathcal{S}, S, c)$
 \begin{algorithmic}[1]
@@ -1342,7 +1326,8 @@ instância do problema U-Curve $\langle S_X, c_Y\rangle$ tal que:
     \EndWhile
     \Return $\mathcal{N}$
 \end{algorithmic}
-\caption{Continuação do pseudo-código~\ref{pfs:code:ubbpfs:step1}}
+\caption{Pseudo-código da função \algname{SolveTrees}.}
+\label{alg:Solve-Trees}
 \end{algorithm}
 
 A função \textsc{FinishStepOne} determina qual é a iteração em que o
@@ -1378,16 +1363,13 @@ máquina ou quando o número de iterações é maior do que duas vezes a
 quantidade de características. 
 
 \subsection{Experimentos com instâncias artificiais}
-Testamos o algoritmo \algname{UBB-PFS} no arcabouço \toolname{featsel}
-utilizando uma servidora de 64 núcleos. Os experimentos foram feitos com 
-instâncias artificiais que são reduções do problema da soma de
-subconjuntos. Analisaremos o desempenho dos algoritmos tanto quanto ao 
+Testamos o algoritmo \algname{UBB-PFS} em experimentos computacionais. Analisaremos agora o desempenho dos algoritmos tanto quanto ao 
 tempo médio de execução quanto a quantidade de nós computados.
 
 A tabela~\ref{tab:ubbpfs_vs_ubb_vs_pfs_time} mostra o tempo de execução
 dos algoritmos \algname{PFS}, \algname{UBB-PFS} e \algname{UBB}. O 
 \algname{UBB-PFS} teve tempos de execuções médios menores do que o 
-\algname{PFS}, portanto precisamo investigar se ele é melhor também do
+\algname{PFS}, portanto precisamos investigar se ele é melhor também do
 que um outro algoritmo mais rápido que o \algname{PFS}, o \algname{UBB}.
 Este último mostrou ter melhor desempenho nesta tabela, entretanto, 
 por conta da paralelização, é possível que o \algname{UBB-PFS} se torne 
@@ -1418,6 +1400,14 @@ cálculos da função custo.
 \begin{table}
 \centering
 \footnotesize
+\caption{Comparação de tempo médio de execução entre os algoritmos
+\algname{UBB}, \algname{PFS} e \algname{UBB-PFS}. Podemos observar que
+o \algname{PFS} foi o mais lento enquanto o \algname{UBB} foi o mais
+rápido e o \algname{UBB-PFS} teve desempenho itermediário para estas
+instâncias. Este teste continua na tabela~\ref{tab:ubbpfs_vs_ubb_time},
+que mostra apenas o \algname{UBB} e o \algname{UBB-PFS} já que o 
+\algname{PFS} mostrou ter desempenho pior.}
+\label{tab:ubbpfs_vs_ubb_vs_pfs_time}
 % \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c ccc}
 \toprule
@@ -1442,19 +1432,15 @@ $|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS  \\
 \bottomrule
 \end{tabular}
 % }
-\caption{Comparação de tempo médio de execução entre os algoritmos
-\algname{UBB}, \algname{PFS} e \algname{UBB-PFS}. Podemos observar que
-o \algname{PFS} foi o mais lento enquanto o \algname{UBB} foi o mais
-rápido e o \algname{UBB-PFS} teve desempenho itermediário para estas
-instâncias. Este teste continua na tabela~\ref{tab:ubbpfs_vs_ubb_time},
-que mostra apenas o \algname{UBB} e o \algname{UBB-PFS} já que o 
-\algname{PFS} mostrou ter desempenho pior.}
-\label{tab:ubbpfs_vs_ubb_vs_pfs_time}
 \end{table}
 
 \begin{table}
 \centering
 \footnotesize
+\caption{Comparação de tempo médio de execução entre os algoritmos 
+\algname{UBB} e \algname{UBB-PFS}. O algoritmo \algname{UBB-PFS} mostrou
+maior tempo médio de execução.}
+\label{tab:ubbpfs_vs_ubb_time}
 \begin{tabular}{cc c cc}
 \toprule
 \multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)} \\
@@ -1468,17 +1454,18 @@ $|S|$ & $2^{|S|}$ && UBB & UBB-PFS \\
 25 & 33554432 &&  46.215 $\pm$ 35.837 & 144.196 $\pm$ 110.583 \\
 \bottomrule
 \end{tabular}
-
-\caption{Comparação de tempo médio de execução entre os algoritmos 
-\algname{UBB} e \algname{UBB-PFS}. O algoritmo \algname{UBB-PFS} mostrou
-maior tempo médio de execução.}
-\label{tab:ubbpfs_vs_ubb_time}
 \end{table}
 
 
 \begin{table}
 \centering
 \footnotesize
+\caption{Comparação sobre o número de chamadas de função custo entre
+os algoritmos \algname{UBB}, \algname{PFS} e \algname{UBB-PFS}. Vemos
+nesta tabela que o número de nós computados pelo \algname{UBB} é o maior
+enquanto o do \algname{PFS} é o menor; o \algname{UBB-PFS} tem 
+desempenho intermediário, porém próximo ao do \algname{PFS}.}
+\label{tab:ubbpfs_vs_ubb_vs_pfs_computed_nodes}
 % \resizebox{\columnwidth}{!}{%
 \begin{tabular}{cc c ccc}
 \toprule
@@ -1502,11 +1489,5 @@ $|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS  \\
 24 & 16777216 && 10146842.9 $\pm$ 6673018.3 & 5527504.2 $\pm$ 3413432.3 & 5609052.7 $\pm$ 3337059.1 \\
 \bottomrule
 \end{tabular}
-\caption{Comparação sobre o número de chamadas de função custo entre
-os algoritmos \algname{UBB}, \algname{PFS} e \algname{UBB-PFS}. Vemos
-nesta tabela que o número de nós computados pelo \algname{UBB} é o maior
-enquanto o do \algname{PFS} é o menor; o \algname{UBB-PFS} tem 
-desempenho intermediário, porém próximo ao do \algname{PFS}.}
-\label{tab:ubbpfs_vs_ubb_vs_pfs_computed_nodes}
 % }
 \end{table}

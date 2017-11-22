@@ -65,7 +65,7 @@ a {\bf \em entropia condicional} de $Y$ dado $\mathbf{X} = \mathbf x$ é:
 $
 \begin{aligned}
 H (Y | \mathbf{X = x}) = - 
-\sum_{y \in Y} \probability (Y = y | \mathbf{X = x}) log \probability (Y = y | \mathbf{X = x})
+\sum_{y \in Y} \probability (Y = y | \mathbf{X = x}) log \probability (Y = y | \mathbf{X = x}).
 \end{aligned}
 $
 \end{center}
@@ -78,7 +78,7 @@ definimos a {\bf \em entropia condicional média} como:
 $
 \begin{aligned}
     \expectation[H (Y | \mathbf{X})] = 
-    \sum_{\mathbf{x} \in \mathbf{X}} H (Y | \mathbf{X = x}) \probability (\mathbf{X = x})
+    \sum_{\mathbf{x} \in \mathbf{X}} H (Y | \mathbf{X = x}) \probability (\mathbf{X = x}).
 \end{aligned}
 $
 \end{center}
@@ -168,16 +168,12 @@ modificando a entropia condicional média para penalizar a entropia de
 $Y$ quando $\mathbf{x}$ foi observado poucas vezes. A função de custo
 utilizada é, então:
 
-\begin{center}
-$
-\begin{aligned}
+\begin{equation} \label{cost_function:mce}
     \hat{\expectation}[H (Y | \mathbf{X})] = \frac{N}{t}
-    \sum_{\mathbf{x} \in \mathbf{X}} H (Y | \mathbf{X = x}) \probability (\mathbf{X = x})
-\end{aligned}
-$
-\end{center}
+    \sum_{\mathbf{x} \in \mathbf{X}} H (Y | \mathbf{X = x}) \probability (\mathbf{X = x}).
+\end{equation}
 
-\section{O problema U-Curve}
+\section{O problema U-curve}
 A função de custo apresentada na seção ~\ref{fund_concept:mce}
 descrevem curvas que tem um formato em U (a menos de oscilações) nas 
 cadeias do reticulado booleano, vamos definir esta propriedade agora.
@@ -215,7 +211,7 @@ dois elementos $A \subseteq B$ de $\powerset (S)$, então:
     \item{se $c(B) > c (A)$, então $c (X) > c (A)$ para todo $X$
         do intervalo $[B, \powerset (S)]$;}
     \item{se $c(A) > c (B)$, então $c (X) > c (B)$ para todo $X$ 
-        do intervalo $[\emptyset, A]$;}
+        do intervalo $[\emptyset, A]$.}
 \end{itemize}
 
 Desta maneira, quando um problema de seleção de características tem uma 
@@ -252,19 +248,19 @@ com a solução de uma instância do problema de seleção de características
 onde o conjunto de características é $S'$ uma cópia de $S$ e a função de
 custo é $c$:
 
-\begin{equation*} \label{cost_function:subset_sum}
+\begin{equation} \label{cost_function:subset_sum}
     c (X) = |t - \sum_{x \in X} x| \text{, para todo } 
                                         X \in \powerset(S') \text{.}
-\end{equation*}
+\end{equation}
 
 Assim como a função de custo MCE, a função de custo de somas de 
 subconjuntos também apresenta formato de curva em U nas cadeias
-do reticulado booleano. Para toda cadeia com elementos $A \subseteq B 
+do reticulado Booleano~\cite{Rei12}. Para toda cadeia com elementos 
+$A \subseteq B 
 \subseteq C$ vale que $c (B) \leq max\{c (A), c (B)\}$, então de fato 
-esta função é decomponível em curvas U. Vamos provar 
-esta propriedade para dois casos disjuntos, quando $|t - \sum_{b \in B}
-b| > 0$ e quando $|t - \sum_{b \in B} b| \leq 0$. Começamos a 
-demonstração definindo $D = B \setminus A$ e $E = C \setminus B$.
+esta função é decomponível em curvas U. Vamos apresentar a prova desta propriedade, feita em~\cite{Rei12}. Começamos a 
+demonstração definindo $D = B \setminus A$ e $E = C \setminus B$. Este problema tem dois casos disjuntos:  $|t - \sum_{b \in B}
+b| > 0$ ou então $|t - \sum_{b \in B} b| \leq 0$.  
 
 \begin{itemize}
     \item{se $|t - \sum_{b \in B} b| > 0$, então:}
@@ -275,9 +271,9 @@ demonstração definindo $D = B \setminus A$ e $E = C \setminus B$.
                 \sum_{b \in B} b > 0$)} \\
               & = |t - \sum_{a \in B \setminus D} a| \\
               & = |t - \sum_{a \in A} a| \\
-              & = c (A)
+              & = c (A).
     \end{align*}
-    portanto, $c (B) \leq  c (A)$, logo $c (B) \leq max \{c (A), c (C)\}$.
+    Portanto, $c (B) \leq  c (A)$, logo $c (B) \leq max \{c (A), c (C)\}$.
     
     \item{se $|t - \sum_{b \in B} b| \leq 0$, então:}
     \begin{align*}
@@ -287,9 +283,9 @@ demonstração definindo $D = B \setminus A$ e $E = C \setminus B$.
                 \sum_{b \in B} b \leq 0$)} \\
               & = |t - \sum_{c \in B \cup E} c| \\
               & = |t - \sum_{c \in C} c| \\
-              & = c (C)
+              & = c (C).
     \end{align*}
-    portanto, $c (B) \leq  c (C)$, logo $c (B) \leq max \{c (A), c (C)\}$.
+    Portanto, $c (B) \leq  c (C)$, logo $c (B) \leq max \{c (A), c (C)\}$.
 \end{itemize}
 Como acabamos de provar para os dois casos possíveis, temos que 
 $c (B) \leq max \{c (A), c (C)\}$. Desta maneira, a função de custo de
@@ -309,13 +305,12 @@ importante citar esta métrica de qualidade.
 
 Uma maneira de gerar funções com oscilações e violações da curva em U
 é adicionar uma perturbação senoidal a uma função decomponível em curvas
-U. Seja a seguinte função ~\cite{AG+18}:
+U. Seja a seguinte função:
 
-\begin{align*}
-    c(X | X_0, {\mathbf W}, c_{max}) &= c_{max} [1 - e^{- \frac{1}{2} 
-                    (X - X_0)^T {\mathbf W} (X - X_0)}] \\
-\end{align*}
-em que,
+\begin{equation*} 
+    c(X | X_0, {\mathbf W}, c_{max}) = c_{max} [1 - e^{- \frac{1}{2} (X - X_0)^T {\mathbf W} (X - X_0)}],
+\end{equation*}
+em que:
 \begin{align*}
     X \in \powerset(S) & \text{ é um conjunto de características;} \\
     X_0 \in \powerset (S) & \text{ é o conjunto de custo mínimo;} \\
@@ -323,18 +318,15 @@ em que,
     {\mathbf W} & \text { é uma matriz positiva-definida de pesos que dá forma a função.}
 \end{align*}
 
-Adiciona-se então um ruído senoidal a esta função
-
-\begin{align*}
-    & c(X | X_0, {\mathbf W}, c_{max}) = c_{max} [1 - e^{- \frac{1}{2} 
-                    (X - X_0)^T {\mathbf W} (X - X_0)}]  + 
-                    A \cos (2\pi f \beta (X)) \\
-    & \text{com } \beta (X) = \frac{1}{n} \sum_{i = 1}^{n} X (i)
-\end{align*}
-em que, $A \in \fieldR$ é uma constante que regula a amplitude do ruído, 
+A função de custo acima é decomponível em curvas em U. Podemos então adicionar à mesma um ruído senoidal, para esse fim generalizando a função com o acréscimo de um termo:
+\begin{equation} \label{cost_function:esmaeil}
+    c(X | X_0, {\mathbf W}, c_{max}) = c_{max} [1 - e^{- \frac{1}{2} (X - X_0)^T {\mathbf W} (X - X_0)}]  + A \cos (2\pi f \beta (X)),
+\end{equation}
+onde  $\beta (X) = \frac{1}{n} \sum_{i = 1}^{n} X (i)$ e $A \in \fieldR$ é uma constante que regula a amplitude do ruído, 
 ou seja, a profundidade dos mínimos locais; e $f \in \fieldR$ controla a
 frequência do ruído, isto é, qual a distância entre os mínimos locais 
 gerados.
 
+A função de custo da equação~\ref{cost_function:esmaeil} foi utilizada por Atashpaz-Gargari e colegas para avaliar a robustez de um algoritmo para o problema U-curve~\cite{AG+18}. Esta função já encontra-se implementada no arcabouço featsel e será utilizada em experimentos computacionais futuros.
 
 
