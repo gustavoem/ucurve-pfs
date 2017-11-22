@@ -21,7 +21,7 @@ modelos de aprendizado computacional. Usamos as características
 selecionadas para definir um modelo de aprendizado e calculamos o erro
 de classificação médio para este modelo, usando validação cruzada. Os
 dados utilizados estão disponíveis no 
-University of California Irvine Machine Learning 
+University of California Irvine (UCI) Machine Learning 
 Repository~\cite{Lic13}.
 
 \section{Seleção de características em aprendizado de máquina}
@@ -61,11 +61,14 @@ outras estratégias mais elaboradas, como a de Fayyad e Irani~\cite{FI93}
 que separa dados por classes minimizando a entropia média.
 
 \section{Support Vector Machine com kernel linear}
+\label{sec:real_instances:svm}
 A seleção de características é apenas uma etapa da seleção de modelo
 de aprendizado. Vamos então especificar mais o conjunto de possíveis
 classificadores para os problemas que trataremos neste capítulo. Fazemos
 isto ao decidir que o modelo de aprendizado que usaremos é o de
 Support Vector Machine (SVM)~\cite{CL11}.
+% TODO: citei um texto que é da biblioteca libSVM. Talvez o certo seria
+% citar algum texto que explica exclusivamente support vector machine?
 
 Mais especificamente, vamos trabalhar com classificadores SVM com kernel
 linear e multi-classe. O funcionamento de um classificador SVM binário
@@ -109,3 +112,57 @@ cruzada 10-\foreignword{fold} separa as amostras em 10 grupos e usa
 cada um deles para calcular o erro do classificador treinado com os 
 outros nove. Na abordagem \foreignword{leave-one-out} separamos as
 $n$ amostras em $n$ grupos e fazemos o mesmo procedimento.
+
+\section{Experimentos com problemas de classificação}
+Nesta seção apresentamos projetos de classificadores feitos
+com seleção de características para conjuntos de dados do University of 
+California Irvine (UCI) Machine Learning Repository~\cite{Lic13}. Após 
+a fase de seleção de modelo, feita com seleção de características, 
+fazemos a validação cruzada de modelos, como definidos na 
+seção~\ref{sec:real_instances:svm}, utilizando a biblioteca 
+libsvm~\cite{CL11}.
+
+\subsection{Descrição dos conjuntos de dados}
+\subsubsection{\gender{Iris}}
+Este conjunto de dados é mais famoso do repositório UCI, e apresenta 
+dados de plantas com flor do gênero Iris, conhecidas popularmente como 
+lírio. Os dados descrevem cada planta com quatro variáveis, que são 
+comprimento e largura de pétalas e sépalas, e as rotulam em três tipos:
+\species{Iris setosa}, \species{Iris Versicolor} e 
+\species{Iris Virginica}. Este conjunto possui 150 exemplos de 
+rotulações.
+
+\subsubsection{Promoters}
+Chamamos de promotora uma sequência de nucleotídeos (A, T, C, G) do DNA 
+que indica o começo de uma região da fita onde deve haver a transcrição. 
+Este conjunto de dados contém 106 exemplos de sequências de DNA da 
+bactéria \species{E. coli}. Cada sequência é formada por 57 variáveis,
+que são nucleotídeos, e é rotulada em promotora ou não promotora.
+
+\subsubsection{Wine}
+Este conjunto de dados descreve vinhos em 13 variáveis, como porcentagem 
+alcoólica, cor, intensidade de cor, entre outros. Os 178 exemplos de
+vinhos são classificados entre três tipos.
+
+\subsubsection{Zoo}
+Este conjunto de dados contém exemplos de classificação de animais de
+zoológico. Os animais são classificados em 7 possíveis grupos e são 
+descritos em 17 variáveis que podem ser Booleanas, como presença de 
+pelos, ser aquático, etc., ou inteiras, como a quantidade de pernas. 
+Este conjunto possui 101 exemplos classificados.
+
+\subsubsection{Lung Cancer}
+Estes dados apresentam exemplos de classificação de tipos de câncer
+de pulmão. São utilizadas 56 características para descrever um paciente,
+mas nenhuma delas é especificada pelos autores deste conjunto de dados.
+Existem 3 possíveis rótulos para cada paciente, e um total de 32 
+exemplos.
+
+\subsubsection{Breast Cancer}
+O objetivo deste conjunto de dados é classificar amostras de biópsia
+de tumores mamários. Estas amostras contém informações de 31 variáveis
+e são classificadas em tumores benignos ou malignos. Este conjunto 
+possui 700 exemplos de classificação de biópsia.
+
+
+\subsection{Resultados}

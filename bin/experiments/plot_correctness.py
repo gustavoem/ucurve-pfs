@@ -1,41 +1,38 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-file_name = "big"
-# file_name = "small"
-file_name = file_name + "_artificial_corr_data.txt"
+file_name = "sffs_bfs_pucs_correctness.txt"
+
 
 n = []
-es_corr = []
-sfs_corr = []
+m = 50.0
+sffs_corr = []
 bfs_corr = []
 pucs_corr = []
 
-# n   ES SFS  SFFS PUCS BFS       
-# 1   20 20   20   20   20
-# 0   1  2    3    4    5
+# n   SFFS BFS PUCS       
+# 31  1    1   50
+# 32  3    3   50
+# 33  1    1   50
+# 34  0    0   50
 with open(file_name) as f:
     for line in f:
         v = line.split ()
-        if (len (v) != 6):
+        if (len (v) != 4):
             break
         n.append (int (v[0]))
-        m = float (v[1])
-        es_corr.append (float (v[1]) / m)
-        sfs_corr.append (float (v[2]) / m)
-        pucs_corr.append (float (v[4]) / m)
-        bfs_corr.append (float (v[5]) / m)
+        sffs_corr.append (float (v[1]) / m)
+        bfs_corr.append (float (v[2]) / m)
+        pucs_corr.append (float (v[3]) / m)
 
 results = {}
 algorithms = [
-    "PUCS",
-    "SFS",
-    "BFS"]
-    # "ES"]
-results["ES"] = es_corr
-results["SFS"] = sfs_corr
-results["PUCS"] = pucs_corr
+    "SFFS",
+    "BFS",
+    "PUCS"]
+results["SFFS"] = sffs_corr
 results["BFS"] = bfs_corr
+results["PUCS"] = pucs_corr
 
 # Plot data
 ax = plt.gca () 
@@ -44,6 +41,6 @@ for alg in algorithms:
     plt.plot (n, r, label = alg)
 handlers, labels = ax.get_legend_handles_labels ()
 ax.legend(handlers, labels, loc = 'best', numpoints = 1)
-plt.xlabel ("Instance size")
-plt.ylabel ("Best solution proportion")
+plt.xlabel ("Tamanho de instância")
+plt.ylabel ("Proporção de melhor solução encontrada")
 plt.show ()

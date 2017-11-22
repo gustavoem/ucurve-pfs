@@ -564,10 +564,15 @@ que use todo o poder computacional da máquina usada.
     \label{fig:pucs:parameters:small}
 \end{figure}
 
-% TODO: esses graficos ficaram ruins
+{\textbf{\color{blue} Melhorar estes gráficos para justificar o uso de $p$}}
 
 A figura~\ref{fig:pucs:parameters:small} mostra como o tempo de 
 execução evolui quando aumentamos o valor dos parâmetros $p$ e $l$.
+
+% talvez a interferência do l é muito maior que a do p
+%Podemos observar que o parâmetro $p$ teve pouca influência no tempo de
+%execução do algoritmo, enquanto aumentar o parâmetro $l$ faz o tempo
+%de execução aumentar de maneira significativa.
 
 \subsubsection{Instâncias grandes}
 Instâncias grandes costumam não ser resolvidas por algoritmos ótimos, 
@@ -635,15 +640,16 @@ custo utilizada é a de soma de subconjuntos. Estes testes foram feitos
 no arcabouço \toolname{featsel} e foram rodados em uma servidora de 
 64 cores.
 
-Para o parâmetro $p$ utilizamos um valor tal que o número de variáveis
-fixas é sempre 10, o que julgamos ser o suficiente para o 
-particionamento ser fino sem comprometer a escalabilidade do algoritmo.
+Como parâmetro $p$ utilizamos um valor tal que o número de variáveis
+fixas é sempre 10, o que não compromete a escalabilidade e deve ser 
+o suficiente para gerar um número de partes que façam todos os cores
+da servidora trabalharem.
 
 \subsection{Experimentos ótimos}
 Estes experimentos são feitos em instâncias do problema U-Curve de 
 tamanho pequeno, que podem ser resolvidos por algoritmos ótimos. 
 Comparamos o \algname{PUCS} com o \algname{UBB}, \algname{PFS} e
-também o algoritmo criado na seção ~\ref{sec:ubbpfs}, o 
+também com o algoritmo criado na seção ~\ref{sec:ubbpfs}, o 
 \algname{UBB-PFS}. Como parâmetros para estas instâncias, fixamos. 
 Utilizamos como parâmetros: $p$ tal que número de variáveis fixas é 10;
 $l = 2$; e o \algname{UBB} como algoritmo base.
@@ -681,6 +687,7 @@ $|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS & PUCS \\
 % 22 & 4194304 &&  4.885 $\pm$ 4.147 & 20.100 $\pm$ 13.499 & 9.488 $\pm$ 6.079 & 14.816 $\pm$ 24.232 \\
 % 23 & 8388608 &&  10.351 $\pm$ 8.382 & 45.253 $\pm$ 35.499 & 21.499 $\pm$ 16.087 & 50.933 $\pm$ 152.947 \\
 % 24 & 16777216 &&  26.998 $\pm$ 16.076 & 95.824 $\pm$ 74.523 & 46.868 $\pm$ 36.055 & 114.238 $\pm$ 321.363 \\
+\bottomrule
 \end{tabular}
 \caption{Comparação de tempo de execução de algoritmos ótimos para o
 problema U-Curve. O \algname{PUCS} foi o algoritmo mais lento para 
@@ -732,10 +739,64 @@ $|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS & PUCS \\
 % 22 & 4194304 && 2158571.7 $\pm$ 1803870.4 & 1177778.6 $\pm$ 760294.0 & 1229632.4 $\pm$ 729938.0 & 912024.8 $\pm$ 986652.4 \\
 % 23 & 8388608 && 4520728.7 $\pm$ 3608416.8 & 2514970.7 $\pm$ 1890287.4 & 2580020.9 $\pm$ 1844122.5 & 2403719.7 $\pm$ 2700661.7 \\
 % 24 & 16777216 && 11320530.0 $\pm$ 6635797.7 & 5114808.2 $\pm$ 3822782.2 & 5239475.8 $\pm$ 3737450.0 & 5412420.9 $\pm$ 5372754.1 \\
+\bottomrule
 \end{tabular}
 }
-\caption{Legenda}
+\caption{Comparação de número de chamadas da função custo em algoritmos
+ótimos do problema U-Curve. O \algname{PUCS} faz menos chamadas da
+função custo que o \algname{UBB}, porém faz mais chamadas do que o 
+\algname{PFS} e \algname{PFS-UBB}.}
 \label{tab:pucs:small:cost}
 \end{table}
 
 \subsection{Experimentos sub-ótimos}
+Estes experimentos foram feitas em instâncias do problema U-Curve que
+são grandes e geralmente não podem ser resolvidas por algoritmos ótimos.
+Comparamos o desempenho do \algname{PUCS} contra as heurísticas 
+\algname{SFFS}~\cite{PNK94} e \algname{BFS}~\cite{KJ97}. Utilizamos
+como parâmetros: $p$ tal que o número de variáveis fixas é 10; $l = 1$;
+e como algoritmo base, utilizamos a heurística 
+\algname{Sequential Forward Selection} \algname{SFS}~\cite{Whi71}.
+
+A figura~\ref{fig:pucs:big:time} compara o tempo de execução do 
+\algname{PUCS} com heurísticas. Apesar do desvio padrão grande, podemos
+observar que, com os parâmetros citados, o \algname{PUCS} foi o 
+algoritmo mais lento entre os testados. A 
+figura~\ref{fig:pucs:big:correctness} mostra para cada uma das três
+heurísticas testadas a proporção de vezes em que o algoritmo achou a
+solução de menor custo entre os três. Neste teste, o \algname{PUCS}
+teve proporção de melhor solução de 100\% para todos os tamanhos
+de instâncias testadas, isto é, a solução encontrada por este algoritmo
+teve custo sempre menor ou igual do que as soluções encontradas
+pelo \algname{SFFS} e \algname{BFS}.
+
+
+\begin{figure}[!ht]
+    \begin{center}
+    \begin{tabular}{l r}
+    \centering
+        \subfigure[] {
+        \label{fig:pucs:big:time}
+        \includegraphics[clip=true, width=0.5\textwidth]{pucs/experiments/time_sffs_bfs_pucs.png}
+    }
+    &
+        \subfigure[] {
+        \label{fig:pucs:big:correctness}
+        \includegraphics[clip=true, width=0.5\textwidth]{pucs/experiments/correctness_sffs_bfs_pucs.png}
+    }
+    \end{tabular}   
+    \end{center}
+    \caption{Comparação entre os algoritmos \algname{SFFS}, 
+    \algname{BFS} e \algname{PUCS}. A figura~\ref{fig:pucs:big:time} 
+    mostra o tempo médio de execução dos algoritmos. A 
+    figura~\ref{fig:pucs:big:correctness} mostra a proporção de vezes
+    em que cada algoritmo achou a melhor resposta entre os três.}
+    \label{fig:pucs:big}
+\end{figure}
+
+\subsection{Comentários sobre os experimentos}
+Os experimentos ótimos mostraram que o desempenho do \algname{PUCS} foi
+pior do que outros algoritmos ótimos. Isto significa que o trabalho
+do particionamento, percorrimento do reticulado externo, e do controle 
+de concorrência não são compensados pelos ganhos de processamento 
+paralelo.
