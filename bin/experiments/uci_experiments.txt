@@ -18,66 +18,6 @@
  8-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 and selected  4 features
  9-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 and selected  4 features
 10-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 and selected  4 features
-1-run on  Breast_cancer with     pucs takes  3.257 and has cross-validation error of 0.041 and selected  6 features
- 2-run on  Breast_cancer with     pucs takes  3.280 and has cross-validation error of 0.041 and selected  5 features
- 3-run on  Breast_cancer with     pucs takes  3.345 and has cross-validation error of 0.041 and selected  5 features
- 4-run on  Breast_cancer with     pucs takes  3.175 and has cross-validation error of 0.041 and selected  5 features
- 5-run on  Breast_cancer with     pucs takes  3.306 and has cross-validation error of 0.041 and selected  6 features
- 6-run on  Breast_cancer with     pucs takes  2.886 and has cross-validation error of 0.041 and selected  5 features
- 7-run on  Breast_cancer with     pucs takes  3.297 and has cross-validation error of 0.041 and selected  6 features
- 8-run on  Breast_cancer with     pucs takes  2.936 and has cross-validation error of 0.041 and selected  5 features
- 9-run on  Breast_cancer with     pucs takes  3.434 and has cross-validation error of 0.041 and selected  6 features
-10-run on  Breast_cancer with     pucs takes  3.006 and has cross-validation error of 0.041 and selected  6 features
- 1-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
- 2-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
- 3-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
- 4-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
- 5-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
- 6-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
- 7-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
- 8-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
- 9-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
-10-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
-1-run on           Wine with     pucs takes  4.889 and has cross-validation error of 0.028 and selected  4 features
- 2-run on           Wine with     pucs takes  4.867 and has cross-validation error of 0.028 and selected  4 features
- 3-run on           Wine with     pucs takes  3.292 and has cross-validation error of 0.028 and selected  4 features
- 4-run on           Wine with     pucs takes  4.607 and has cross-validation error of 0.028 and selected  4 features
- 5-run on           Wine with     pucs takes  3.052 and has cross-validation error of 0.028 and selected  4 features
- 6-run on           Wine with     pucs takes  4.924 and has cross-validation error of 0.028 and selected  4 features
- 7-run on           Wine with     pucs takes  3.878 and has cross-validation error of 0.028 and selected  4 features
- 8-run on           Wine with     pucs takes  4.496 and has cross-validation error of 0.028 and selected  4 features
- 9-run on           Wine with     pucs takes  4.064 and has cross-validation error of 0.028 and selected  4 features
-10-run on           Wine with     pucs takes  5.479 and has cross-validation error of 0.028 and selected  4 features
- 1-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
- 2-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
- 3-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
- 4-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
- 5-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
- 6-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
- 7-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
- 8-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
- 9-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
-10-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
-1-run on            Zoo with     pucs takes 12.646 and has cross-validation error of 0.069 and selected  6 features
- 2-run on            Zoo with     pucs takes 13.627 and has cross-validation error of 0.069 and selected  6 features
- 3-run on            Zoo with     pucs takes 14.803 and has cross-validation error of 0.069 and selected  6 features
- 4-run on            Zoo with     pucs takes 13.569 and has cross-validation error of 0.069 and selected  6 features
- 5-run on            Zoo with     pucs takes  9.744 and has cross-validation error of 0.069 and selected  6 features
- 6-run on            Zoo with     pucs takes 11.602 and has cross-validation error of 0.069 and selected  6 features
- 7-run on            Zoo with     pucs takes 11.686 and has cross-validation error of 0.069 and selected  6 features
- 8-run on            Zoo with     pucs takes 14.795 and has cross-validation error of 0.069 and selected  6 features
- 9-run on            Zoo with     pucs takes 13.153 and has cross-validation error of 0.069 and selected  6 features
-10-run on            Zoo with     pucs takes 10.909 and has cross-validation error of 0.069 and selected  6 features
- 1-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
- 2-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
- 3-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
- 4-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
- 5-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
- 6-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
- 7-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
- 8-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
- 9-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
-10-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
  1-run on       Thoracic with     pucs takes 113.032 and has cross-validation error of 0.149 and selected  6 features
  2-run on       Thoracic with     pucs takes 180.555 and has cross-validation error of 0.149 and selected  6 features
  3-run on       Thoracic with     pucs takes 128.733 and has cross-validation error of 0.149 and selected  7 features
@@ -98,26 +38,6 @@
  8-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 and selected 16 features
  9-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 and selected 16 features
 10-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 and selected 16 features
-1-run on    Lung_cancer with     pucs takes  9.810 and has cross-validation error of 0.438 and selected  4 features
- 2-run on    Lung_cancer with     pucs takes 11.937 and has cross-validation error of 0.375 and selected  4 features
- 3-run on    Lung_cancer with     pucs takes  7.679 and has cross-validation error of 0.250 and selected  6 features
- 4-run on    Lung_cancer with     pucs takes 14.282 and has cross-validation error of 0.375 and selected  4 features
- 5-run on    Lung_cancer with     pucs takes  7.678 and has cross-validation error of 0.250 and selected  6 features
- 6-run on    Lung_cancer with     pucs takes  9.429 and has cross-validation error of 0.250 and selected  6 features
- 7-run on    Lung_cancer with     pucs takes  7.812 and has cross-validation error of 0.375 and selected  4 features
- 8-run on    Lung_cancer with     pucs takes  7.531 and has cross-validation error of 0.375 and selected  4 features
- 9-run on    Lung_cancer with     pucs takes  7.878 and has cross-validation error of 0.250 and selected  6 features
-10-run on    Lung_cancer with     pucs takes  9.552 and has cross-validation error of 0.375 and selected  4 features
- 1-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
- 2-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
- 3-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
- 4-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
- 5-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
- 6-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
- 7-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
- 8-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
- 9-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
-10-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
  1-run on      Promoters with     pucs takes  6.156 and has cross-validation error of 0.160 and selected  3 features
  2-run on      Promoters with     pucs takes  7.310 and has cross-validation error of 0.160 and selected  3 features
  3-run on      Promoters with     pucs takes  7.724 and has cross-validation error of 0.160 and selected  3 features
@@ -138,3 +58,83 @@
  8-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 and selected 57 features
  9-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 and selected 57 features
 10-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 and selected 57 features
+ 1-run on           Wine with     pucs takes  4.889 and has cross-validation error of 0.028 and selected  4 features
+ 2-run on           Wine with     pucs takes  4.867 and has cross-validation error of 0.028 and selected  4 features
+ 3-run on           Wine with     pucs takes  3.292 and has cross-validation error of 0.028 and selected  4 features
+ 4-run on           Wine with     pucs takes  4.607 and has cross-validation error of 0.028 and selected  4 features
+ 5-run on           Wine with     pucs takes  3.052 and has cross-validation error of 0.028 and selected  4 features
+ 6-run on           Wine with     pucs takes  4.924 and has cross-validation error of 0.028 and selected  4 features
+ 7-run on           Wine with     pucs takes  3.878 and has cross-validation error of 0.028 and selected  4 features
+ 8-run on           Wine with     pucs takes  4.496 and has cross-validation error of 0.028 and selected  4 features
+ 9-run on           Wine with     pucs takes  4.064 and has cross-validation error of 0.028 and selected  4 features
+10-run on           Wine with     pucs takes  5.479 and has cross-validation error of 0.028 and selected  4 features
+ 1-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
+ 2-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
+ 3-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
+ 4-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
+ 5-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
+ 6-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
+ 7-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
+ 8-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
+ 9-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
+10-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 and selected 13 features
+ 1-run on            Zoo with     pucs takes 12.646 and has cross-validation error of 0.069 and selected  6 features
+ 2-run on            Zoo with     pucs takes 13.627 and has cross-validation error of 0.069 and selected  6 features
+ 3-run on            Zoo with     pucs takes 14.803 and has cross-validation error of 0.069 and selected  6 features
+ 4-run on            Zoo with     pucs takes 13.569 and has cross-validation error of 0.069 and selected  6 features
+ 5-run on            Zoo with     pucs takes  9.744 and has cross-validation error of 0.069 and selected  6 features
+ 6-run on            Zoo with     pucs takes 11.602 and has cross-validation error of 0.069 and selected  6 features
+ 7-run on            Zoo with     pucs takes 11.686 and has cross-validation error of 0.069 and selected  6 features
+ 8-run on            Zoo with     pucs takes 14.795 and has cross-validation error of 0.069 and selected  6 features
+ 9-run on            Zoo with     pucs takes 13.153 and has cross-validation error of 0.069 and selected  6 features
+10-run on            Zoo with     pucs takes 10.909 and has cross-validation error of 0.069 and selected  6 features
+ 1-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
+ 2-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
+ 3-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
+ 4-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
+ 5-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
+ 6-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
+ 7-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
+ 8-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
+ 9-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
+10-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 and selected 15 features
+ 1-run on    Lung_cancer with     pucs takes  9.810 and has cross-validation error of 0.438 and selected  4 features
+ 2-run on    Lung_cancer with     pucs takes 11.937 and has cross-validation error of 0.375 and selected  4 features
+ 3-run on    Lung_cancer with     pucs takes  7.679 and has cross-validation error of 0.250 and selected  6 features
+ 4-run on    Lung_cancer with     pucs takes 14.282 and has cross-validation error of 0.375 and selected  4 features
+ 5-run on    Lung_cancer with     pucs takes  7.678 and has cross-validation error of 0.250 and selected  6 features
+ 6-run on    Lung_cancer with     pucs takes  9.429 and has cross-validation error of 0.250 and selected  6 features
+ 7-run on    Lung_cancer with     pucs takes  7.812 and has cross-validation error of 0.375 and selected  4 features
+ 8-run on    Lung_cancer with     pucs takes  7.531 and has cross-validation error of 0.375 and selected  4 features
+ 9-run on    Lung_cancer with     pucs takes  7.878 and has cross-validation error of 0.250 and selected  6 features
+10-run on    Lung_cancer with     pucs takes  9.552 and has cross-validation error of 0.375 and selected  4 features
+ 1-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
+ 2-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
+ 3-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
+ 4-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
+ 5-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
+ 6-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
+ 7-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
+ 8-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
+ 9-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
+10-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 and selected 56 features
+ 1-run on  Breast_cancer with     pucs takes  3.257 and has cross-validation error of 0.041 and selected  6 features
+ 2-run on  Breast_cancer with     pucs takes  3.280 and has cross-validation error of 0.041 and selected  5 features
+ 3-run on  Breast_cancer with     pucs takes  3.345 and has cross-validation error of 0.041 and selected  5 features
+ 4-run on  Breast_cancer with     pucs takes  3.175 and has cross-validation error of 0.041 and selected  5 features
+ 5-run on  Breast_cancer with     pucs takes  3.306 and has cross-validation error of 0.041 and selected  6 features
+ 6-run on  Breast_cancer with     pucs takes  2.886 and has cross-validation error of 0.041 and selected  5 features
+ 7-run on  Breast_cancer with     pucs takes  3.297 and has cross-validation error of 0.041 and selected  6 features
+ 8-run on  Breast_cancer with     pucs takes  2.936 and has cross-validation error of 0.041 and selected  5 features
+ 9-run on  Breast_cancer with     pucs takes  3.434 and has cross-validation error of 0.041 and selected  6 features
+10-run on  Breast_cancer with     pucs takes  3.006 and has cross-validation error of 0.041 and selected  6 features
+ 1-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
+ 2-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
+ 3-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
+ 4-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
+ 5-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
+ 6-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
+ 7-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
+ 8-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
+ 9-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features
+10-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 and selected 10 features

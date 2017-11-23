@@ -40,21 +40,21 @@ my @ALGORITHMS = (
 my %cost_function = ("pucs" => "mce", "sffs" => "mce");
 my @DATA_SETS = (
                  "Iris", 
+                 "Breast_cancer",
+                 "Wine",
+                 "Zoo",
                  "Thoracic",
+                 "Lung_cancer",
+                 "Promoters");
                  # "Forests",
                  # "Parkinsons",
                  # "Soybean",
                  # "Dermatology",
                  # "Credit",
                  # "Fertility",
-                 "Promoters",
-                 "Wine",
-                 "Zoo",
                   # "HillValley",
                   # "Arrhythmia",
                  # "Musk2",
-                 "Lung_cancer",
-                 "Breast_cancer");
 my %labels    = ("Iris" => 3, "Arrhythmia" => 16, "Musk2" => 2, 
                  "Promoters" => 2, "Wine" => 3, "Zoo" => 7,
                  "Lung_cancer" => 3, "Breast_cancer" => 2,
