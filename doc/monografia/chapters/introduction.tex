@@ -156,6 +156,41 @@ de modelos de Aprendizado Computacional.}
 \end{itemize}
 
 \section{Organização do Trabalho}
-
-A fazer, resumo de cada capítulo da monografia.
-
+Além deste capítulo, de introdução, este trabalho é organizado em outros
+cinco capítulos, que são os seguintes:
+\begin{itemize}
+    \item{Capítulo~\ref{chap:fundamental_concepts}:} faremos uma revisão
+        dos conceitos fundamentais para desenvolvimento deste trabalho. 
+        Definiremos o problema de seleção de características e 
+        mostraremos uma função de custo baseada em entropia para o 
+        mesmo. Explicaremos o fenômeno das curvas em U em funções de
+        custo utilizadas na seleção de características e definiremos
+        o problema de otimização U-curve. Por fim, apresentaremos
+        funções de custo usadas na criação de instâncias artificiais do  
+        problema U-Curve.
+    \item{Capítulo~\ref{chap:forests}:} descreveremos dois algoritmos
+        ótimos para o problema U-curve, o 
+        \algname{U\--curve\--Branch\--and\--Bound} (\algname{UBB}) e um 
+        algoritmo semelhante e mais geral, o 
+        \algname{Poset\--Forest\--Search} (\algname{PFS}). Em seguida, 
+        apresentaremos modificações no \algname{PFS} a fim de  melhorar
+        seu desempenho. Além disso, vamos mostrar um novo algoritmo
+        baseado nos dois últimos que permite fácil paralelização. 
+        Faremos testes com estas modificações e novos algoritmos com
+        instâncias artificias do problema U-curve.
+    \item{Capítulo~\ref{chap:pucs}:} apresentaremos o 
+        \algname{Parallel\--U\--Curve\--Search}, um algoritmo de 
+        divisão em conquista paralelizado para o problema U-curve. 
+        Mostraremos seu funcionamento e testaremos seu desempenho em 
+        instâncias artificiais do problema U-curve.
+    \item{Capítulo~\ref{chap:uci}} aplicaremos a seleção de 
+        características na seleção de modelos de aprendizado 
+        computacional. Os modelos criados serão treinados e validados
+        com conjuntos de dados reais de aprendizado de máquina, 
+        disponíveis no repositório UCI Machine Learning Repository.
+    \item{Capítulo~\ref{chap:conclusion}} revisaremos o conteúdo deste
+        trabalho, mostrando as diferentes abordagens feitas para 
+        enfrentar o problema U-curve assim como os resultados obtidos.
+        Além disso, mostraremos possíveis linhas que podem ser tomadas 
+        em trabalhos futuros que se relacionam com este.
+\end{itemize}
