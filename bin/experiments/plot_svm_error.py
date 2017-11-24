@@ -55,6 +55,9 @@ for algorithm in algorithm_err:
 n_range = np.arange (n)
 ones = np.ones (n)
 
+axes = plt.gca ()
+axes.set_ylim([0, 1])
+
 # creates bars
 bar_width = 1
 i = 0
@@ -68,7 +71,7 @@ for algorithm in alg_err_arrays:
     if algorithm == "all":
         bar_label = "todas características"
     rects = plt.bar (indexes, err_arr, bar_width, label=bar_label, color=my_colors[i + 1])
-    plt.legend (bbox_to_anchor=(1.04,1), loc="upper left")
+    plt.legend ()
     i += 1
 
 plt.xlabel ('Conjunto de dados')

@@ -31,10 +31,10 @@ supervisionado. Estes dados são compostos por múltiplos exemplos de
 tuplas com valores de características do conjunto $S$ e o rótulo da 
 tupla observada, $Y$. Um modelo de aprendizado determina um conjunto de 
 possíveis classificadores para o problema; quando usamos seleção de 
-características, indicando que um conjunto $X \in \powerset(S)$ descreve
-melhor os dados, estamos escolhendo como modelo de aprendizado o 
-conjunto de classificadores que leva em consideração apenas as 
-características de $X$.
+características, indicando que um conjunto de características 
+$X \in \powerset(S)$ descreve melhor os dados, estamos escolhendo como 
+modelo de aprendizado o conjunto de classificadores que leva em 
+consideração apenas as características de $X$.
 
 Para que o conjunto $X$ de características selecionadas de fato 
 determine um bom conjunto de classificadores, precisamos construir
@@ -45,20 +45,21 @@ Como discutido na seção~\ref{fund_concept:mce}, a função de custo
 entropia condicional média (MCE) faz bem este papel. Além disso, a 
 função MCE induz curvas em U, com poucas violações, nas cadeias do 
 reticulado Booleano. Por conta das violações, este problema não é o
-U-Curve, porém, como visto em ~\cite{Rei12}, podemos aproximar
-a solução do problema original pela solução encontrada assumindo que
-estamos no caso U-Curve.
+U-Curve, porém, como visto no trabalho de Reis ~\cite{Rei12}, podemos 
+aproximar a solução do problema original pela solução encontrada 
+assumindo que estamos no caso U-Curve.
 
 A função de custo MCE que utilizamos neste trabalho, disponível no
 arcabouço \toolname{featsel}~\cite{Reis+17}, assume que os valores
 das características são discretos, portanto ainda é necessário 
-discretizar os dados de treinamento do UCI que têm variáveis contínuas 
-para fazermos a seleção de características no arcabouço.
+discretizar os alguns dados de treinamento do UCI, que tiverem variáveis 
+contínuas, para fazermos a seleção de características com o arcabouço.
 A estratégia que utilizamos para tal tarefa é de 
 discretizar os valores de características contínuas por quartis, 
 mapeando seus valores para um inteiro entre 0 e 3. Existem entretanto 
 outras estratégias mais elaboradas, como a de Fayyad e Irani~\cite{FI93}
-que separa dados por classes minimizando a entropia média.
+que separa dados por classes minimizando umaa medida de entropia média 
+destas classes.
 
 \section{Support Vector Machine com kernel linear}
 \label{sec:real_instances:svm}
@@ -74,12 +75,12 @@ Mais especificamente, vamos trabalhar com classificadores SVM com kernel
 linear e multi-classe. O funcionamento de um classificador SVM binário
 (duas classes) é simples: dado um conjunto de dados de treinamento com 
 dois rótulos possíveis, o classificador determina um hiperplano que 
-separa no espaço os dados de treinamento, assim para classificar um dado, 
-basta responder em qual lado do hiperplano este dado está localizado.
-Se houverem $k$ classes, então podemos criar $k(k-1)$ classificadores
-binários para cada par de classes e então, para rotular um dado,
-utilizamos um esquema de votação em que a classe mais votada dentre 
-todos os estes classificadores dá o rótulo ao ponto.
+separa no espaço os dados de treinamento, assim, para classificar um 
+dado basta responder em qual lado do hiperplano este dado está 
+localizado. Se houverem $k$ classes, então podemos criar $k(k-1)$ 
+classificadores binários para cada par de classes e então, para rotular 
+um dado, utilizamos um esquema de votação em que a classe mais votada 
+dentre todos os estes classificadores dá o rótulo ao ponto.
 
 O modelo de SVM linear tem um parâmetro $C$ que determina como o 
 hiperplano é posicionado no espaço de pontos de treinamento. Para 
@@ -88,12 +89,13 @@ a ter uma margem grande para pontos de treinamento corretamente
 classificados, mesmo que isto implique em pontos de treinamento mal 
 classificados; para valores maiores de $C$, a preferência é dada para 
 classificar corretamente os dados de treinamento, mesmo que a margem do
-hiperplano seja pequena. Em nosso trabalho, utilizamos $C = 100$, pois
-este parâmetro é regulador, isto é, diminui a complexidade do modelo
-para se obter melhores resultados com poucas amostras; mas isto é o que
-queremos fazer também com seleção de características, portanto o valor
-alto de $C$ garante que a diminuição da complexidade do modelo é feita
-de fato pela seleção de características.
+hiperplano seja pequena. O efeito de um valor pequeno de $C$ em um 
+modelo de SVM é regularizador, isto é, ele diminui a complexidade do
+modelo para se obter melhores resultados come menos amostras. 
+Entretanto, isto é o que queremos fazer também com seleção de 
+características, portanto utilizamos neste parâmetro um valor alto 
+($C = 100$), o que garante que a diminuição da complexidade do modelo é 
+feita de fato pela seleção de características.
 
 \section{Validação de modelos}
 Para fazer a validação dos modelos de aprendizado gerados, precisamos
@@ -101,9 +103,9 @@ estimar o erro médio de classificadores treinados em cada um destes
 modelos. Para fazer isto é necessário separar os dados entre dados de
 treinamento e dados de teste, mas como o número de amostras é geralmente
 pequeno, fazemos o procedimento de classificação e estimação de erro
-para várias escolhas de conjuntos de treinamento e teste; chamamos este
-tipo de validação, que usa o mesmo exemplo como teste e treinamento, de
-validação cruzada.
+para várias escolhas de conjuntos de treinamento e teste dentro do 
+mesmo conjunto de dados; chamamos este tipo de validação, que usa o 
+mesmo exemplo como teste e treinamento, de validação cruzada.
 
 Para as instâncias em que o número de exemplos é superior a 100, 
 usaremos a validação cruzada 10-\foreignword{fold}, para outras 
@@ -144,7 +146,7 @@ de pulmão em que se remove do paciente os tecidos do pulmão que são
 cancerígenos, assim como os tecidos saudáveis das suas periferias.
 Os pacientes são classificados em duas classes complementares que 
 indicam se o paciente sobreviveu por um ano após o procedimento.
-Os dados possuem 470 exemplos e descrevem os pacientes em 17 atributos.
+Os dados possuem 470 exemplos e descrevem os pacientes com 17 atributos.
 
 \subsubsection{Zoo}
 Este conjunto de dados contém exemplos de classificação de animais de
@@ -169,9 +171,60 @@ exemplos.
 \subsubsection{Promoters}
 Chamamos de promotora uma sequência de nucleotídeos (A, T, C, G) do DNA 
 que indica o começo de uma região da fita onde deve haver a transcrição. 
-Este conjunto de dados contém 106 exemplos de sequências de DNA da 
-bactéria \species{E. coli}. Cada sequência é formada por 57 variáveis,
-que são nucleotídeos, e é rotulada em promotora ou não promotora.
+O conjunto de dados Promoters contém 106 exemplos de sequências de DNA 
+da bactéria \species{E. coli}. Cada sequência é formada por 57 
+variáveis, que são nucleotídeos, e é rotulada em promotora ou não 
+promotora.
 
 \subsection{Resultados}
+A figura~\ref{fig:uci} mostra os resultados de nossos experimentos.
+Na figura~\ref{fig:uci:feats} apresentamos a quantidade média de 
+características que são selecionadas pelo algoritmo \algname{PUCS} após
+repetidas etapas de seleção de características. A média do número de 
+características selecionadas é menor do que a quantidade total em todos 
+os conjuntos de dados, ou seja, é esperado que a etapa de seleção
+de características defina um subconjunto menor de atributos para 
+serem considerados no modelo; no conjunto Promoters, por exemplo, das 
+57 características, em média menos de 5 foram consideradas no modelo 
+com seleção de características.
+
+A figura~\ref{fig:uci:error} compara o erro de validação cruzada em cada
+conjunto de dados para os modelos com e sem seleção de características.
+Podemos notar que o erro não aumenta significativamente para estes 
+dados; pelo contrário, no conjunto Lung Cancer, o erro de validação 
+cruzada diminuiu de pouco menos de $60\%$ para menos de $40\%$. Isto
+significa que a seleção de características não foi prejudicial para
+classificação destes conjuntos.
+
+Estes experimentos mostram que, para estes conjuntos de 
+dados, a seleção de características é capaz de diminuir o número de 
+variáveis em um modelo, sem perder uma quantidade significativa de 
+informações sobre o problema. Desta forma, diminui-se a complexidade do
+modelo de aprendizado, porém mantém-se ou é pouco prejudicada a 
+qualidade dos classificadores.
+
+\begin{figure}[!ht]
+    \begin{center}
+    \begin{tabular}{l r}
+    \centering
+        \subfigure[] {
+        \label{fig:uci:feats}
+        \includegraphics[clip=true, width=0.5\textwidth]{uci/avg_features.pdf}
+    }
+    &
+        \subfigure[] {
+        \label{fig:uci:error}
+        \includegraphics[clip=true, width=0.5\textwidth]{uci/svm_error.pdf}
+    }
+    \end{tabular}   
+    \end{center}
+    \caption{Comparações de modelos feitos com todas características e
+        com a características selecionadas pelo \algname{PUCS}. A 
+        figura~\ref{fig:uci:feats} mostra a quantidade de 
+        atributos selecionados pelo algoritmo em cada conjunto
+        de dados, enquanto a figura~\ref{fig:uci:error} mostra o erro
+        de validação cruzada dos modelos feitos com todas 
+        características e apenas com as características selecionadas.}
+    \label{fig:uci}
+\end{figure}
 
