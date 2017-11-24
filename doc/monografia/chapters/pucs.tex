@@ -506,6 +506,7 @@ subutilizadas durante o passeio.
 
 
 \section{Ajuste de parâmetros}
+\label{sec:pucs:parameters}
 Antes de discutir o desempenho do algoritmo, precisamos entender como
 os parâmetros devem ser ajustados para cada tipo de instância do 
 problema U-Curve. Consideramos instâncias pequenas aquelas que podem ser
@@ -564,15 +565,41 @@ que use todo o poder computacional da máquina usada.
     \label{fig:pucs:parameters:small}
 \end{figure}
 
-{\textbf{\color{blue} Melhorar estes gráficos para justificar o uso de $p$}}
-
 A figura~\ref{fig:pucs:parameters:small} mostra como o tempo de 
-execução evolui quando aumentamos o valor dos parâmetros $p$ e $l$.
+execução evolui quando aumentamos o valor dos parâmetros $p$ e $l$,
+usando como base o algoritmo \algname{UBB}. Nesta figura podemos 
+perceber que o parâmetro $l = 3$ aumenta consideravelmente o tempo de 
+execução do algoritmo (note a escala logarítmica). Desta maneira, 
+repetimos o experimento com valores de $l$ sendo apenas 1 ou 2. Os novos 
+resultados são mostrados na figura~\ref{fig:pucs:parameters:small2}, 
+que novamente indicam que o aumento do parâmetro $l$ implica em um 
+tempo de execução maior. Desta maneira, decidimos que o uso do parâmetro 
+$l = 1$ é o mais adequado para o computador que utilizamos.
 
-% talvez a interferência do l é muito maior que a do p
-%Podemos observar que o parâmetro $p$ teve pouca influência no tempo de
-%execução do algoritmo, enquanto aumentar o parâmetro $l$ faz o tempo
-%de execução aumentar de maneira significativa.
+\begin{figure}[!ht]
+    \begin{center}
+    \begin{tabular}{l r}
+    \centering
+        \subfigure[] {
+        \label{fig:pucs:parameters:small2:A}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/parameters/k20_n12_time.png}
+    }
+    &
+        \subfigure[] {
+        \label{fig:pucs:parameters:small2:B}
+        \includegraphics[clip=true, width=0.48\textwidth]{pucs/parameters/k20_n20_time.png}
+    }
+    \end{tabular}   
+    \end{center}
+    \caption{Gráficos com o tempo de execução médio de acordo com os
+    parâmetros $p$ e $l$. A figura~\ref{fig:pucs:parameters:small2:A} 
+    mostra este valor para uma instância artificial com 12 
+    características enquanto a figura~\ref{fig:pucs:parameters:small2:B}
+    mostra este valor para uma instância de 20 características. O
+    algoritmo base utilizado é o \algname{UBB}.}
+    \label{fig:pucs:parameters:small2}
+\end{figure}
+
 
 \subsubsection{Instâncias grandes}
 Instâncias grandes costumam não ser resolvidas por algoritmos ótimos, 
@@ -591,14 +618,14 @@ feito, mais partes são geradas e resolvidas pelo \algname{PUCS}, e como
 cada parte é resolvida com uma chamada do algoritmo base, temos que 
 quanto mais granular é o particionamento, mais percorrimentos 
 disjuntos acontecerão no reticulado. Desta maneira, quando 
-aumentamos o $p$ e $l$, mais buscas são feitas e é provável que a 
-solução encontrada seja melhor.
+aumentamos o $p$ e $l$, mais buscas são feitas e, desta forma, é 
+provável que a solução encontrada seja melhor.
 
 Entretanto, não podemos nos esquecer que estes parâmetros ainda 
-influenciam o tempo de execução do algoritmo. Desta maneira não podemos
-aumentar os valores destes parâmetros arbitrariamente até atingir a 
-solução com qualidade necessária, e sim aumentar estes parâmetros 
-enquanto houverem recursos computacionais compatíveis.
+influenciam o tempo de execução do algoritmo. Desta maneira não é 
+possível aumentar os valores destes parâmetros arbitrariamente até 
+atingir a solução com qualidade necessária, e sim aumentar estes 
+parâmetros enquanto houverem recursos computacionais compatíveis.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -799,4 +826,26 @@ Os experimentos ótimos mostraram que o desempenho do \algname{PUCS} foi
 pior do que outros algoritmos ótimos. Isto significa que o trabalho
 do particionamento, percorrimento do reticulado externo, e do controle 
 de concorrência não são compensados pelos ganhos de processamento 
-paralelo.
+paralelo. Além disso, o número de chamadas de função custo feitas
+por este algoritmo não é menor do que de outros algoritmos mais rápidos, 
+como o \algname{PFS} e \algname{UBB-PFS}. Desta maneira, este algoritmo 
+não é um dos mais recomendados para este tipo de instâncias.
+
+Entretanto, o \algname{PUCS} se mostrou mais interessante quando 
+utilizado para resolver instâncias de maneira sub-ótima. Para estes 
+experimentos, o \algname{PUCS} teve tempo médio de execução pior do que 
+as outras heurísticas, porém a qualidade da solução encontrada foi 
+sempre melhor ou igual a solução dos outros algoritmos. Logo este 
+algoritmo é recomendável para problemas em que o recurso de tempo é
+grande o suficiente. Além disso, o pior tempo de execução observado
+na figura~\ref{fig:pucs:big:time} foi medido com parâmetros $p$ e $l$
+fixos, e como vimos na seção~\ref{sec:pucs:parameters}, podemos diminuir
+o tempo de execução ao diminuir o valor destes parâmetros.
+
+Por ser um algoritmo paralelo com pouco compartilhamento de memória, 
+esperamos que o desempenho do \algname{PUCS} melhore (até algum ponto
+de saturação) quando aumentamos os recursos de processadores da máquina
+utilizada. Desta maneira, respeitando os limites da paralelização na 
+máquina, com maiores recursos de tempo e processamento é esperado que 
+possamos aumentar os parâmetros $p$ e $l$, conseguindo melhores 
+soluções.

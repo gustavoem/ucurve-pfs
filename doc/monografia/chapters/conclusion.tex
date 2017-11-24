@@ -1,7 +1,7 @@
 Nesta seção vamos fazer uma revisão deste trabalho, apontando e 
 discutindo os resultados obtidos. Também vamos apresentar algumas opções
 de linhas de pesquisa para trabalhos futuros relacionados a este.
-\section{Revisão dos resultados}
+\section{Revisão do trabalho}
 % - estudamos o ubb e o pfs e com isso pudemos
 %   - modificar a escolha das raízes
 %     - uma escolha arbitrária parece ser melhor do que escolher uma
@@ -23,6 +23,108 @@ de linhas de pesquisa para trabalhos futuros relacionados a este.
 %   - diminuimos a quantidade de características mantendo a qualidade
 %     dos modelos de aprendizado
 
+Neste trabalho, definimos o problema de seleção de características
+e com o exemplo de sua aplicação em seleção de modelos definimos também
+o problema U-curve, que foi o problema principal tratado aqui. Estudamos
+algoritmos da literatura, investigando e sugerindo modificações a estes,
+visando melhorar o seu desempenho computacional. Aplicamos a seleção de
+características, feita como uma aproximação pelo problema U-curve, em
+conjuntos de dados reais e verificamos como a seleção de características
+pode ser benéfica na seleção de modelos de aprendizado.
+
+Estudamos algoritmos baseados em florestas da literatura, \algname{UBB}
+e \algname{PFS} e investigamos modificações ao último. Mudamos a 
+estratégia de escolha de raízes para ramificação assim como a estrutura
+de dados para armazenamento destas raízes no \algname{PFS}, entretanto
+estas modificações não implicaram em melhoras significativas no 
+desempenho do algoritmo. Sugerimos uma paralelização do algoritmo
+\algname{PFS}, justificada pelo fato da etapa de ramificação poder 
+acontecer de maneira independente, mas a etapa de atualização, que 
+ocorre após a ramificação, mostrou-se dependente e complicada de ser
+paralelizada, o que implicou em um desempenho pior do que a versão
+sequencial do mesmo algoritmo. 
+
+Ainda no escopo de modificações do \algname{UBB} e \algname{PFS}, 
+propomos o \algname{UBB-PFS}, um algoritmo que utiliza o \algname{UBB} 
+para decompor o espaço de busca em sub-árvores que são intervalos
+do reticulado Booleano. Conseguimos reduzir a solução de cada sub-árvore
+a um problema de seleção de características auxilar, em que cada um 
+destes pode ser resolvido pelo algoritmo \algname{PFS} de maneira 
+independente e paralela. Com a criação de sub-problemas, a paralelização 
+deste algoritmo tornou-se mais simples e menos entrelaçada do que na 
+outra tentativa de paralelização do \algname{PFS}. Como resultado, o 
+novo algoritmo teve tempo de execução e número de chamadas da função 
+custo intermediários, com menos nós computados do que o \algname{UBB} e
+menor tempo de execução do que o \algname{PFS}. 
+
+A criação de árvores feita no \algname{UBB-PFS} determina sub-problemas
+que são partes do espaço de busca inteiro. Inspirados com esta 
+estratégia, definimos um particionamento que divide o espaço de busca em 
+partes iguais no algoritmo \algname{PUCS}. Este algoritmo possui 
+parâmetros $p$, $l$ e algoritmo base, que são capazes de modificar o 
+comportamento deste algoritmo de maneira que ele possa ser ótimo ou 
+sub-ótimo. No caso ótimo, o \algname{PUCS} não teve melhor desempenho do que outros algoritmos, como
+o próprio \algname{UBB-PFS}. No caso sub-ótimo notamos que, os 
+parâmetros $p$ e $l$ determinam a qualidade da solução encontrada 
+assim como o tempo de execução. Com um ajuste fino destes parâmetros, o
+\algname{PUCS} conseguiu encontrar soluções melhores (menor custo) do 
+que outras heurísticas como \algname{SFFS} e \algname{BFS}.
+
+Finalmente, aplicamos o algoritmo \algname{PUCS} na seleção de 
+características para seleção modelos de aprendizado em problemas reais
+de classificação, disponíveis no UCI Machine Learning Respository. 
+Utilizamos classificadores do tipo SVM linear, considerando todas as 
+características e apenas as características selecionadas pelo 
+\algname{PUCS}, e comparamos os resultados fazendo a validação cruzada
+dos dois modelos. Os resultados mostraram que mesmo com menos 
+características, o erro de validação não cresce significativamente. Isto 
+é, a seleção de características nos permitiu diminuir a complexidade dos
+modelos sem comprometer a qualidade dos classificadores.
+
 \section{Trabalhos futuros}
 % - percorrimento do UBB-PFS que distribua o trabalho de forma melhor
-% - 
+% - estudo destes novos algoritmos quanto a robustez
+% - identificação de vias de sinalização celular
+
+Listaremos agora possíveis trabalhos futuros nesta linha de pesquisa:
+\begin{itemize}
+    \item{Melhorias no \algname{UBB-PFS}:}  este algoritmo faz na sua primeira etapa uma busca em profundidade para criar raízes que 
+determinam uma divisão do espaço de busca em sub-árvores. 
+        Entretanto, este procedimento cria sub-árvores de tamanhos 
+        muito diferentes, o que deve causar um grande desbalanço de
+        trabalho entre linhas de processamento na paralelização. É 
+        possível que em uma primeira etapa menos ingênua crie-se 
+        sub-árvores que possuam tamanhos parecidos. Além disso, este 
+        algoritmo, assim como o \algname{PUCS}, possui uma estrutura
+        recursiva e pode ser uma heurística, se utilizarmos um algoritmo
+        sub-ótimo na solução das sub-árvores, o que não foi explorado
+        neste trabalho e ainda pode ser investigado.
+    \item{Estudo de robustez dos novo algoritmos:} as funções de custo
+        que utilizamos nas instâncias artificiais neste trabalho são
+        todas decomponíveis em curvas U. Podemos refazer os mesmos 
+        testes utilizando uma função com violações da propriedade da
+        curva em U e estudar o que acontece com a qualidade das soluções
+        geradas pelo \algname{PUCS} e \algname{UBB-PFS}. Uma observação 
+        interessante, por exemplo, é que os parâmetros $p$ e $l$ do
+        \algname{PUCS} devem interferir na qualidade da solução mesmo
+        quando o algoritmo base é ótimo.
+    \item{Seleção de características em identificação de vias de 
+        sinalização celular:} na área de biologia de sistemas, chamamos
+        de modelo funcional um modelo computacional capaz de simular
+        fenômenos celulares. Uma das etapas na construção de um modelo
+        funcional é a escolha de um conjunto de interações químicas que
+        participam da via de sinalização que controla predominantemente 
+        o fenômeno observado. Neste sentido, Lulu Wu apresentou 
+        em sua tese de mestrado~\cite{Wu15} uma maneira de 
+        sistematicamente modificar modelos funcionais ao adicionar 
+        interações de um banco de dados. Entretanto sua abordagem 
+        mostrou algumas limitações, e entre elas citamos a dinâmica
+        incremental de sua abordagem, que não é capaz de remover
+        interações já presentes no modelo. Desta maneira, sugerimos uma
+        abordagem que enfrente esta limitação tratando a modificação
+        sistemática de um modelo como um problema de seleção de
+        características em que o conjunto $S$ de características é
+        formado pelo banco de interações químicas e a função custo $c$ 
+        é uma função que mede a qualidade do modelo que possui
+        um determinado conjunto de interações (características).
+\end{itemize}

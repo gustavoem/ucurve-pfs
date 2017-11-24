@@ -53,7 +53,7 @@ for algorithm in algorithm_feats:
 
 
 # creates bars
-bar_width = 1
+bar_width = 1.2
 n_range = np.arange (n) * 2
 i = 0
 
@@ -65,6 +65,8 @@ bar_label = "todas características"
 rects = plt.bar (n_range, avg_feats_arr, bar_width, label=bar_label, color=my_colors[2])
 plt.legend (loc="upper left")
 
+bar_width = 1
+n_range = np.arange (n) * 2
 avg_feats_arr = avg_alg_feats_arr["pucs"]
 indexes = n_range
 bar_label = "características do " + "pucs"
