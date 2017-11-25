@@ -123,7 +123,7 @@ do \algname{UBB} é apresentado no pseudo-código~\ref{pfs:code:ubb}.
 \textsc{U-curve-Branch-and-Bound} $(S, c)$
 \begin{algorithmic}[1]
     \State $\mathcal{M} \gets \mathsc{Branch} (S, \emptyset, c, c (\emptyset))$
-    \Return $\{M \in \mathcal{M} : c(M) \text{é mínimo}\}$
+    \Return $\{M \in \mathcal{M} : c (M) \text{ is minimal}\}$
 \end{algorithmic}
 \vspace{1em}
 
@@ -131,7 +131,7 @@ do \algname{UBB} é apresentado no pseudo-código~\ref{pfs:code:ubb}.
 \begin{algorithmic}[1]
     \State $\mathcal{M} \gets \{Y\}$
     \While{$X \ne \emptyset$}
-        \State remova um elemento $x$ de $X$
+        \State remove an element $x$ from $X$
         \State $Y' \gets Y \cup \{y\}$
         \State $cost_{Y'} \gets c (Y')$
         \If {$cost_{Y'} \leq cost_Y$}
@@ -457,14 +457,15 @@ $\mathcal{M}$ de subconjuntos percorridos que são candidatos a mínimo.
 \textsc{Lower-Forest-Branch} $(\forest_A, \forest_B, c)$
 \begin{algorithmic}[1]
     \State $\mathcal{M} \gets \emptyset$
-    \State remova um nó $\pfsnode{R}$ de $\forest_A$
+    \State remove a node $\pfsnode{R}$ from $\forest_A$
     \State $\pfsnode{R}[\varname{cost}] \gets \mathsc{Calc-Node-Cost}(\forest_B, \pfsnode{R})$
     \State $\pfsnode{M} \gets \pfsnode{N} \gets \pfsnode{R}$
     \While{$\pfsnode{N}[\varname{cost}] \leq \pfsnode{M}[\varname{cost}]$ e $\pfsnode{N}[\varname{adjacent}] \ne \emptyset$}
         \State $\pfsnode{M} \gets \pfsnode{N}$
-        \State remova um elemento de $s_i$ de $\pfsnode{M}[\varname{adjacent}]$
+        \State remove an element $s_i$ from $\pfsnode{M}[\varname{adjacent}]$
+        \State insert $\pfsnode{M}$ into $\forest_A$
         \State $\forest_A \gets \forest_A \cup \{\pfsnode{M}\}$
-        \State crie o nó $\pfsnode{N}$
+        \State create node $\pfsnode{N}$
         \State $\pfsnode{N}[\varname{vertex}] \gets \pfsnode{M}[\varname{vertex}] \cup \{s_i\}$
         \State $\pfsnode{N}[\varname{leftmost}] \gets i$
         \State $\pfsnode{N}[\varname{adjacent}] \gets \bigcup_{i=\pfsnode{N}[\varname{leftmost}]}^{n} s_i$
@@ -482,7 +483,7 @@ Durante a execução do \algname{PFS}, o custo de um subconjunto é calculado um
 \begin{algorithm}[H]
 \textsc{Calc-Node-Cost} $(\forest, \pfsnode{N})$
 \begin{algorithmic}[1]
-\If{$\pfsnode{N}[\varname{cost}] = \infty$ e existe $\pfsnode{M} \in \forest$ tal que $\pfsnode{M}[\varname{vertex}] = \pfsnode{N}[\varname{vertex}]$ e $\pfsnode{M}[\varname{cost}] \ne \infty$}
+\If{$\pfsnode{N}[\varname{cost}] = \infty$ and there is $\pfsnode{M} \in \forest$ such that $\pfsnode{M}[\varname{vertex}] = \pfsnode{N}[\varname{vertex}]$ and $\pfsnode{M}[\varname{cost}] \ne \infty$}
     \Return $\pfsnode{M}[\varname{cost}]$
 \Else
     \Return $c(\pfsnode{R}[\varname{vertex}])$
@@ -526,17 +527,17 @@ Esta função devolve a floresta $\forest_B$ atualizada.
         \While{$\pfsnode{N}[\varname{adjacent}] \ne \emptyset$}
             \State $\pfsnode{M} \gets \mathsc{Get-Node} (\forest_B, M)$
             \If{$\pfsnode{M} \ne NIL$}
-                \State remova $\pfsnode{M}$ de $\forest_B$
+                \State remove $\pfsnode{M}$ from $\forest_B$
             \EndIf
             \State $\forest_B \gets \mathsc{Search-Lower-Children} (\forest_B, \pfsnode{M}, M, \pfsnode{N}[\varname{vertex}])$
-            \State remova o elemento $s_i$ de $\pfsnode{N}[\varname{adjacent}]$ com maior $i$
+            \State remove the element $s_i$ from $\pfsnode{N}[\varname{adjacent}]$ with greatest index $i$
             \State $M \gets M \cup \{s_i\}$
         \EndWhile
         \State $\pfsnode{M} \gets \mathsc{Get-Node} (\forest_B, M)$
         \If{$\pfsnode{M} = NIL$}
             \State $\mathsc{Search-Upper-Root} (\forest_B, M)$
         \Else
-            \State remova $\pfsnode{M}$ de $\forest_B$
+            \State remove $\pfsnode{M}$ from $\forest_B$
         \EndIf
         \State $\forest_B \gets \mathsc{Search-Lower-Children} (\forest_B, \pfsnode{M}, M, \pfsnode{N}[\varname{vertex}])$
         \Return $\forest_B$
@@ -549,7 +550,7 @@ Esta função devolve a floresta $\forest_B$ atualizada.
 \begin{algorithm}[H]
     \textsc{Get-Node} ($\forest, N$)
     \begin{algorithmic}[1]
-        \If{existe $\pfsnode{N} \in \forest$ tal que $\pfsnode{N}[\varname{vertex}] = N$}
+        \If{there is $\pfsnode{N} \in \forest$ such that $\pfsnode{N}[\varname{vertex}] = N$}
             \Return $\pfsnode{N}$
         \Else
             \Return $NIL$
@@ -568,10 +569,10 @@ Esta função devolve a floresta $\forest_B$ atualizada.
         \If{$B \supseteq Y$}
             \State $\pfsnode{B} \gets \mathsc{Get-Node} (\forest_B, M)$
             \If{$\pfsnode{B} \ne NIL$}
-                \State remova $\pfsnode{B}$ de $\forest_B$
+                \State remove $\pfsnode{B}$ from $\forest_B$
             \EndIf
         \Else
-            \State crie o nó $\pfsnode{B}$
+            \State create a node $\pfsnode{B}$
             \State $\pfsnode{B}[\varname{vertex}] \gets B$
             \State $\pfsnode{B}[\varname{leftmost}] \gets i + 1$
             \State $\pfsnode{B}[\varname{adjacent}] \gets \bigcup_{i=\pfsnode{B}[\varname{leftmost}]}^{n} s_i$
@@ -645,14 +646,14 @@ caminho mas sem a adjacência que os comunica com $M$. O funcionamento de
             \State $\pfsnode{M}[\varname{adjacent}] \gets \pfsnode{M}[\varname{adjacent}] \setminus \{m\} $
             \State $i \gets 0$
         \Else
-            \State crie o nó $\pfsnode{M}$
+            \State create a node $\pfsnode{M}$
             \While{$i \geq 1$ e $s_i \in M$}
                 \State $i \gets i - 1$
             \EndWhile
             \State $\pfsnode{M}[\varname{leftmost}] \gets i + 1$
             \State $\pfsnode{M}[\varname{adjacent}] \gets \cup_{j = \pfsnode{M}[\varname{leftmost}]}^{n} \{s_j\} \setminus \{m\} $
             \State $\pfsnode{M}[\varname{cost}] \gets \infty$
-            \State adicione $\pfsnode{M}$ em $\forest_B$
+            \State insert $\pfsnode{M}$ into $\forest_B$
         \EndIf
         \Return $\forest_B$
     \EndWhile

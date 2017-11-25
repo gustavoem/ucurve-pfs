@@ -484,7 +484,7 @@ com anotações que indicam ao compilador como blocos do código fonte
 podem ser processados paralelamente.
 
 O \algname{PUCS} foi criado com o intuito de ser um algoritmo paralelo
-para resolver o problema U-Curve. A particionamento do espaço foi feito
+para resolver o problema U-Curve. O particionamento do espaço foi feito
 exatamente para que o processo de paralelização do código fosse simples,
 facilitando a distribuição de trabalho entre threads e usando o mínimo
 de comunicação entre as mesmas. Desta forma, para paralelizar o código,
@@ -510,13 +510,12 @@ subutilizadas durante o passeio.
 Antes de discutir o desempenho do algoritmo, precisamos entender como
 os parâmetros devem ser ajustados para cada tipo de instância do 
 problema U-Curve. Consideramos instâncias pequenas aquelas que podem ser
-resolvidas otimamente. Estas instâncias costumam ter no máximo por volta
-de 30 características e algoritmos ingênuos como a busca exaustiva 
-podem, já para estas instâncias, se tornar muito caros 
-computacionalmente. Já as instâncias grandes, que não podem ser 
-resolvidas por algoritmos ótimos, costumam ter mais do que 30 
-características; utilizam-se para estas algoritmos sub-ótimos, 
-heurísticas.
+resolvidas otimamente. Estas instâncias costumam ter menos do que 30 
+características e algoritmos ingênuos como a busca exaustiva podem, 
+já para estas instâncias, se tornar muito caros computacionalmente. Já 
+as instâncias grandes, que não podem ser resolvidas por algoritmos 
+ótimos, costumam ter mais do que 30 características; utiliza-se para 
+estas instâncias algoritmos sub-ótimos, heurísticas.
 
 \subsubsection{Instâncias pequenas}
 % -> p e l não interferem na qualidade da solução
@@ -574,7 +573,8 @@ repetimos o experimento com valores de $l$ sendo apenas 1 ou 2. Os novos
 resultados são mostrados na figura~\ref{fig:pucs:parameters:small2}, 
 que novamente indicam que o aumento do parâmetro $l$ implica em um 
 tempo de execução maior. Desta maneira, decidimos que o uso do parâmetro 
-$l = 1$ é o mais adequado para o computador que utilizamos.
+$l = 1$ é o mais adequado para o computador que utilizamos. Para o 
+parâmetro $p$, basta evitar valores muito pequenos e também muito altos.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -608,7 +608,7 @@ Desta forma, resolve-se o problema U-Curve com heurísticas, como o
 \algname{Sequential Forward Floating Selection} 
 (\algname{SFFS})~\cite{PNK94} ou \algname{Best-First Search} 
 (\algname{BFS})~\cite{KJ97}. Para o \algname{PUCS} se tornar uma 
-heurística, basta utilizar um destes algoritmos como algoritmo base.
+heurística, basta utilizar um algoritmo sub-ótimo como base.
 
 Quando o \algname{PUCS} é ótimo, os parâmetros $p$ e $l$ interferem 
 apenas no tempo de execução do algoritmo, mas quando tornamos este 
@@ -618,7 +618,7 @@ feito, mais partes são geradas e resolvidas pelo \algname{PUCS}, e como
 cada parte é resolvida com uma chamada do algoritmo base, temos que 
 quanto mais granular é o particionamento, mais percorrimentos 
 disjuntos acontecerão no reticulado. Desta maneira, quando 
-aumentamos o $p$ e $l$, mais buscas são feitas e, desta forma, é 
+aumentamos o $p$ e $l$, mais buscas são feitas e portanto é 
 provável que a solução encontrada seja melhor.
 
 Entretanto, não podemos nos esquecer que estes parâmetros ainda 
@@ -664,8 +664,8 @@ tempo de execução aumenta.
 Nesta seção apresentamos testes feitos com o \algname{PUCS} ao  
 solucionar instâncias artificiais do problema U-Curve onde função de 
 custo utilizada é a de soma de subconjuntos. Estes testes foram feitos
-no arcabouço \toolname{featsel} e foram rodados em uma servidora de 
-64 cores.
+no arcabouço \toolname{featsel} e foram rodados em uma servidora 
+Dell PowerEdge 850, com 64 núcleos e 256 GB de memória RAM.
 
 Como parâmetro $p$ utilizamos um valor tal que o número de variáveis
 fixas é sempre 10, o que não compromete a escalabilidade e deve ser 
@@ -677,48 +677,38 @@ Estes experimentos são feitos em instâncias do problema U-Curve de
 tamanho pequeno, que podem ser resolvidos por algoritmos ótimos. 
 Comparamos o \algname{PUCS} com o \algname{UBB}, \algname{PFS} e
 também com o algoritmo criado na seção ~\ref{sec:ubbpfs}, o 
-\algname{UBB-PFS}. Como parâmetros para estas instâncias, fixamos. 
-Utilizamos como parâmetros: $p$ tal que número de variáveis fixas é 10;
-$l = 2$; e o \algname{UBB} como algoritmo base.
+\algname{UBB-PFS}. Como parâmetros para estas instâncias utiilizamos 
+$p$ tal que número de variáveis fixas é 10, $l = 1$, e o \algname{UBB} 
+como algoritmo base.
 
 \begin{table}
 \centering
 \footnotesize
 % \resizebox{\columnwidth}{!}{%
+
 \begin{tabular}{cc c cccc}
 \toprule
 \multicolumn{2}{c}{Instance} & \phantom{} & \multicolumn{4}{c}{Total time (sec)} \\
 \cline{1-2}\cline{4-7}\\
-$|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS & PUCS \\
- % 1 &       2 &&  0.004 $\pm$ 0.000 & 0.004 $\pm$ 0.001 & 0.004 $\pm$ 0.000 & 0.018 $\pm$ 0.004 \\
- % 2 &       4 &&  0.004 $\pm$ 0.000 & 0.004 $\pm$ 0.001 & 0.004 $\pm$ 0.000 & 0.018 $\pm$ 0.003 \\
- % 3 &       8 &&  0.004 $\pm$ 0.000 & 0.004 $\pm$ 0.000 & 0.011 $\pm$ 0.007 & 0.018 $\pm$ 0.003 \\
- % 4 &      16 &&  0.005 $\pm$ 0.002 & 0.004 $\pm$ 0.000 & 0.016 $\pm$ 0.006 & 0.017 $\pm$ 0.003 \\
- % 5 &      32 &&  0.004 $\pm$ 0.001 & 0.005 $\pm$ 0.002 & 0.017 $\pm$ 0.005 & 0.018 $\pm$ 0.003 \\
- % 6 &      64 &&  0.004 $\pm$ 0.000 & 0.004 $\pm$ 0.000 & 0.017 $\pm$ 0.004 & 0.018 $\pm$ 0.003 \\
- % 7 &     128 &&  0.004 $\pm$ 0.000 & 0.005 $\pm$ 0.001 & 0.018 $\pm$ 0.005 & 0.018 $\pm$ 0.003 \\
- % 8 &     256 &&  0.005 $\pm$ 0.000 & 0.006 $\pm$ 0.001 & 0.019 $\pm$ 0.005 & 0.020 $\pm$ 0.003 \\
- % 9 &     512 &&  0.005 $\pm$ 0.000 & 0.007 $\pm$ 0.001 & 0.020 $\pm$ 0.004 & 0.020 $\pm$ 0.004 \\
-10 &    1024 &&  0.008 $\pm$ 0.017 & 0.013 $\pm$ 0.014 & 0.024 $\pm$ 0.004 & 0.026 $\pm$ 0.023 \\
-11 &    2048 &&  0.007 $\pm$ 0.002 & 0.017 $\pm$ 0.004 & 0.027 $\pm$ 0.005 & 0.631 $\pm$ 0.316 \\
-12 &    4096 &&  0.010 $\pm$ 0.003 & 0.025 $\pm$ 0.008 & 0.034 $\pm$ 0.007 & 0.814 $\pm$ 0.570 \\
-13 &    8192 &&  0.015 $\pm$ 0.006 & 0.052 $\pm$ 0.017 & 0.048 $\pm$ 0.012 & 1.099 $\pm$ 0.562 \\
-14 &   16384 &&  0.025 $\pm$ 0.013 & 0.095 $\pm$ 0.039 & 0.074 $\pm$ 0.023 & 1.816 $\pm$ 1.145 \\
-15 &   32768 &&  0.039 $\pm$ 0.029 & 0.179 $\pm$ 0.075 & 0.114 $\pm$ 0.042 & 2.088 $\pm$ 1.107 \\
-16 &   65536 &&  0.106 $\pm$ 0.053 & 0.386 $\pm$ 0.159 & 0.214 $\pm$ 0.078 & 3.591 $\pm$ 1.874 \\
-17 &  131072 &&  0.222 $\pm$ 0.105 & 0.708 $\pm$ 0.368 & 0.358 $\pm$ 0.181 & 3.370 $\pm$ 2.228 \\
-18 &  262144 &&  0.311 $\pm$ 0.240 & 1.302 $\pm$ 0.762 & 0.666 $\pm$ 0.346 & 5.683 $\pm$ 3.479 \\
-19 &  524288 &&  0.731 $\pm$ 0.447 & 2.867 $\pm$ 1.661 & 1.381 $\pm$ 0.794 & 7.158 $\pm$ 7.202 \\
-20 & 1048576 &&  1.542 $\pm$ 0.886 & 6.119 $\pm$ 3.403 & 2.873 $\pm$ 1.537 & 15.634 $\pm$ 24.817 \\
-% 21 & 2097152 &&  2.597 $\pm$ 2.009 & 9.872 $\pm$ 7.279 & 4.789 $\pm$ 3.351 & 9.460 $\pm$ 6.545 \\
-% 22 & 4194304 &&  4.885 $\pm$ 4.147 & 20.100 $\pm$ 13.499 & 9.488 $\pm$ 6.079 & 14.816 $\pm$ 24.232 \\
-% 23 & 8388608 &&  10.351 $\pm$ 8.382 & 45.253 $\pm$ 35.499 & 21.499 $\pm$ 16.087 & 50.933 $\pm$ 152.947 \\
-% 24 & 16777216 &&  26.998 $\pm$ 16.076 & 95.824 $\pm$ 74.523 & 46.868 $\pm$ 36.055 & 114.238 $\pm$ 321.363 \\
+$|S|$ & $2^{|S|}$ && \algname{UBB} & \algname{PFS} & \algname{UBB-PFS} & \algname{PUCS} \\
+10 &    1024 &&  0.006 $\pm$ 0.001 & 0.011 $\pm$ 0.002 & 0.022 $\pm$ 0.004 & 0.039 $\pm$ 0.019 \\
+11 &    2048 &&  0.007 $\pm$ 0.002 & 0.017 $\pm$ 0.004 & 0.026 $\pm$ 0.005 & 0.045 $\pm$ 0.022 \\
+12 &    4096 &&  0.009 $\pm$ 0.003 & 0.029 $\pm$ 0.009 & 0.033 $\pm$ 0.008 & 0.048 $\pm$ 0.024 \\
+13 &    8192 &&  0.013 $\pm$ 0.006 & 0.054 $\pm$ 0.016 & 0.047 $\pm$ 0.014 & 0.053 $\pm$ 0.021 \\
+14 &   16384 &&  0.026 $\pm$ 0.012 & 0.103 $\pm$ 0.035 & 0.074 $\pm$ 0.017 & 0.057 $\pm$ 0.024 \\
+15 &   32768 &&  0.048 $\pm$ 0.027 & 0.195 $\pm$ 0.080 & 0.116 $\pm$ 0.044 & 0.056 $\pm$ 0.025 \\
+16 &   65536 &&  0.097 $\pm$ 0.055 & 0.354 $\pm$ 0.176 & 0.198 $\pm$ 0.089 & 0.090 $\pm$ 0.080 \\
+17 &  131072 &&  0.142 $\pm$ 0.120 & 0.676 $\pm$ 0.375 & 0.350 $\pm$ 0.200 & 0.255 $\pm$ 0.276 \\
+18 &  262144 &&  0.319 $\pm$ 0.228 & 1.512 $\pm$ 0.764 & 0.751 $\pm$ 0.338 & 0.680 $\pm$ 0.592 \\
+19 &  524288 &&  0.684 $\pm$ 0.464 & 2.875 $\pm$ 1.554 & 1.387 $\pm$ 0.707 & 1.492 $\pm$ 1.323 \\
+20 & 1048576 &&  1.249 $\pm$ 0.975 & 5.295 $\pm$ 3.509 & 2.594 $\pm$ 1.569 & 2.701 $\pm$ 2.908 \\
+21 & 2097152 &&  2.671 $\pm$ 1.948 & 11.136 $\pm$ 6.947 & 5.460 $\pm$ 3.392 & 6.118 $\pm$ 5.961 \\
+22 & 4194304 &&  5.420 $\pm$ 4.202 & 19.825 $\pm$ 14.519 & 9.709 $\pm$ 7.319 & 11.729 $\pm$ 11.613 \\
 \bottomrule
 \end{tabular}
 \caption{Comparação de tempo de execução de algoritmos ótimos para o
-problema U-Curve. O \algname{PUCS} foi o algoritmo mais lento para 
-estas instâncias.}
+problema U-Curve. O \algname{PUCS} foi o segundo algoritmo mais lento,
+sendo mais rápido do que o \algname{PFS} apenas.}
 \label{tab:pucs:small:time}
 % }
 \end{table}
@@ -726,11 +716,12 @@ estas instâncias.}
 
 A tabela ~\ref{tab:pucs:small:time} mostra o tempo de execução médio
 dos algoritmos \algname{UBB}, \algname{PFS}, \algname{UBB-PFS} e
-\algname{PUCS}. O último foi o algoritmo que gastou mais tempo para 
-estas instâncias. A tabela ~\ref{tab:pucs:small:cost} mostra, para os
-mesmos algoritmos, o número médio de chamadas da função custo. O
-\algname{PUCS} computou menos nós do que o \algname{UBB}, e computou
-pouco mais nós do que o \algname{PFS} e \algname{UBB-PFS}.
+\algname{PUCS}. O desempenho em tempo do \algname{PUCS} foi similar
+ao \algname{UBB-PFS}, porém só foi melhor que o \algname{PFS}. A tabela 
+~\ref{tab:pucs:small:cost} mostra, para os mesmos algoritmos, o número 
+médio de chamadas da função custo. O \algname{PUCS} computou menos nós 
+do que o \algname{UBB}, e computou pouco mais nós do que o \algname{PFS} 
+e \algname{UBB-PFS}.
 
 
 \begin{table}
@@ -743,29 +734,27 @@ pouco mais nós do que o \algname{PFS} e \algname{UBB-PFS}.
 \cline{1-2}\cline{4-7}\\
 $|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS & PUCS \\
  % 1 &       2 && 2.0 $\pm$  0.0 &  2.0 $\pm$  0.0 &  2.0 $\pm$  0.0 &  5.0 $\pm$  0.0 \\
- % 2 &       4 && 3.8 $\pm$  0.4 &  3.8 $\pm$  0.4 &  3.8 $\pm$  0.4 &  7.1 $\pm$  1.0 \\
- % 3 &       8 && 7.2 $\pm$  1.2 &  7.2 $\pm$  1.1 &  7.2 $\pm$  1.2 & 10.7 $\pm$  1.9 \\
- % 4 &      16 && 13.2 $\pm$  3.2 & 14.4 $\pm$  2.0 & 13.2 $\pm$  3.2 & 22.4 $\pm$  4.6 \\
- % 5 &      32 && 25.6 $\pm$  8.2 & 27.5 $\pm$  3.1 & 24.5 $\pm$  7.5 & 33.8 $\pm$  9.7 \\
- % 6 &      64 && 52.0 $\pm$ 16.7 & 51.7 $\pm$  6.0 & 49.1 $\pm$ 13.9 & 61.2 $\pm$ 17.4 \\
- % 7 &     128 && 88.9 $\pm$ 38.7 & 90.6 $\pm$ 18.7 & 88.0 $\pm$ 30.2 & 113.0 $\pm$ 37.1 \\
- % 8 &     256 && 152.5 $\pm$ 93.9 & 174.7 $\pm$ 39.2 & 158.1 $\pm$ 71.5 & 194.5 $\pm$ 91.4 \\
- % 9 &     512 && 328.9 $\pm$ 188.7 & 311.2 $\pm$ 77.6 & 308.8 $\pm$ 124.0 & 367.8 $\pm$ 158.4 \\
-10 &    1024 && 617.7 $\pm$ 368.0 & 621.5 $\pm$ 147.1 & 603.3 $\pm$ 228.1 & 730.6 $\pm$ 319.4 \\
-11 &    2048 && 1225.5 $\pm$ 748.6 & 1125.1 $\pm$ 354.9 & 1163.5 $\pm$ 450.5 & 1268.4 $\pm$ 782.2 \\
-12 &    4096 && 2396.1 $\pm$ 1724.9 & 1811.1 $\pm$ 680.9 & 1982.7 $\pm$ 772.1 & 1693.9 $\pm$ 1501.7 \\
-13 &    8192 && 5144.4 $\pm$ 3182.5 & 3982.3 $\pm$ 1399.0 & 4292.6 $\pm$ 1592.1 & 4125.2 $\pm$ 2859.2 \\
-14 &   16384 && 9777.9 $\pm$ 6350.5 & 7559.3 $\pm$ 3308.7 & 8262.6 $\pm$ 3395.1 & 7879.4 $\pm$ 6534.4 \\
-15 &   32768 && 16496.8 $\pm$ 13431.8 & 13866.9 $\pm$ 6098.5 & 14390.0 $\pm$ 6576.1 & 14693.8 $\pm$ 11279.2 \\
-16 &   65536 && 46811.7 $\pm$ 23795.2 & 28667.9 $\pm$ 12109.5 & 31038.2 $\pm$ 11381.7 & 30742.6 $\pm$ 22862.0 \\
-17 &  131072 && 99140.0 $\pm$ 46959.9 & 49896.5 $\pm$ 26087.6 & 53171.0 $\pm$ 26159.2 & 54582.4 $\pm$ 47866.6 \\
-18 &  262144 && 141399.9 $\pm$ 108893.4 & 89345.1 $\pm$ 50833.7 & 96310.4 $\pm$ 47545.5 & 95279.0 $\pm$ 88709.4 \\
-19 &  524288 && 339805.7 $\pm$ 206774.3 & 186964.7 $\pm$ 108756.5 & 199350.3 $\pm$ 101879.9 & 201333.1 $\pm$ 174767.8 \\
-20 & 1048576 && 709486.2 $\pm$ 404264.5 & 390060.3 $\pm$ 218822.5 & 406496.1 $\pm$ 208354.8 & 445381.0 $\pm$ 358644.6 \\
-% 21 & 2097152 && 1179350.5 $\pm$ 902364.9 & 612193.4 $\pm$ 443434.1 & 641281.9 $\pm$ 430795.7 & 495856.8 $\pm$ 557003.6 \\
-% 22 & 4194304 && 2158571.7 $\pm$ 1803870.4 & 1177778.6 $\pm$ 760294.0 & 1229632.4 $\pm$ 729938.0 & 912024.8 $\pm$ 986652.4 \\
-% 23 & 8388608 && 4520728.7 $\pm$ 3608416.8 & 2514970.7 $\pm$ 1890287.4 & 2580020.9 $\pm$ 1844122.5 & 2403719.7 $\pm$ 2700661.7 \\
-% 24 & 16777216 && 11320530.0 $\pm$ 6635797.7 & 5114808.2 $\pm$ 3822782.2 & 5239475.8 $\pm$ 3737450.0 & 5412420.9 $\pm$ 5372754.1 \\
+ % 2 &       4 && 3.8 $\pm$  0.4 &  3.9 $\pm$  0.2 &  3.8 $\pm$  0.4 &  7.4 $\pm$  0.9 \\
+ % 3 &       8 && 6.9 $\pm$  1.3 &  7.7 $\pm$  0.5 &  6.9 $\pm$  1.3 & 15.0 $\pm$  3.2 \\
+ % 4 &      16 && 13.1 $\pm$  3.5 & 13.1 $\pm$  2.9 & 13.1 $\pm$  3.5 & 28.6 $\pm$  8.1 \\
+ % 5 &      32 && 25.0 $\pm$  8.2 & 25.4 $\pm$  5.1 & 24.4 $\pm$  7.5 & 50.3 $\pm$ 14.4 \\
+ % 6 &      64 && 50.7 $\pm$ 16.7 & 49.6 $\pm$ 13.9 & 49.3 $\pm$ 14.4 & 97.8 $\pm$ 32.9 \\
+ % 7 &     128 && 101.6 $\pm$ 34.2 & 80.2 $\pm$ 29.3 & 95.1 $\pm$ 24.9 & 167.4 $\pm$ 57.6 \\
+ % 8 &     256 && 166.2 $\pm$ 89.6 & 173.0 $\pm$ 33.9 & 162.7 $\pm$ 69.7 & 274.1 $\pm$ 136.8 \\
+ % 9 &     512 && 356.2 $\pm$ 193.1 & 313.0 $\pm$ 91.9 & 323.1 $\pm$ 126.6 & 472.8 $\pm$ 285.4 \\
+10 &    1024 && 668.2 $\pm$ 359.2 & 614.2 $\pm$ 162.7 & 630.3 $\pm$ 235.9 & 753.6 $\pm$ 493.6 \\
+11 &    2048 && 1171.5 $\pm$ 742.5 & 1139.2 $\pm$ 354.0 & 1174.8 $\pm$ 499.3 & 1305.0 $\pm$ 881.8 \\
+12 &    4096 && 2611.6 $\pm$ 1528.5 & 2137.1 $\pm$ 793.3 & 2271.2 $\pm$ 894.1 & 2370.5 $\pm$ 1615.7 \\
+13 &    8192 && 4583.2 $\pm$ 2910.2 & 4218.9 $\pm$ 1306.7 & 4308.7 $\pm$ 1732.2 & 4780.0 $\pm$ 2797.7 \\
+14 &   16384 && 10781.4 $\pm$ 5565.5 & 8211.1 $\pm$ 3054.5 & 9050.4 $\pm$ 2638.1 & 7050.8 $\pm$ 4755.7 \\
+15 &   32768 && 20891.9 $\pm$ 12757.0 & 15134.0 $\pm$ 6528.5 & 15900.7 $\pm$ 6927.4 & 14080.1 $\pm$ 11373.1 \\
+16 &   65536 && 43529.6 $\pm$ 25318.9 & 26447.0 $\pm$ 13446.1 & 28783.6 $\pm$ 12934.2 & 26001.3 $\pm$ 21699.6 \\
+17 &  131072 && 65301.0 $\pm$ 56215.8 & 49694.5 $\pm$ 27621.8 & 51032.5 $\pm$ 29984.3 & 50145.2 $\pm$ 46799.0 \\
+18 &  262144 && 145594.5 $\pm$ 103597.8 & 105603.1 $\pm$ 52652.2 & 110538.0 $\pm$ 51589.7 & 111296.6 $\pm$ 84922.4 \\
+19 &  524288 && 313096.0 $\pm$ 209913.1 & 194572.5 $\pm$ 104802.3 & 204604.5 $\pm$ 100305.4 & 233717.7 $\pm$ 186182.0 \\
+20 & 1048576 && 578319.0 $\pm$ 445912.2 & 340052.5 $\pm$ 221271.6 & 362007.0 $\pm$ 207411.2 & 387082.0 $\pm$ 389417.4 \\
+% 21 & 2097152 && 1208939.1 $\pm$ 867260.3 & 699906.1 $\pm$ 437209.1 & 726193.9 $\pm$ 420497.8 & 854293.9 $\pm$ 779635.6 \\
+% 22 & 4194304 && 2375634.9 $\pm$ 1826536.5 & 1195439.1 $\pm$ 881956.5 & 1253704.3 $\pm$ 847533.7 & 1640138.3 $\pm$ 1547703.6 \\
 \bottomrule
 \end{tabular}
 }
@@ -781,8 +770,8 @@ Estes experimentos foram feitas em instâncias do problema U-Curve que
 são grandes e geralmente não podem ser resolvidas por algoritmos ótimos.
 Comparamos o desempenho do \algname{PUCS} contra as heurísticas 
 \algname{SFFS}~\cite{PNK94} e \algname{BFS}~\cite{KJ97}. Utilizamos
-como parâmetros: $p$ tal que o número de variáveis fixas é 10; $l = 1$;
-e como algoritmo base, utilizamos a heurística 
+como parâmetros $p$ tal que o número de variáveis fixas é 10, $l = 1$,
+e, como algoritmo base, utilizamos a heurística 
 \algname{Sequential Forward Selection} \algname{SFS}~\cite{Whi71}.
 
 A figura~\ref{fig:pucs:big:time} compara o tempo de execução do 
@@ -822,18 +811,17 @@ pelo \algname{SFFS} e \algname{BFS}.
 \end{figure}
 
 \subsection{Comentários sobre os experimentos}
-Os experimentos ótimos mostraram que o desempenho do \algname{PUCS} foi
-pior do que outros algoritmos ótimos. Isto significa que o trabalho
-do particionamento, percorrimento do reticulado externo, e do controle 
-de concorrência não são compensados pelos ganhos de processamento 
-paralelo. Além disso, o número de chamadas de função custo feitas
-por este algoritmo não é menor do que de outros algoritmos mais rápidos, 
-como o \algname{PFS} e \algname{UBB-PFS}. Desta maneira, este algoritmo 
-não é um dos mais recomendados para este tipo de instâncias.
+Os experimentos ótimos com o \algname{PUCS} mostraram que este algoritmo
+possui tempo de execução menor do que o \algname{PFS} e pouco maior do
+que \algname{UBB-PFS}. Quanto ao número de chamadas da função de custo,
+o \algname{PUCS} teve desempenho melhor do que o \algname{UBB}, e 
+um desempenho similar ao \algname{UBB-PFS}. Em resumo, o \algname{PUCS}
+é um algoritmo tão competitivo quanto o \algname{UBB-PFS} para estas
+instâncias.
 
-Entretanto, o \algname{PUCS} se mostrou mais interessante quando 
+O \algname{PUCS} se mostrou mais interessante quando 
 utilizado para resolver instâncias de maneira sub-ótima. Para estes 
-experimentos, o \algname{PUCS} teve tempo médio de execução pior do que 
+experimentos, este algoritmo teve tempo médio de execução pior do que 
 as outras heurísticas, porém a qualidade da solução encontrada foi 
 sempre melhor ou igual a solução dos outros algoritmos. Logo este 
 algoritmo é recomendável para problemas em que o recurso de tempo é
@@ -848,4 +836,6 @@ de saturação) quando aumentamos os recursos de processadores da máquina
 utilizada. Desta maneira, respeitando os limites da paralelização na 
 máquina, com maiores recursos de tempo e processamento é esperado que 
 possamos aumentar os parâmetros $p$ e $l$, conseguindo melhores 
-soluções.
+soluções. Em uma máquina hipoteticamente tão rápida quanto necessário,
+podemos aumentar a qualidade das soluções ao aumentar os valores dos
+parâmetros até que, no limite, o \algname{PUCS} se torne ótimo.
