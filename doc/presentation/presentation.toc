@@ -1,0 +1,6 @@
+\beamer@endinputifotherversion {3.36pt}
+\select@language {portuguese}
+\beamer@sectionintoc {1}{O problema U-curve}{2}{0}{1}
+\beamer@sectionintoc {2}{Algoritmos baseados em florestas}{18}{0}{2}
+\beamer@sectionintoc {3}{Melhoramentos ao \texttt {Poset-Forest-Search}}{37}{0}{3}
+\beamer@sectionintoc {4}{O algoritmo \texttt {Parallel-U-Curve-Search}}{56}{0}{4}
