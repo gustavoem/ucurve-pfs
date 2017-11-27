@@ -14,3 +14,15 @@
 \beamer@slide {tab:pfsrand_vs_pfs}{42}
 \beamer@slide {fig:pfs:obdd:A}{46}
 \beamer@slide {fig:pfs:obdd:B}{46}
+\beamer@slide {fig:pucs:example:lattice}{71}
+\beamer@slide {fig:pucs:example:A}{71}
+\beamer@slide {fig:pucs:example:B}{72}
+\beamer@slide {fig:pucs:example:C}{72}
+\beamer@slide {fig:pucs:example:D}{72}
+\beamer@slide {fig:pucs:example:E}{72}
+\beamer@slide {fig:pucs:example:F}{76}
+\beamer@slide {fig:pucs:example:G}{76}
+\beamer@slide {fig:pucs:example:H}{76}
+\beamer@slide {fig:pucs:example:I}{76}
+\beamer@slide {fig:pucs:big:time}{90}
+\beamer@slide {fig:pucs:big:correctness}{90}

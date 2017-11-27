@@ -80,4 +80,4 @@ plt.title ('')
 plt.xticks (n_range * (n_algs + 1) + (n_algs / 4) * ones, names_arr,rotation=45)
 
 
-plt.savefig ('svm_error.pdf', bbox_inches='tight')
+plt.savefig ('svm_error.pdf', bbox_inches='tight', transparent=True)
