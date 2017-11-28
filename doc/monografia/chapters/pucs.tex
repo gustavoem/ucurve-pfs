@@ -1,41 +1,42 @@
-O algoritmo \algname{Parallel U-Curve Search (PUCS)} foi desenvolvido 
-para resolver o problema U-Curve particionando o espaço de busca em 
-partes que podem ser resolvidas independentemente e de forma paralela. 
-Além disso, a dinâmica desse algoritmo depende de parâmetros que 
-determinam o tempo de execução e qualidade da solução obtida, permitindo
+No capítulo anterior, vimos que a estratégia de particionar o espaço de busca utilizando o algoritmo \algname{UBB} e resolvendo os casos base com o algoritmo \algname{PFS} permitiu a paralelização eficiente deste último algoritmo. Nesse sentido, recentemente desenvolvemos o algoritmo \algname{Parallel U-curve Search (PUCS)}. Este algoritmo resolve o problema U-curve particionando o espaço de busca em 
+partes que podem ser resolvidas independentemente e de forma paralela, utilizando para resolver casos base o próprio \algname{PFS} ou outro algoritmo. 
+Além disso, a dinâmica do \algname{PUCS} depende de parâmetros que 
+determinam o tempo de execução e qualidade da solução obtida, permitindo assim
 ao usuário adequar o algoritmo aos recursos computacionais disponíveis. 
 
-\section{Princípios}\label{sec:pucs_principles}
+
+%
+% Comentário: prestar mais atenção na pontuação de equações matemáticas, pois as mesmas fazem parte do texto principal e também devem obedecer às regras gramaticais!
+%
+
+\section{Princípios teóricos do algoritmo}\label{sec:pucs_principles}
 Seja $S$ o conjunto de características do problema em questão. O 
-primeiro passo do particionamento é escolher arbitrariamente $S'$ um 
-subconjunto de $S$; de maneira complementar, definimos 
-$\overline{S'} = S \setminus S'$. Agora, sejam $X, Y \in \powerset (S)$
+primeiro passo do particionamento é escolher arbitrariamente um 
+subconjunto $S'$ de $S$. Sejam $X, Y \in \powerset (S)$
 e $\sim$ a relação:
-
 \begin{equation*}
-    X \sim Y \iff (X \cap S') = (Y \cap S')
+    X \sim Y \iff (X \cap S') = (Y \cap S').
 \end{equation*}
-Esta relação é de equivalência, pois nela valem:
-
+$\sim$ é uma relação de equivalência, pois nela valem:
 \begin{itemize}
-    \item{reflexividade}
+    \item{Reflexividade:}
         \begin{align*} 
             X \sim X \text{, pois }
-            (X \cap S') = (X \cap S')
+            (X \cap S') = (X \cap S').
         \end{align*} 
-    \item{simetria}
+    \item{Simetria:}
         \begin{align*}
             X \sim Y  & \iff \\
             (X \cap S') = (Y \cap S') & \iff \\
             (Y \cap S') = (X \cap S') & \iff \\
-            Y \sim X 
+            Y \sim X. 
         \end{align*}
-    \item{transitividade,}
+    \item{Transitividade:}
         \begin{align*}
             X \sim Y, Y \sim Z & \Rightarrow \\
             (X \cap S') = (Y \cap S') = (Z \cap S') & \Rightarrow \\
             (X \cap S') = (Z \cap S') & \Rightarrow \\
-            X \sim Z
+            X \sim Z.
         \end{align*}
 \end{itemize}
 Portanto, o conjunto das classes de equivalência definidas por $\sim$ é
@@ -49,7 +50,7 @@ Pela definição da relação $\sim$ temos que a presença de cada
 característica de $S'$ em uma dada parte do reticulado não muda, isto é,
 ou ela está presente em todos subconjuntos da parte ou não está presente
 em nenhum, portanto, dizemos que estas variáveis são {\bf fixas}. De 
-modo análogo, as variáveis de $\overline{S'}$ são {\bf livres}. Tanto 
+modo análogo, as variáveis de $\overline{S'} = S \setminus S'$ são {\bf livres}. Tanto 
 variáveis fixas quanto livres podem definir reticulados Booleanos junto 
 a relação de ordem parcial $\subseteq$.
 
@@ -88,21 +89,21 @@ Booleano com cinco características.
   \end{tabular}
     \caption{Exemplo de particionamento feito pelo algoritmo 
     \algname{PUCS} em uma instância com cinco características; o 
-    reticulado Booleano desta instância é representado na figura 
-    ~\ref{fig:pucs_part:full}. Neste particionamento, as duas primeiras
+    reticulado Booleano desta instância é representado na figura~\ref{fig:pucs_part:full}. Neste particionamento, as duas primeiras
     variáveis formam o conjunto de variáveis fixadas, definindo o 
-    reticulado externo (figura ~\ref{fig:pucs_part:external}) enquanto 
+    reticulado externo (figura~\ref{fig:pucs_part:external}) enquanto 
     as outras três definem os reticulados internos, que são cópias do
-    reticulado da figura ~\ref{fig:pucs_part:internal}. A figura 
-    ~\ref{fig:pucs_part:parts} mostra o reticulado Booleano original, sem
+    reticulado da figura~\ref{fig:pucs_part:internal}. A figura~\ref{fig:pucs_part:parts} mostra o reticulado Booleano original, sem
     as arestas que ligam duas partes diferentes, e a cor de cada nó 
     representa a qual parte tal nó pertence, de acordo com as cores
-    do reticulado externo em ~\ref{fig:pucs_part:external}
+    do reticulado externo em~\ref{fig:pucs_part:external}
     Note que, de fato, 
     cada parte forma um reticulado pequeno de mesmo tamanho e com mesma 
-    estrutura que o reticulado da figura ~\ref{fig:pucs_part:internal}}
+    estrutura que o reticulado da figura~\ref{fig:pucs_part:internal}}.
   \label{fig:pucs_parts} 
 \end{figure}
+
+% A função do "~" entre "figura" e a tag \ref é para que o compilador do LaTeX nunca quebre a linha entre as duas palavras; dessa forma, nunca devemos deixar espaços antes e/ou depois do "~".
 
 Os reticulados internos e externo elucidam a estrutura recursiva do 
 problema de seleção de características e sugerem que podemos construir 
@@ -113,27 +114,29 @@ instância do problema de seleção de características, $S'$ o conjunto de
 variáveis fixas, $\overline{S'}$ o conjunto de variáveis livres, e 
 $A \in \powerset (S')$ um subconjunto que é nó do reticulado externo, 
 então podemos definir um outro problema de seleção de características 
-$\langle \overline{S'}, c_{A} \rangle$ em que 
-\begin{align*}
-    c_{A} (X) = c (X \cup A).
-\end{align*}
-Resolver a instância $\langle \overline{S'}, c_{A} \rangle$ é 
+$\langle \overline{S'}, c_{A} \rangle$ em que: 
+\begin{equation} \label{eq:PUCS}
+    c_{A} (X) = c (X \cup A), \mbox{ para todo } X \in \powerset (\overline{S'}).
+\end{equation}
+Como resolver a instância $\langle \overline{S'}, c_{A} \rangle$ é 
 essencialmente achar o mínimo do problema inicial restrito a classe de
 equivalência de $A$, dizemos também que estamos resolvendo a parte $A$. 
 Se soubermos em qual classe o mínimo global reside, podemos resolver 
 apenas tal parte e garantir que a solução encontrada é a solução do 
 problema original.
 
+%
+% Comentário: para equações sem numeração, use o ambiente "equation" ou "subequation" combinado com a tag \nonumber na(s) linha(s) que você não quer que a numeração apareça.
+%
 
-\section{Dinâmica}
+\section{Dinâmica do algoritmo}
 Com as estruturas de reticulado interno e externo, o \algname{PUCS} 
-resolve uma instância do problema U-Curve em duas etapas. Na primeira, o
+resolve uma instância do problema U-curve em duas etapas. Na primeira, o
 algoritmo percorre o reticulado externo, fazendo podas sempre que 
 possível, e armazena cada parte que é candidata a conter o mínimo global
 do problema. Na segunda etapa, para cada parte candidata, resolve-se o
-problema U-Curve auxiliar que é equivalente ao problema original, mas 
-restrito a parte de interesse; em seguida, escolhe-se como resposta o 
-conjunto custo mínimo entre as soluções dos problemas parciais.
+problema U-curve auxiliar que é equivalente ao problema original, mas 
+restrito à parte de interesse, utilizando para este fim a função de custo definida na equação~\ref{eq:PUCS}; em seguida, escolhe-se como resposta o conjunto custo mínimo entre as soluções dos problemas parciais.
 
 
 \subsection{Condições de poda}
@@ -156,76 +159,44 @@ fixas no particionamento definido pelo algoritmo \algname{PUCS}. Dados
 $P, Q \in \powerset (S')$ dois elementos do reticulado externo com 
 $Q \subseteq P$; se a ponta inferior do reticulado interno de $P$ tem 
 custo maior do que a ponta inferior do reticulado interno de $Q$, então 
-todas as partes do intervalo $[P, \powerset (S')]$ tem apenas conjuntos 
-de características com custo maior do que o custo da ponta inferior de 
-$Q$.
+todos os elementos do intervalo $[P, S']$ possuem reticulados internos cujos elementos terão custo maior do que o custo da ponta inferior do reticulado interno de $Q$.
 \end{mytheorem}
 \begin{proof}
 Se o custo da ponta inferior do reticulado interno de $P$ é maior do que
 a de $Q$, então:
-
-\begin{align*}
-    c_Q (\emptyset) & < c_P (\emptyset) \\
-    c (\emptyset \cup Q) & < c (\emptyset \cup P) \\
-    c (Q) & < c (P) 
-\end{align*}
-
+\begin{subequations}
+\begin{align}
+    c_Q (\emptyset) & < c_P (\emptyset) \nonumber \\
+    c (\emptyset \cup Q) & < c (\emptyset \cup P) \nonumber \\
+    c (Q) & < c (P). \nonumber
+\end{align}
+\end{subequations}
 Como $Q \subseteq P$, temos que existe uma cadeia que passa pelas pontas
 inferiores de $Q$ e $P$. Além disso, para qualquer conjunto de 
 características $X \in \powerset (S)$, com $P \subseteq X$, a hipótese 
 de curva em U garante que:
-\begin{align*}
-    c (P) & \leq max \{c (Q), c (X)\}
-\end{align*}
-e como $c (P) > c (Q)$, temos que $c (X) \geq c (P)$, isto é, qualquer 
-elemento do reticulado Booleano original que cobre a ponta inferior de 
-$P$ tem custo estritamente maior do que o custo da ponta inferior de $Q$.
-Note que para qualquer parte $R$ do intervalo $[P, \powerset (S')]$, 
-vale que $P \subseteq R$, e como a ponta inferior de $P$ não contém 
-nenhum elemento de $\overline {S'}$, então qualquer conjunto de 
-características da parte $R$ cobre a ponta inferior de $P$ e portanto 
-tem custo estritamente maior do que o custo da ponta inferior da parte 
-$Q$.
+\begin{equation}
+    c (P) \leq max \{c (Q), c (X)\}; \nonumber
+\end{equation}
+como $c (P) > c (Q)$, temos que $c (X) \geq c (P)$, isto é, qualquer 
+elemento do reticulado Booleano original que cobre $P$ tem custo estritamente maior do que o custo da ponta inferior do reticulado interno de $Q$.
+Note que para qualquer elemento $R$ do intervalo $[P, S']$, 
+vale que $P \subseteq R$, e como a ponta inferior do reticulado interno de $P$ não contém 
+nenhum elemento de $\overline {S'}$, então qualquer elemento do reticulado interno de $R$ cobre a ponta inferior do reticulado interno de $P$ e portanto tem custo estritamente maior do que o custo da ponta inferior do reticulado interno de $Q$.
 \end{proof}
 
-\begin{mytheorem}[Critério dual de poda para o reticulado externo do 
+\begin{corollary}[Critério dual de poda para o reticulado externo do 
 algoritmo \algname{PUCS}]
 \label{theorem:pucs:pruning_dual}
 Sejam $S$ um conjunto de características e $S'$ um conjunto de variáveis
 fixas no particionamento definido pelo algoritmo \algname{PUCS}. Dados
 $P, Q \in \powerset (S')$ dois elementos do reticulado externo com 
 $Q \subseteq P$; se a ponta superior do reticulado interno de $P$ tem 
-custo menor do que a ponta superior do reticulado interno de $Q$, então 
-todas as partes do intervalo $[\emptyset, Q]$ tem apenas conjuntos 
-de características com custo maior do que o custo da ponta superior de 
-$P$.
-\end{mytheorem}
+custo menor do que a ponta superior do reticulado interno de $Q$, então todos os elementos do intervalo $[P, S']$ possuem reticulados internos cujos elementos terão custo maior do que o custo da ponta superior do reticulado interno de $P$.
+\end{corollary}
 
 \begin{proof}
-Se o custo da ponta superior do reticulado interno de $Q$ é maior do que
-a de $P$, então:
-
-\begin{align*}
-    c_P (\overline{S'}) & < c_Q (\overline{S'}) \\
-    c (\overline{S'} \cup P) & < c (\overline{S'} \cup Q) \\
-\end{align*}
-
-Como $Q \subseteq P$, temos que existe uma cadeia que passa pelas pontas
-superiores de $Q$ e $P$. Além disso, para qualquer conjunto de 
-características $X \in \powerset (S)$, com $\{Q \cup \overline{S'}\}\supseteq X$, a hipótese 
-de curva em U garante que:
-\begin{align*}
-    c (Q \cup \overline{S'}) \leq max \{c (P \cup \overline{S'}), c (X)\}
-\end{align*}
-e como $c (Q \cup \overline{S'}) > c (P \cup \overline{S'})$, temos que 
-$c (X) \geq c (Q \cup \overline{S'})$, isto é, qualquer elemento do reticulado Booleano 
-original que é coberto pela ponta superior de $Q$ tem custo estritamente maior 
-do que o custo da ponta superior de $P$. Note que para qualquer parte 
-$R$ do intervalo $[\emptyset, Q]$, vale que $R \subseteq Q$, e como 
-a ponta superior de $Q$ contém todos os elementos de $\overline {S'}$, 
-então qualquer conjunto de características da parte $R$ é coberto pela 
-ponta superior de $Q$ e portanto tem custo estritamente maior do que o 
-custo da ponta superior da parte $P$.
+Segue imediatamente da aplicação do princípio da dualidade sobre o reticulado Booleano $(\powerset (S), \subseteq)$.
 \end{proof}
 
 \subsection{Passeio aleatório no reticulado externo}
@@ -251,8 +222,11 @@ conter tal elemento. Desta forma, como toda parte é visitada ou podada,
 temos que o conjunto de nós visitados e não podados é exatamente o 
 conjunto de candidatos a conterem o subconjunto de custo ótimo.
 
-As figuras ~\ref{fig:pucs:example:part_1}~-~\ref{fig:pucs:example:part_3} mostram a dinâmica do \algname{PUCS} ao
-resolver uma instância do problema U-Curve.
+% Comentário: range numérico a gente utiliza "--" e não "-".
+%
+
+As figuras~\ref{fig:pucs:example:part_1}--\ref{fig:pucs:example:part_3} mostram a dinâmica do \algname{PUCS} ao
+resolver uma instância do problema U-curve.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -269,23 +243,18 @@ resolver uma instância do problema U-Curve.
     }
     \end{tabular}   
     \end{center}
-    \caption{Uma instância do problema U-Curve e o seu particionamento
+    \caption{Uma instância do problema U-curve e o seu particionamento
     quando o conjunto de variáveis fixas $S'$ é composto pela primeira, 
     segunda e última variável. No reticulado externo, denotamos por $X$ 
     \foreignword{don't cares}, que são as variáveis livres do 
-    particionamento. O subconjunto colorido em verde é o elemento de
-    custo mínimo desta instância.}
-    \label{fig:pucs:example:part_1}
-\end{figure}
-
-\begin{itemize}
-    \item{Figura ~\ref{fig:pucs:example:lattice}: uma instância do 
-        problema U-Curve com cinco características e com a função de 
-        custo anotada ao lado dos nós do reticulado.} 
-    \item{Figura ~\ref{fig:pucs:example:A}: o particionamento do espaço
+    particionamento. Figura~\ref{fig:pucs:example:lattice}: instância original do 
+        problema U-curve com cinco características e com a função de 
+        custo anotada ao lado dos nós do reticulado; o subconjunto colorido em verde é o elemento de
+    custo mínimo desta instância. Figura~\ref{fig:pucs:example:A}: o particionamento do espaço
         de busca quando são fixadas a primeira, segunda e última 
         característica.}
-\end{itemize}
+    \label{fig:pucs:example:part_1}
+\end{figure}
 
 \begin{figure}[!ht]
     \begin{center}
@@ -311,32 +280,29 @@ resolver uma instância do problema U-Curve.
         \includegraphics[clip=true, width=0.48\textwidth]{pucs/sample_run/E.pdf}
     }
     \end{tabular}   
-    \caption{Dinâmica do algoritmo \algname{PUCS} ao resolver a instância apresentada na figura ~\ref{fig:pucs:example:part_1}}
-    \label{fig:pucs:example:part_2}
-    \end{center}
-\end{figure}
-
-\begin{itemize}
-    \item{Figura ~\ref{fig:pucs:example:B} a parte 00XX0 é escolhida
+    \caption{Dinâmica do algoritmo \algname{PUCS} ao resolver a instância apresentada na figura~\ref{fig:pucs:example:part_1}.
+   Figura~\ref{fig:pucs:example:B}: a parte 00XX0 é escolhida
         arbitrariamente para ser o início do passeio aleatório. O 
         vizinho 00XX1 é escolhido aleatoriamente como candidato a ser o
         próximo nó do passeio. Como o custo da ponta superior de 00XX1 
         (6) é menor do que o custo da ponta superior de 00XX0 (7), o
-        intervalo de partes $[000, 000]$ é removido do espaço de busca.}
-    \item{Figura ~\ref{fig:pucs:example:C} a pontas inferiores das 
+        intervalo de partes $[000, 000]$ é removido do espaço de busca.
+    Figura~\ref{fig:pucs:example:C}: a pontas inferiores das 
         partes 10XX1 (7) e 01XX1 (8) têm custo maior do que a ponta 
         inferior de 00XX1 (5), portanto os intervalos de partes 
-        $[101, 111]$ e $[011, 111]$ são removidos do espaço de busca.}
-    \item{Figura ~\ref{fig:pucs:example:D} todos os vizinhos de 00XX1
+        $[101, 111]$ e $[011, 111]$ são removidos do espaço de busca.
+    Figura~\ref{fig:pucs:example:D}: todos os vizinhos de 00XX1
         foram podados, portanto esta parte torna-se candidata a conter 
-        o mínimo, e iniciamos um novo passeio.}
-    \item{Figura ~\ref{fig:pucs:example:E} a parte 10XX0 é escolhida 
+        o mínimo, e iniciamos um novo passeio.
+    Figura~\ref{fig:pucs:example:E}: a parte 10XX0 é escolhida 
         arbitrariamente como início de passeio. O custo da ponta 
         superior de 10XX0 (6) é maior do que o custo da ponta superior
         de 11XX0 (5), portanto o intervalo de partes $[000, 100]$ é 
-        removido do espaço de busca.} 
-\end{itemize}
-
+        removido do espaço de busca.
+}
+    \label{fig:pucs:example:part_2}
+    \end{center}
+\end{figure}
     
 \begin{figure}[!ht]
     \begin{center}
@@ -362,38 +328,30 @@ resolver uma instância do problema U-Curve.
         \includegraphics[clip=true, width=0.48\textwidth]{pucs/sample_run/I.pdf}
     }
     \end{tabular}   
-    \caption{Continuação da figura ~\ref{fig:pucs:example:part_2}}%
+    \caption{Continuação da figura ~\ref{fig:pucs:example:part_2}. Figura~\ref{fig:pucs:example:F} Nenhuma poda é realizada ao
+        comparar 11XX0 com 01XX0, portanto a última torna-se o nó 
+        corrente e a primeira torna-se candidata a conter o mínimo. Figura~\ref{fig:pucs:example:G} A parte 01XX0 torna-se o nó 
+        corrente, mas como não possui vizinho no espaço de busca é 
+        removida do espaço de busca e torna-se candidata a conter o 
+        mínimo. Figura~\ref{fig:pucs:example:H} Todo nó foi removido do 
+        espaço de busca por podas ou por visitas. Resolve-se as partes 
+        candidatas a conter o mínimo. Figura~\ref{fig:pucs:example:I} O elemento de custo mínimo
+        entre as partes é 11100, que é de fato a solução ótima do 
+        problema com custo 3.}%
     \label{fig:pucs:example:part_3}
     \end{center}
 \end{figure}
-
-\begin{itemize}
-    \item{Figura ~\ref{fig:pucs:example:F} Nenhuma poda é realizada ao
-        comparar 11XX0 com 01XX0, portanto a última torna-se o nó 
-        corrente e a primeira torna-se candidata a conter o mínimo.} 
-    \item{Figura ~\ref{fig:pucs:example:G} A parte 01XX0 torna-se o nó 
-        corrente, mas como não possui vizinho no espaço de busca é 
-        removida do espaço de busca e torna-se candidata a conter o 
-        mínimo.}  
-    \item{Figura ~\ref{fig:pucs:example:H} Todo nó foi removido do 
-        espaço de busca por podas ou por visitas. Resolve-se as partes 
-        candidatas a conter o mínimo.} 
-    \item{Figura ~\ref{fig:pucs:example:I} O elemento de custo mínimo
-        entre as partes é 11100, que é de fato a solução ótima do 
-        problema com custo 3.} 
-\end{itemize}
-
 
 \subsection{Solução das partes} \label{sec:dynamics:solution}
 Ao fim do passeio aleatório, teremos uma coleção de partes 
 que precisam ser resolvidas para se obter o conjunto de custo mínimo. 
 Nesta etapa, o \algname{PUCS} constrói para cada parte uma instância 
-auxiliar do problema U-Curve que é equivalente ao problema original, 
-porém restrito a parte de interesse. Seja $\langle S, c \rangle$ a 
+auxiliar do problema U-curve que é equivalente ao problema original, 
+porém restrito à parte de interesse. Seja $\langle S, c \rangle$ a 
 instância do problema original e $S'$ o conjunto de variáveis fixas no 
-particionamento feito pelo \algname{PUCS} neste problema, então,
+particionamento feito pelo \algname{PUCS} neste problema. Então,
 dada uma parte $A \in \powerset(S')$, o conjunto de custo mínimo nesta 
-parte é exatamente a solução ótima do problema U-Curve auxiliar 
+parte é exatamente a solução ótima do problema U-curve auxiliar 
 $\langle \overline{S'}, c_A \rangle$ em que $c_A (X) = c (X \cup A)$ 
 para qualquer $X \in \powerset(\overline{S'})$.
 
@@ -407,33 +365,34 @@ algoritmo base é crítica no desempenho da chamada do \algname{PUCS}
 no que diz respeito a uso de recursos computacionais e também na 
 qualidade da solução obtida.
 
-
 \section{Parâmetros de funcionamento}
 Na seção anterior apresentamos a dinâmica básica do algoritmo 
-\algname{PUCS}, porém por simplicidade não definimos alguns parâmetros 
-que regem o funcionamento do mesmo. Apesar de ser fácil entender a 
-dinâmica do algoritmo sem conhecer estes parâmetros, eles tem papel 
+\algname{PUCS}, porém por simplicidade não definimos três parâmetros 
+que regem o funcionamento do mesmo, necessários para especificar o número variáveis fixas utilizado, o número máximo de chamadas recursivas do algoritmo, e a maneira de se resolver um caso base. Apesar de ser fácil entender a 
+dinâmica do algoritmo sem conhecer estes parâmetros, eles têm papel 
 crítico no desempenho do mesmo, tanto no quesito de uso de recursos 
-computacionais quanto na qualidade da solução encontrada. Estes 
-parâmetros são $p$, $l$, e algoritmo base.
+computacionais quanto na qualidade da solução encontrada. Denominaremos estes 
+parâmetros por $p$, $l$, e algoritmo base.
 
 O parâmetro $p$ define a quantidade de variáveis fixas no 
-particionamento do espaço de busca e deve estar contido no intervalo 
-$(0, 1]$, sendo a proporção de variáveis que devem ser fixadas; desta 
-forma:
-\begin{align*}
-    |S'| & =  \ceil{|S| * p} \\
-    |\overline{S'}| & = |S| - \ceil{|S| * p} \\
-\end{align*}
+particionamento do espaço de busca. $p$ deve estar contido no intervalo 
+$(0, 1]$ e representa a proporção de variáveis que devem ser fixadas; desta 
+forma, o tamanho de $S'$ é modulado pelo valor de $p$ da seguinte maneira:
+\begin{subequations}
+\begin{align}
+    |S'| & =  \ceil{|S| * p} \nonumber \\
+    |\overline{S'}| & = |S| - \ceil{|S| * p}. \nonumber
+\end{align}
+\end{subequations}
 Portanto, quanto maior o $p$, maior o tamanho do reticulado externo 
 ($|\powerset (S')|$) e menor o tamanho dos reticulados internos 
 ($|\powerset(\overline{S'})|$) e vice-versa. Note que quando $p$ é 
-pequeno o algoritmo \algname{PUCS} deve ser semelhante ao algorítmo 
+pequeno o algoritmo \algname{PUCS} deve ser semelhante ao algoritmo 
 base, já que o tamanho das partes continua semelhante; quando o $p$ é
 grande, o particionamento é mais ``fino'' porque as partes se tornam 
 menores e consequentemente há mais partes.
 
-Como vimos na seção ~\ref{sec:dynamics:solution}, a estrutura criada no
+Como vimos na seção~\ref{sec:dynamics:solution}, a estrutura criada no
 particionamento do problema nos permite fazer chamadas recursivas do 
 \algname{PUCS}. O parâmetro $l$ determina a quantidade de chamadas 
 recursivas que acontecerão até que o algoritmo base seja chamado. Ao 
@@ -448,13 +407,13 @@ base diminui.
     %\prod_{i = 1}^l 2^{n (1 - p)^{i - 1}p}
 %\end{align*}
 
-O algoritmo base determina como as partes serão resolvidas. Note que os 
-teoremas ~\ref{theorem:pucs:pruning} e ~\ref{theorem:pucs:pruning_dual}
-garantem que se a hipótese U-Curve for verdadeira, então todas as partes
-que foram podadas do espaço de busca não contém o mínimo global, 
+O algoritmo base determina como as partes serão resolvidas. Note que o 
+teorema~\ref{theorem:pucs:pruning} e o corolário~\ref{theorem:pucs:pruning_dual}
+garantem que se a hipótese U-curve for verdadeira, então todas as partes
+que foram podadas do espaço de busca não contêm o mínimo global, 
 portanto se o algoritmo base é ótimo, então o \algname{PUCS} também é
-ótimo. Se o algoritmo base for uma heurística, então o \algname{PUCS}
-também se comporta como uma heurística, entretanto é provável que a 
+ótimo. Inversamente, se o algoritmo base for uma heurística, então o \algname{PUCS}
+também se comporta como uma heurística; entretanto, neste caso é provável que a 
 solução encontrada pelo \algname{PUCS} seja melhor do que a solução 
 dada pelo algoritmo base. Dizemos que isto é provável porque o 
 \algname{PUCS} faz diversas chamadas ao algoritmo base, uma para cada
@@ -463,7 +422,7 @@ algoritmo base.
 
 \section{Implementação do algoritmo}
 O algoritmo \algname{PUCS} foi implementado no arcabouço 
-\toolname{featsel}, usando a linguagem \algname{C++}. Nesta seção 
+\href{https://github.com/msreis/featsel}{\toolname{featsel}}, usando a linguagem \algname{C++}. Nesta seção 
 apresentaremos detalhes sobre sua implementação 
 
 \subsection{Controle do espaço de busca}
@@ -474,8 +433,8 @@ relação a quantidade de características fixas. A estrutura de dados
 utilizada deve ser eficiente tanto para inserções (de intervalos e de 
 pontos do reticulado) quanto para consultas. Escolhemos para nossa 
 implementação usar a estrutura de dados de diagramas de decisão binária
-reduzidos e ordenados (\foreignword{Reduced Ordered Binary Decision 
-Diagram} (ROBDD)) ~\cite{Bry86}.
+reduzidos e ordenados (\foreignword{Reduced, Ordered Binary Decision 
+Diagrams} (ROBDDs))~\cite{Bry86}.
 
 \subsection{Paralelização do código}
 Usamos a biblioteca \toolname{OpenMP} na paralelização do código.
@@ -483,8 +442,8 @@ Esta biblioteca nos permite paralelizar o algoritmo de maneira fácil,
 com anotações que indicam ao compilador como blocos do código fonte 
 podem ser processados paralelamente.
 
-O \algname{PUCS} foi criado com o intuito de ser um algoritmo paralelo
-para resolver o problema U-Curve. O particionamento do espaço foi feito
+O \algname{PUCS} foi criado com o intuito de ser um algoritmo paralelizado
+para resolver o problema U-curve. O particionamento do espaço foi feito
 exatamente para que o processo de paralelização do código fosse simples,
 facilitando a distribuição de trabalho entre threads e usando o mínimo
 de comunicação entre as mesmas. Desta forma, para paralelizar o código,
@@ -496,11 +455,11 @@ Desta forma, sempre que o algoritmo visita uma parte que não é podada,
 cria-se uma \foreignword{task} que deve solucionar tal parte. 
 
 Esta abordagem pode causar cálculos supérfluos, pois partes resolvidas
-podem ser podadas no decorrer dos passeios aleatórios, no entanto, para 
+podem ser podadas no decorrer dos passeios aleatórios. No entanto, para 
 evitar tais recálculos seria necessário esperar o percorrimento de todo
 reticulado externo antes de se resolver as partes. Esta segunda 
 abordagem tornaria necessário armazenar e manter atualizada uma lista de 
-partes candidatas, o que pode ser caro computacionalmente; além disso, 
+partes candidatas, o que pode ser caro computacionalmente. Além disso, 
 como o passeio é feito apenas por uma thread, todas as outras seriam
 subutilizadas durante o passeio. 
 
@@ -509,13 +468,13 @@ subutilizadas durante o passeio.
 \label{sec:pucs:parameters}
 Antes de discutir o desempenho do algoritmo, precisamos entender como
 os parâmetros devem ser ajustados para cada tipo de instância do 
-problema U-Curve. Consideramos instâncias pequenas aquelas que podem ser
+problema U-curve. Consideramos instâncias pequenas aquelas que podem ser
 resolvidas otimamente. Estas instâncias costumam ter menos do que 30 
 características e algoritmos ingênuos como a busca exaustiva podem, 
-já para estas instâncias, se tornar muito caros computacionalmente. Já 
+já para estas instâncias, tornar-se muito caros computacionalmente. Já 
 as instâncias grandes, que não podem ser resolvidas por algoritmos 
 ótimos, costumam ter mais do que 30 características; utiliza-se para 
-estas instâncias algoritmos sub-ótimos, heurísticas.
+estas instâncias algoritmos sub-ótimos, isto é, heurísticas.
 
 \subsubsection{Instâncias pequenas}
 % -> p e l não interferem na qualidade da solução
@@ -542,25 +501,19 @@ particionamento seja muito pouco fino, não gerando um número de tarefas
 que use todo o poder computacional da máquina usada.
 
 \begin{figure}[!ht]
-    \begin{center}
-    \begin{tabular}{l r}
-    \centering
+    \begin{tabular}{ll}
         \subfigure[] {
         \label{fig:pucs:parameters:small:A}
-        \includegraphics[clip=true, width=0.48\textwidth]{pucs/parameters/k20_n15_l3_time.png}
+        \scalebox{0.375}{\includegraphics[clip=true, trim=0cm 0cm 3cm 0cm]{pucs/parameters/k20_n15_l3_time.png}}
     }
     &
         \subfigure[] {
         \label{fig:pucs:parameters:small:B}
-        \includegraphics[clip=true, width=0.48\textwidth]{pucs/parameters/k20_n20_l3_time.png}
+        \scalebox{0.375}{\includegraphics[clip=true, trim=0cm 0cm 0cm 0cm]{pucs/parameters/k20_n20_l3_time.png}}
     }
     \end{tabular}   
-    \end{center}
-    \caption{Gráficos com o tempo de execução médio de acordo com os
-    parâmetros $p$ e $l$. A figura~\ref{fig:pucs:parameters:small:A} 
-    mostra este valor para uma instância artificial com 15 
-    características enquanto a figura~\ref{fig:pucs:parameters:small:B}
-    mostra este valor para uma instância de 20 características.}
+    \caption{Tempo de execução médio em função dos
+    parâmetros $p$ e $l$. As figuras~\ref{fig:pucs:parameters:small:A} e \ref{fig:pucs:parameters:small:B} mostram, respectivamente, resultados para instâncias com 15 e 20 características.}
     \label{fig:pucs:parameters:small}
 \end{figure}
 
@@ -582,31 +535,27 @@ parâmetro $p$, basta evitar valores muito pequenos e também muito altos.
     \centering
         \subfigure[] {
         \label{fig:pucs:parameters:small2:A}
-        \includegraphics[clip=true, width=0.48\textwidth]{pucs/parameters/k20_n12_time.png}
+        \includegraphics[clip=true, width=0.5\textwidth]{pucs/parameters/k20_n12_time.png}
     }
     &
         \subfigure[] {
         \label{fig:pucs:parameters:small2:B}
-        \includegraphics[clip=true, width=0.48\textwidth]{pucs/parameters/k20_n20_time.png}
+        \includegraphics[clip=true, width=0.5\textwidth]{pucs/parameters/k20_n20_time.png}
     }
     \end{tabular}   
     \end{center}
-    \caption{Gráficos com o tempo de execução médio de acordo com os
-    parâmetros $p$ e $l$. A figura~\ref{fig:pucs:parameters:small2:A} 
-    mostra este valor para uma instância artificial com 12 
-    características enquanto a figura~\ref{fig:pucs:parameters:small2:B}
-    mostra este valor para uma instância de 20 características. O
-    algoritmo base utilizado é o \algname{UBB}.}
+    \caption{Tempo de execução médio em função dos
+    parâmetros $p$ e $l$, usando \algname{UBB} como algoritmo base. As figuras~\ref{fig:pucs:parameters:small2:A} e \ref{fig:pucs:parameters:small2:B} mostram, respectivamente, resultados para instâncias com 12 e 20 características.}
     \label{fig:pucs:parameters:small2}
 \end{figure}
 
 
 \subsubsection{Instâncias grandes}
 Instâncias grandes costumam não ser resolvidas por algoritmos ótimos, 
-pois estes demandam recursos computacionais as vezes não disponíveis. 
-Desta forma, resolve-se o problema U-Curve com heurísticas, como o 
+pois estes demandam recursos computacionais que por vezes excedem a capacidade disponível. 
+Desta forma, resolve-se o problema U-curve com heurísticas, tais como o 
 \algname{Sequential Forward Floating Selection} 
-(\algname{SFFS})~\cite{PNK94} ou \algname{Best-First Search} 
+(\algname{SFFS})~\cite{PNK94} ou o \algname{Best-First Search} 
 (\algname{BFS})~\cite{KJ97}. Para o \algname{PUCS} se tornar uma 
 heurística, basta utilizar um algoritmo sub-ótimo como base.
 
@@ -655,14 +604,14 @@ parâmetros enquanto houverem recursos computacionais compatíveis.
 
 A figura~\ref{fig:pucs:parameters:big} mostra como o tempo de execução
 e qualidade da solução se comportam quando aumentamos os valores de 
-$p$ e $l$. Confirmando as nossas expectativas, quando amentamos $p$ e
+$p$ e $l$. Confirmando as nossas expectativas, quando aumentamos $p$ e
 $l$ a qualidade da solução encontrada é mais perto da ótima (o erro 
-diminui, no gráfico da figura ~\ref{fig:pucs:parameters:big:B}), e o 
+diminui no gráfico da figura~\ref{fig:pucs:parameters:big:B}), e o 
 tempo de execução aumenta.
 
 \section{Experimentos com instâncias artificiais}
 Nesta seção apresentamos testes feitos com o \algname{PUCS} ao  
-solucionar instâncias artificiais do problema U-Curve onde função de 
+solucionar instâncias artificiais do problema U-curve onde função de 
 custo utilizada é a de soma de subconjuntos. Estes testes foram feitos
 no arcabouço \toolname{featsel} e foram rodados em uma servidora 
 Dell PowerEdge 850, com 64 núcleos e 256 GB de memória RAM.
@@ -673,13 +622,16 @@ o suficiente para gerar um número de partes que façam todos os cores
 da servidora trabalharem.
 
 \subsection{Experimentos ótimos}
-Estes experimentos são feitos em instâncias do problema U-Curve de 
+Estes experimentos são feitos em instâncias do problema U-curve de 
 tamanho pequeno, que podem ser resolvidos por algoritmos ótimos. 
 Comparamos o \algname{PUCS} com o \algname{UBB}, \algname{PFS} e
 também com o algoritmo criado na seção ~\ref{sec:ubbpfs}, o 
 \algname{UBB-PFS}. Como parâmetros para estas instâncias utiilizamos 
 $p$ tal que número de variáveis fixas é 10, $l = 1$, e o \algname{UBB} 
 como algoritmo base.
+
+% Comentário: {\bf \color{blue} [Não faria sentido usar o PFS como algoritmo base?]}
+
 
 \begin{table}
 \centering
@@ -707,7 +659,7 @@ $|S|$ & $2^{|S|}$ && \algname{UBB} & \algname{PFS} & \algname{UBB-PFS} & \algnam
 \bottomrule
 \end{tabular}
 \caption{Comparação de tempo de execução de algoritmos ótimos para o
-problema U-Curve. O \algname{PUCS} foi o segundo algoritmo mais lento,
+problema U-curve. O \algname{PUCS} foi o segundo algoritmo mais lento,
 sendo mais rápido do que o \algname{PFS} apenas.}
 \label{tab:pucs:small:time}
 % }
@@ -759,20 +711,20 @@ $|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS & PUCS \\
 \end{tabular}
 }
 \caption{Comparação de número de chamadas da função custo em algoritmos
-ótimos do problema U-Curve. O \algname{PUCS} faz menos chamadas da
+ótimos do problema U-curve. O \algname{PUCS} faz menos chamadas da
 função custo que o \algname{UBB}, porém faz mais chamadas do que o 
-\algname{PFS} e \algname{PFS-UBB}.}
+\algname{PFS} e \algname{UBB-PFS}.}
 \label{tab:pucs:small:cost}
 \end{table}
 
 \subsection{Experimentos sub-ótimos}
-Estes experimentos foram feitas em instâncias do problema U-Curve que
+Estes experimentos foram feitas em instâncias do problema U-curve que
 são grandes e geralmente não podem ser resolvidas por algoritmos ótimos.
 Comparamos o desempenho do \algname{PUCS} contra as heurísticas 
 \algname{SFFS}~\cite{PNK94} e \algname{BFS}~\cite{KJ97}. Utilizamos
 como parâmetros $p$ tal que o número de variáveis fixas é 10, $l = 1$,
 e, como algoritmo base, utilizamos a heurística 
-\algname{Sequential Forward Selection} \algname{SFS}~\cite{Whi71}.
+\algname{Sequential Forward Selection} (\algname{SFS})~\cite{Whi71}.
 
 A figura~\ref{fig:pucs:big:time} compara o tempo de execução do 
 \algname{PUCS} com heurísticas. Apesar do desvio padrão grande, podemos
