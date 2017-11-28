@@ -15,14 +15,16 @@
 % datasets utilizados
 % resultados dos experimentos
 
+
+
 Com o objetivo de testar os algoritmos de seleção de características
 em problemas reais, decidimos aplicá-los a problemas de seleção de 
 modelos de aprendizado computacional. Usamos as características 
 selecionadas para definir um modelo de aprendizado e calculamos o erro
 de classificação médio para este modelo, usando validação cruzada. Os
 dados utilizados estão disponíveis no 
-University of California Irvine (UCI) Machine Learning 
-Repository~\cite{Lic13}.
+\href{https://archive.ics.uci.edu/ml/index.php}{University of California Irvine (UCI) Machine Learning 
+Repository}~\cite{Lic13}.
 
 \section{Seleção de características em aprendizado de máquina}
 Os dados disponíveis no repositório UCI Machine Learning Repository
@@ -42,7 +44,7 @@ o problema de seleção de características de maneira que isto aconteça.
 Então, além de determinar que o conjunto de características seja $S$,
 precisamos escolher a função de custo $c$ para o problema. 
 Como discutido na seção~\ref{fund_concept:mce}, a função de custo
-entropia condicional média (MCE) faz bem este papel. Além disso, a 
+entropia condicional média (MCE), apresentada na equação~\ref{cost_function:mce}, faz bem este papel. Além disso, a 
 função MCE induz curvas em U, com poucas violações, nas cadeias do 
 reticulado Booleano. Por conta das violações, este problema não é o
 U-Curve, porém, como visto no trabalho de Reis ~\cite{Rei12}, podemos 
