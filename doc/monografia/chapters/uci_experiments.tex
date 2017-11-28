@@ -178,6 +178,13 @@ da bactéria \species{E. coli}. Cada sequência é formada por 57
 variáveis, que são nucleotídeos, e é rotulada em promotora ou não 
 promotora.
 
+\subsection{Algoritmo de seleção de características}
+Para esta tarefa utilizamos o algoritmo \algname{PUCS} por ser o mais
+flexível entre os estudados. Utilizamos como base o algoritmo 
+\algname{Sequential Forward Floating Search}~\cite{Whi71}; como 
+parâmetro $p$ um valor tal que o número de variáveis fixas é 10, e como 
+$l$ utilizamos 1.
+
 \subsection{Resultados}
 A figura~\ref{fig:uci} mostra os resultados de nossos experimentos.
 Na figura~\ref{fig:uci:feats} apresentamos a quantidade média de 
