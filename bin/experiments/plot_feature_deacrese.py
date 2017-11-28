@@ -53,8 +53,9 @@ for algorithm in algorithm_feats:
 
 
 # creates bars
-bar_width = 1.2
+bar_width = 1.4
 n_range = np.arange (n) * 2
+ones = np.ones(n) * 0.2
 i = 0
 
 axes = plt.gca ()
@@ -70,7 +71,7 @@ n_range = np.arange (n) * 2
 avg_feats_arr = avg_alg_feats_arr["pucs"]
 indexes = n_range
 bar_label = "características do " + "pucs"
-rects = plt.bar (n_range, avg_feats_arr, bar_width, label=bar_label, color=my_colors[1])
+rects = plt.bar (n_range + ones, avg_feats_arr, bar_width, label=bar_label, color=my_colors[1])
 plt.legend (loc="upper left")
 
 plt.xlabel ('Conjunto de dados')
@@ -78,4 +79,4 @@ plt.ylabel ('Número médio de características selecionadas')
 plt.title ('')
 plt.xticks (n_range, names_arr,rotation=45)
 
-plt.savefig ('avg_features.pdf', bbox_inches='tight')
+plt.savefig ('avg_features.pdf', bbox_inches='tight', transparent=True)

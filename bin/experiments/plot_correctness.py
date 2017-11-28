@@ -43,4 +43,5 @@ handlers, labels = ax.get_legend_handles_labels ()
 ax.legend(handlers, labels, loc = 'best', numpoints = 1)
 plt.xlabel ("Tamanho de instância")
 plt.ylabel ("Proporção de melhor solução encontrada")
-plt.show ()
+
+plt.savefig ('avg_correctness.pdf', bbox_inches='tight', transparent=True)

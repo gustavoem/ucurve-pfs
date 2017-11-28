@@ -44,4 +44,5 @@ ax.legend(handlers, labels, loc = 'upper left', numpoints = 1)
 plt.xlabel ("Tamanho de instância")
 plt.ylabel ("Tempo médio de execução")
 plt.title ("")
-plt.show ()
+
+plt.savefig ('avg_time.pdf', bbox_inches='tight', transparent=True)
