@@ -1,0 +1,126 @@
+\include{template}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+\title{\LARGE%
+SigNetSim : A web platform for building and analyzing mathematical models of molecular signaling networks.%
+}
+
+\author{\vspace*{1.5cm}\underline{Vincent No\"el$^{1}$}, Marcelo S. Reis$^{1}$, Matheus H.S. Dias$^{1}$, Lulu Wu$^{1,2}$, Amanda S. Guimarães$^{1,2}$,\\ Daniel F. Reverbel$^{2}$, Junior Barrera$^{1,2}$, and Hugo A. Armelin$^{1,3}$}
+
+\institute{%
+$^1$Center of Toxins, Immune-response and Cell Signaling (CeTICS), Instituto Butantan, Brazil\\%
+$^2$Instituto de Matem\'atica e Estat\'istica, Universidade de S\~ao Paulo, Brazil\\%
+$^3$Instituto de Qu\'imica, Universidade de S\~ao Paulo, Brazil%
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{frame}
+\begin{columns}
+
+\leftcolumn{ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{block}{Introduction and objective}%
+%\the\titleheight
+\paragraph{Molecular biology is experiencing a revolution, in one part thanks to new technologies to measure and perturbate biological systems in vitro, and also due to the growing importance of mathematical modeling which enables us to understand biological mechanisms in a more profound way. However, a crucial point in this transforming field is the need to provide completely new tools, which should be computationally efficient, versatile, and compatible.}%
+\paragraph{To this end, we developed SigNetSim, a web platform that allows user to create, simulate, adjust and analyse biochemical reaction models. As a web platform, it is usable on multiple devices. It is designed to be installed on computation servers, with all the work executed server-side. It uses various standards to produce reproducible projects.}%
+\customparagraph{0.3cm}{It is open-source, and available on GitHub and at \textbf{signetsim.org}}
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                    
+\begin{block}{Models}%
+\rightfigparagraph{figures/edit_reaction.png}{20}{8}{Through the interface, users can easily define the mathematical model as a set of biochemical reactions, as well as other functionalites available in the SBML format. }%
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                     
+\begin{block}{Simulations}%
+\rightfigparagraph{figures/simulation.png}{20}{10}{%
+Users can simulate their models, and obtain timeseries or steady states. It can also simulate the model according to a batch of initial conditions, and compare the results to experimental observations.
+}%
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                     
+\begin{block}{Model fitting}%
+\rightfigparagraph{figures/fit_fgf_v3.png}{20}{8}{%
+SigNetSim can perform curve-fitting on models, using a parallelized simulated annealing. This algorithm is particularly suited for optimizing large non-linear systems.
+}%
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                            
+%\begin{block}{Annotations}%
+%\paragraph{%
+%SigNetSim annotate things\newline
+%}%
+%\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                            
+\begin{block}{Continuations}%
+\rightfigparagraph{figures/bifurcation.png}{20}{7}{%
+In order to analyse the dynamical properties of the mathematical model, SigNetSim uses continuations techniques. It allows the user to investigate the possible multiple equilibria and find the bifurcations between them. 
+}%
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+\vfill 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                    
+%\begin{block}{References}%
+%\myenumerate%
+%{%
+%\item{Chu, K. W., Deng, Y., Reinitz, J. (1999). Parallel simulated annealing by mixing of states. Journal of Computational Physics, 148(2), 646-662.}%
+%}%
+%\end{block}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                    
+\begin{block}{Acknowledgements}%
+\insidecolumns{0.5}{0.5}%
+{\mycenteredimage{institutions/FAPESP.jpg}{1.1}}%
+{\mycenteredimage{institutions/CNPq.png}{1.5}}%
+\vspace*{-3cm}%
+\end{block}%
+} % end \leftcolumn
+\rightcolumn{%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%\begin{block}{Y1 cell line}%
+%\paragraph{The K-Ras-driven mouse adrenocortical tumor cell line Y1 displays a surprising association of phenotypic traits, i.e., high basal levels of activated K-Ras in starved cells and induction of cell cycle arrest upon stimulation by FGF2. In addition, ectopic expression of the dominant negative mutant Ras-N17 reduced activated K-Ras basal levels and eliminated cell cycle arrest by FGF2. We are working to uncovered the molecular basis of this unexpected phenomenon by modeling the kinetics of the Ras-MAPK signalling pathway}%
+%\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%\begin{block}{Model}%
+%\paragraph{Our model is build as an assembly of three different submodels, using the SBML comp package.}
+%\vspace*{-2cm}\mycenteredimage{master_comp_sbgn.png}{0.5}
+%\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%               
+\begin{block}{Multi-Device}%
+\rightfigparagraph{figures/simulation_phone.png}{14}{20}{%
+SigNetSim is a web interface written mostly in python with the Django framework, which uses Bootstrap as a front-end framework. It is designed to function in various devices, from smartphone to desktop computer. The computer-intensive computations are performed server-side.\\$\newline$%
+An important part of the code is written in JavaScript, which makes the interface fast and dynamic. SigNetSim uses a collection of JavaScript libraries to make the interface more responsive. It can draw reaction diagrams using Cytoscape.js, simulations  as interactive plots using Chart.js, or render mathematical formulas using Mathjax.js.
+%SigNetSim can perform multiple simulations, using the different initial conditions stored into the database. The Javasript plotting library Chart.js produces beautiful, interactive plots of the timeseries, which can later be saved as image. display the mathematical model. Users can also easily export the mathematical model description as LaTeX.
+}%
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{block}{Standards}%
+\rightfigparagraph{figures/logo_sbml.png}{6}{2}{SigNetSim is compatible with most of the SBML format. It also uses the SBML comp package to represent hierarchical model composition.}%
+\rightfigparagraph{figures/logo_sedml.png}{6}{5}{It is partially compatible with SED-ML format, which stores simulation settings and allows users to easily reproduce simulations from literature.}%
+\rightfigparagraph{figures/combinearchive.png}{6}{4}{Moreover, SigNetSim can use COMBINE archive format, which stores both the SBML model and the SED-ML simulation file into one file. It also can also store experimental data from its database into the NuML format. Loading an existing combine archive will automatically load a new project, with models and simulations.}%
+%\vspace*{-0.4cm}%
+\end{block}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{block}{libSigNetSim}%
+\rightfigparagraph{figures/jupyter_notebook_3.png}{20}{8}{SigNetSim is modular, and its core library is usable directly from jupyter notebooks. Users can build models with a few lines of code. One advantage of this use case is to be able to analyse the model directly with the computer algebra system Sympy. }%
+\end{block}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                 
+\begin{block}{Open source}%
+\paragraph{SigNetSim, and its core library libSigNetSim, are available on GitHub. They are distributed under AGPLv3 and GPLv3 licences, respectively. We use continuous integration to perform tests on every update, making the software more robust. Installation scripts are provided for debian-based linux distributions, as well as Docker images.
+}%
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                    
+\vfill  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                    
+\begin{block}{Future work}%
+\myitemize%
+{%
+\item SBGN viewer/editor%$\newline$%
+\item Stochastic simulations%$\newline$%
+\item Database interaction, annotations%
+}%
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                    
+}% end of right column
+\end{columns}
+\end{frame}
+\end{document}

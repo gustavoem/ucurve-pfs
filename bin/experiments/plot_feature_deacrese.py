@@ -62,7 +62,8 @@ axes = plt.gca ()
 axes.set_ylim([0, 80])
 
 avg_feats_arr = avg_alg_feats_arr["all"]
-bar_label = "todas características"
+# bar_label = "todas características"
+bar_label = "All features"
 rects = plt.bar (n_range, avg_feats_arr, bar_width, label=bar_label, color=my_colors[2])
 plt.legend (loc="upper left")
 
@@ -70,12 +71,12 @@ bar_width = 1
 n_range = np.arange (n) * 2
 avg_feats_arr = avg_alg_feats_arr["pucs"]
 indexes = n_range
-bar_label = "características do " + "pucs"
+bar_label = "PUCS" + " features"
 rects = plt.bar (n_range + ones, avg_feats_arr, bar_width, label=bar_label, color=my_colors[1])
 plt.legend (loc="upper left")
 
-plt.xlabel ('Conjunto de dados')
-plt.ylabel ('Número médio de características selecionadas')
+plt.xlabel ('Data set')
+plt.ylabel ('Average number of selected features')
 plt.title ('')
 plt.xticks (n_range, names_arr,rotation=45)
 

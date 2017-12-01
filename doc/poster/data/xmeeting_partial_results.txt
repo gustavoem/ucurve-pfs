@@ -1,0 +1,82 @@
+
+ 1-run on     Iris with     pucs takes  0.606 and has cross-validation error of 0.067 
+ 2-run on     Iris with     pucs takes  0.183 and has cross-validation error of 0.067 
+ 3-run on     Iris with     pucs takes  0.146 and has cross-validation error of 0.067 
+ 4-run on     Iris with     pucs takes  0.193 and has cross-validation error of 0.067 
+ 5-run on     Iris with     pucs takes  0.146 and has cross-validation error of 0.067 
+ 6-run on     Iris with     pucs takes  0.184 and has cross-validation error of 0.067 
+ 7-run on     Iris with     pucs takes  0.156 and has cross-validation error of 0.067 
+ 8-run on     Iris with     pucs takes  0.155 and has cross-validation error of 0.067 
+ 9-run on     Iris with     pucs takes  0.169 and has cross-validation error of 0.067 
+10-run on     Iris with     pucs takes  0.171 and has cross-validation error of 0.067 
+ 1-run on     Iris with     sffs takes  0.158 and has cross-validation error of 0.067 
+ 2-run on     Iris with     sffs takes  0.175 and has cross-validation error of 0.067 
+ 3-run on     Iris with     sffs takes  0.147 and has cross-validation error of 0.067 
+ 4-run on     Iris with     sffs takes  0.168 and has cross-validation error of 0.067 
+ 5-run on     Iris with     sffs takes  0.170 and has cross-validation error of 0.067 
+ 6-run on     Iris with     sffs takes  0.200 and has cross-validation error of 0.067 
+ 7-run on     Iris with     sffs takes  0.154 and has cross-validation error of 0.067 
+ 8-run on     Iris with     sffs takes  0.188 and has cross-validation error of 0.067 
+ 9-run on     Iris with     sffs takes  0.140 and has cross-validation error of 0.067 
+10-run on     Iris with     sffs takes  0.193 and has cross-validation error of 0.067 
+ 1-run on Promoters with     pucs takes 21.295 and has cross-validation error of 0.160 
+ 2-run on Promoters with     pucs takes 22.452 and has cross-validation error of 0.160 
+ 3-run on Promoters with     pucs takes 18.474 and has cross-validation error of 0.160 
+ 4-run on Promoters with     pucs takes 20.050 and has cross-validation error of 0.160 
+ 5-run on Promoters with     pucs takes 18.209 and has cross-validation error of 0.160 
+ 6-run on Promoters with     pucs takes 20.746 and has cross-validation error of 0.160 
+ 7-run on Promoters with     pucs takes 17.544 and has cross-validation error of 0.160 
+ 8-run on Promoters with     pucs takes 20.116 and has cross-validation error of 0.160 
+ 9-run on Promoters with     pucs takes 22.866 and has cross-validation error of 0.160 
+10-run on Promoters with     pucs takes 21.908 and has cross-validation error of 0.160 
+ 1-run on Promoters with     sffs takes  0.368 and has cross-validation error of 0.160 
+ 2-run on Promoters with     sffs takes  0.413 and has cross-validation error of 0.160 
+ 3-run on Promoters with     sffs takes  0.386 and has cross-validation error of 0.160 
+ 4-run on Promoters with     sffs takes  0.385 and has cross-validation error of 0.160 
+ 5-run on Promoters with     sffs takes  0.425 and has cross-validation error of 0.160 
+ 6-run on Promoters with     sffs takes  0.449 and has cross-validation error of 0.160 
+ 7-run on Promoters with     sffs takes  0.454 and has cross-validation error of 0.160 
+ 8-run on Promoters with     sffs takes  0.407 and has cross-validation error of 0.160 
+ 9-run on Promoters with     sffs takes  0.442 and has cross-validation error of 0.160 
+10-run on Promoters with     sffs takes  0.391 and has cross-validation error of 0.160 
+ 1-run on     Wine with     pucs takes 11.930 and has cross-validation error of 0.022 
+ 2-run on     Wine with     pucs takes 10.577 and has cross-validation error of 0.022 
+ 3-run on     Wine with     pucs takes 11.398 and has cross-validation error of 0.022 
+ 4-run on     Wine with     pucs takes 10.241 and has cross-validation error of 0.022 
+ 5-run on     Wine with     pucs takes 13.180 and has cross-validation error of 0.022 
+ 6-run on     Wine with     pucs takes 10.675 and has cross-validation error of 0.022 
+ 7-run on     Wine with     pucs takes 11.345 and has cross-validation error of 0.022 
+ 8-run on     Wine with     pucs takes 11.496 and has cross-validation error of 0.022 
+ 9-run on     Wine with     pucs takes 14.941 and has cross-validation error of 0.022 
+10-run on     Wine with     pucs takes 12.879 and has cross-validation error of 0.022 
+ 1-run on     Wine with     sffs takes  0.341 and has cross-validation error of 0.022 
+ 2-run on     Wine with     sffs takes  0.302 and has cross-validation error of 0.022 
+ 3-run on     Wine with     sffs takes  0.353 and has cross-validation error of 0.022 
+ 4-run on     Wine with     sffs takes  0.360 and has cross-validation error of 0.022 
+ 5-run on     Wine with     sffs takes  0.308 and has cross-validation error of 0.022 
+ 6-run on     Wine with     sffs takes  0.296 and has cross-validation error of 0.022 
+ 7-run on     Wine with     sffs takes  0.368 and has cross-validation error of 0.022 
+ 8-run on     Wine with     sffs takes  0.348 and has cross-validation error of 0.022 
+ 9-run on     Wine with     sffs takes  0.300 and has cross-validation error of 0.022 
+10-run on     Wine with     sffs takes  0.384 and has cross-validation error of 0.022 
+ 1-run on      Zoo with     pucs takes 28.608 and has cross-validation error of 0.069 
+ 2-run on      Zoo with     pucs takes 40.745 and has cross-validation error of 0.069 
+ 3-run on      Zoo with     pucs takes 33.052 and has cross-validation error of 0.069 
+ 4-run on      Zoo with     pucs takes 31.960 and has cross-validation error of 0.069 
+ 5-run on      Zoo with     pucs takes 35.725 and has cross-validation error of 0.069 
+ 6-run on      Zoo with     pucs takes 33.810 and has cross-validation error of 0.069 
+ 7-run on      Zoo with     pucs takes 28.130 and has cross-validation error of 0.069 
+ 8-run on      Zoo with     pucs takes 26.576 and has cross-validation error of 0.069 
+ 9-run on      Zoo with     pucs takes 31.243 and has cross-validation error of 0.069 
+10-run on      Zoo with     pucs takes 40.192 and has cross-validation error of 0.069 
+ 1-run on      Zoo with     sffs takes  0.632 and has cross-validation error of 0.050 
+ 2-run on      Zoo with     sffs takes  0.554 and has cross-validation error of 0.050 
+ 3-run on      Zoo with     sffs takes  0.625 and has cross-validation error of 0.050 
+ 4-run on      Zoo with     sffs takes  0.638 and has cross-validation error of 0.050 
+ 5-run on      Zoo with     sffs takes  0.665 and has cross-validation error of 0.050 
+ 6-run on      Zoo with     sffs takes  0.655 and has cross-validation error of 0.050 
+ 7-run on      Zoo with     sffs takes  0.711 and has cross-validation error of 0.050 
+ 8-run on      Zoo with     sffs takes  0.658 and has cross-validation error of 0.050 
+ 9-run on      Zoo with     sffs takes  0.614 and has cross-validation error of 0.050 
+10-run on      Zoo with     sffs takes  0.603 and has cross-validation error of 0.050 
+ 1-run on Arrhythmia with     pucs takes 106690.898 and has cross-validation error of 0.440 

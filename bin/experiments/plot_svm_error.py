@@ -67,15 +67,15 @@ for algorithm in alg_err_arrays:
     print (algorithm)
     print (err_arr)
     print (indexes)
-    bar_label = "características do " + algorithm
+    bar_label = algorithm.upper () + " features"
     if algorithm == "all":
-        bar_label = "todas características"
+        bar_label = "All features"
     rects = plt.bar (indexes, err_arr, bar_width, label=bar_label, color=my_colors[i + 1])
     plt.legend ()
     i += 1
 
-plt.xlabel ('Conjunto de dados')
-plt.ylabel ('Erro médio de validação cruzada')
+plt.xlabel ('Data set')
+plt.ylabel ('Mean cross validation error')
 plt.title ('')
 plt.xticks (n_range * (n_algs + 1) + (n_algs / 4) * ones, names_arr,rotation=45)
 

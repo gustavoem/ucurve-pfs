@@ -1,0 +1,251 @@
+\documentclass[final,hyperref={pdfpagelabels=false}]{beamer}
+
+\usepackage{graphics, subfigure}
+\usepackage{color}
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[orientation=portrait,size=a0,scale=1.4]{beamerposter}
+\usepackage{fp}% http://ctan.org/pkg/fp
+\usepackage{wrapfig} % wrap text around figures
+\usepackage{calc} % easy adding dimensions
+\usepackage[export]{adjustbox} % left, right-align includegraphics
+\usepackage{caption}
+\usepackage{amsmath}
+\newlength{\columnheight}
+\setlength{\columnheight}{98cm}
+\def\marginwidthratio{0.08}
+\FPeval{\contentwidthratio}{1-\marginwidthratio}
+\FPeval{\tightcontentwidthratio}{1-(\marginwidthratio / 2)}
+\def\insidecolumnsinter{0.05}
+
+\graphicspath{{figures/}}
+\newlength{\insidecolumnwidth}%
+\newlength{\intercolumnwidth}%
+\newlength{\titleheight}%
+% Colors %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{green_butantan}{RGB}{0,112,60}
+\definecolor{c_purple}{RGB}{56,3,52}
+\definecolor{c_blue}{RGB}{41,68,107}
+\definecolor{alert_blue}{RGB}{70, 70, 255}
+\definecolor{c_green}{RGB}{87,184,9}
+\definecolor{green2}{RGB}{76,196,93}
+\definecolor{green3}{RGB}{76,173,138}
+\definecolor{turquoise}{RGB}{39,94,102}
+\definecolor{c_orange}{RGB}{255,149,28}
+\setbeamertemplate{navigation symbols}{}  % no navigation on a poster
+\setbeamercolor*{block title}{fg=green_butantan!80,bg=white}
+\setbeamerfont{footline}{size=\large}
+%\setbeamerfont{block title}{size=\large,series=\bf}
+\setbeamerfont{block title}{size={\fontsize{64}{24}}, series=\bfseries}
+\setbeamerfont{title}{size={\fontsize{83}{10}}}
+\setbeamerfont{author font}{size={\fontsize{56}{10}}}
+\setbeamerfont{supervisor font}{size={\fontsize{50}{10}}}
+
+
+% Itemize %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{itemize item}{\color{green_butantan}{\textbf{$\bullet$}~}\color{black!50}}
+\setbeamertemplate{itemize/enumerate body begin}{\color{black!80}}
+\setbeamertemplate{itemize subitem}{\color{green_butantan}{\textbf{\diamond}~}}
+\setbeamertemplate{caption}[numbered]
+\setbeamercolor{caption}{fg=black!80}
+\setbeamercolor{caption name}{fg=green2}
+\setbeamercolor*{enumerate item}{fg=green_butantan}
+\setbeamercolor*{enumerate subitem}{fg=green_butantan}
+\setbeamercolor*{enumerate subsubitem}{fg=green_butantan}
+\setbeamerfont{enumerate item}{series=\bf}
+\setbeamercolor*{background canvas}{bg=white}
+
+
+
+\newcommand{\leftcolumn}[1]{%
+\begin{column}{.49\textwidth}%        
+\begin{minipage}[T]{\textwidth}%
+\parbox[t][\columnheight]{\textwidth}{#1}%
+\end{minipage}%
+\end{column}%
+}
+\newcommand{\rightcolumn}[1]{%
+\begin{column}{.49\textwidth}%        
+\begin{minipage}[T]{\textwidth}%
+\parbox[t][\columnheight]{\textwidth}{#1}%
+\end{minipage}%
+\end{column}%
+}
+
+\newcommand{\customparagraph}[2]{%
+\parbox[t][]{\contentwidthratio\textwidth}{%
+%\hspace*{2cm}%
+#2}%
+\vspace*{#1}%
+~\\%
+}
+\newcommand{\paragraph}[1]{%
+\parbox[t][]{\contentwidthratio\textwidth}{%
+%\hspace*{2cm}%
+#1}%
+\vspace*{2cm}%
+~\\%
+}
+
+\newcommand{\tightparagraph}[1]{%
+\vspace*{-.5cm}\parbox[t][]{\textwidth}{%
+%\hspace*{2cm}%
+#1}%
+~\\%
+}
+
+\newcommand{\leftfigparagraph}[4]{%
+\parbox[t][]{\contentwidthratio\textwidth}{%
+\setlength\intextsep{0pt}%
+\begin{wrapfigure}[#3]{L}{#2cm+1cm}%
+\includegraphics[width=#2cm,left]{#1}%
+\end{wrapfigure}%
+%\hspace*{2cm}%
+#4}%
+\vspace*{2cm}%
+~\\%
+}
+
+\newcommand{\rightfigparagraph}[4]{%
+\parbox[t][]{\contentwidthratio\textwidth}{%
+\setlength\intextsep{0pt}%
+\begin{wrapfigure}[#3]{R}{#2cm+1cm}%
+\includegraphics[width=#2cm,right]{#1}%
+\end{wrapfigure}%
+%\hspace*{2cm}%
+#4}%
+\vspace*{2cm}%
+~\\%
+}
+
+
+\newcommand{\myimage}[2]{%
+\scalebox{#2}{\includegraphics{#1}}%
+~\\%
+}
+
+\newcommand{\mycenteredimage}[2]{%
+\begin{center}%
+\scalebox{#2}{\includegraphics{#1}}%
+\end{center}%
+}
+
+\newcommand{\insidecolumns}[4]{%
+\FPeval{\insidecolumnsnoncontent}{\marginwidthratio + \insidecolumnsinter}
+\FPeval{\insidecolumnscontent}{1 - \insidecolumnsnoncontent}
+\setlength{\insidecolumnwidth}{\insidecolumnscontent\textwidth}%
+\setlength{\intercolumnwidth}{\marginwidthratio\textwidth}%
+\vspace{-2cm}%
+\begin{columns}[t,onlytextwidth]%
+%\vrule{}%
+\begin{column}{.5\intercolumnwidth}~\end{column}%
+%\vrule{}%
+\begin{column}{#1\insidecolumnwidth}%
+\begin{flushleft}%
+#3~%
+\end{flushleft}%
+\end{column}%
+%\vrule{}%
+\begin{column}{\insidecolumnsinter\textwidth}~\end{column}%
+%\vrule{}%
+\begin{column}{#2\insidecolumnwidth}%
+\begin{flushright}%
+#4~%
+\end{flushright}%
+\end{column}%
+%\vrule{}%
+\begin{column}{.5\intercolumnwidth}~\end{column}%
+%\vrule{}%
+\end{columns}%
+\vspace*{2cm}%
+}
+
+\newcommand{\myitemize}[1]{%
+\vspace*{-2cm}%
+\hspace*{1cm}\parbox[t][]{0.9\textwidth}{%
+\begin{itemize}%
+#1%
+\end{itemize}%
+}%
+\vspace*{3cm}%
+}
+
+\newcommand{\myenumerate}[1]{%
+\vspace*{-2cm}%
+\hspace*{1cm}\parbox[t][]{0.9\textwidth}{%
+\begin{enumerate}%
+#1%
+\end{enumerate}%
+}%
+\vspace*{3cm}%
+}
+
+\newcommand{\mycite}[1]{{\color{c_green_dark}\textbf{$^{#1}$}}}
+
+\setbeamertemplate{block begin}{%
+  \begin{beamercolorbox}[ht=4cm,sep=1cm,leftskip=0.5cm]{block title}%
+    \usebeamerfont*{block title}%
+     \insertblocktitle\\%
+     \noindent\makebox[\textwidth]{\hspace*{2cm}\color{c_green!60}\rule{0.95\textwidth}{5pt}\hspace{5cm}}%
+  \end{beamercolorbox}%
+  \usebeamerfont{block body}%
+  \vspace*{.5cm}%
+  \begin{beamercolorbox}[leftskip=1.5cm]{block body}%
+  \color{black!80}
+}
+
+\setbeamertemplate{block end}{%
+\end{beamercolorbox}%
+% \vspace*{1cm}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{headline}{  
+  \leavevmode
+
+  \begin{beamercolorbox}[wd=\paperwidth]{headline}
+      \vspace*{2cm}
+    \begin{columns}[T]
+      \begin{column}{.7\paperwidth}
+      	\vspace*{1cm}
+        \raggedleft
+        \color{c_green}
+        \textbf{\Large{\inserttitle}}\\[1ex]%
+        \color{turquoise}
+        \large{\insertauthor}\\[1ex]%
+        \normalsize{\insertinstitute}\\[1ex]%
+      \end{column}
+      %\begin{column}{.01\paperwidth}
+      %\end{column}
+      \begin{column}{.25\paperwidth}
+          \includegraphics[width=.85\linewidth]{figures/institutions/butantanuspcetics3.png}
+      \end{column}
+      %\begin{column}{.03\paperwidth}
+      %\end{column}
+    \end{columns}
+      \vspace*{1.5cm}
+  	\setlength{\titleheight}{20pt}%
+	
+  \end{beamercolorbox}
+  \vfill
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{footline}{
+  \begin{beamercolorbox}[wd=\paperwidth]{upper separation line foot}
+    \rule{0pt}{3pt}
+  \end{beamercolorbox}
+  \leavevmode%
+  \begin{beamercolorbox}[ht=4ex,leftskip=2em,rightskip=2em]{author in head/foot}%
+	\color{black}\phantom{a}
+    \hfill
+	\color{black}\{marcelo.reis, gustavo.matos \}@butantan.gov.br
+    \vskip1ex
+  \end{beamercolorbox}
+  \vskip0pt%
+  \begin{beamercolorbox}[wd=\paperwidth]{lower separation line foot}
+    \rule{0pt}{3pt}
+  \end{beamercolorbox}
+}

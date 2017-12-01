@@ -3,6 +3,17 @@ import matplotlib.pyplot as plt
 
 file_name = "sffs_bfs_pucs_correctness.txt"
 
+my_colors = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3"]
+alg_color = {"PUCS": my_colors[0],
+             "SFFS": my_colors[1],
+             "BFS": my_colors[2],
+             "ES": my_colors[3],
+             "PFS": my_colors[0],
+             "UBB": my_colors[1],
+             "PPFS": my_colors[2],
+             "RPFS": my_colors[3],
+             "UBB-PFS": my_colors[2]}
+
 
 n = []
 m = 50.0
@@ -38,7 +49,7 @@ results["PUCS"] = pucs_corr
 ax = plt.gca () 
 for alg in algorithms:
     r = results[alg]
-    plt.plot (n, r, label = alg)
+    plt.plot (n, r, label = alg, color=alg_color[alg])
 handlers, labels = ax.get_legend_handles_labels ()
 ax.legend(handlers, labels, loc = 'best', numpoints = 1)
 plt.xlabel ("Tamanho de instância")
