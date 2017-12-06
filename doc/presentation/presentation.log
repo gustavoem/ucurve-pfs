@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.9.3)  27 NOV 2017 15:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.9.3)  5 DEC 2017 23:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1939,53 +1939,90 @@ LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <14.4> not available
 
 ] [41
 
-] [42
+]
+<img/pfs/pfs_rand_avg_time.pdf, id=439, 416.73315pt x 315.53458pt>
+File: img/pfs/pfs_rand_avg_time.pdf Graphic file (type pdf)
 
-] [43
+<use img/pfs/pfs_rand_avg_time.pdf>
+Package pdftex.def Info: img/pfs/pfs_rand_avg_time.pdf used on input line 303.
+(pdftex.def)             Requested size: 153.64493pt x 116.33672pt.
+ [42
 
-] [44
+ <./img/pfs/pfs_rand_avg_time.pdf>]
+File: img/pfs/pfs_rand_avg_time.pdf Graphic file (type pdf)
+
+<use img/pfs/pfs_rand_avg_time.pdf>
+Package pdftex.def Info: img/pfs/pfs_rand_avg_time.pdf used on input line 303.
+(pdftex.def)             Requested size: 153.64493pt x 116.33672pt.
+ [43
 
 ]
-[45
+File: img/pfs/pfs_rand_avg_time.pdf Graphic file (type pdf)
+ <use img/pfs/pfs_rand_avg_time.pdf>
+Package pdftex.def Info: img/pfs/pfs_rand_avg_time.pdf used on input line 303.
+(pdftex.def)             Requested size: 153.64493pt x 116.33672pt.
 
-] <img/pfs/obdd/lattice.pdf, id=468, 195.129pt x 202.356pt>
+[44
+
+] <img/pfs/obdd/lattice.pdf, id=503, 195.129pt x 202.356pt>
 File: img/pfs/obdd/lattice.pdf Graphic file (type pdf)
 
 <use img/pfs/obdd/lattice.pdf>
-Package pdftex.def Info: img/pfs/obdd/lattice.pdf used on input line 365.
+Package pdftex.def Info: img/pfs/obdd/lattice.pdf used on input line 322.
 (pdftex.def)             Requested size: 195.12851pt x 202.3555pt.
 
-<img/pfs/obdd/obdd.pdf, id=470, 296.307pt x 144.54pt>
+<img/pfs/obdd/obdd.pdf, id=505, 296.307pt x 144.54pt>
 File: img/pfs/obdd/obdd.pdf Graphic file (type pdf)
 
 <use img/pfs/obdd/obdd.pdf>
-Package pdftex.def Info: img/pfs/obdd/obdd.pdf used on input line 365.
+Package pdftex.def Info: img/pfs/obdd/obdd.pdf used on input line 322.
 (pdftex.def)             Requested size: 296.30627pt x 144.53963pt.
 
-Overfull \hbox (18.36911pt too wide) in paragraph at lines 365--365
+Overfull \hbox (18.36911pt too wide) in paragraph at lines 322--322
  [] 
  []
 
-[46
+[45
 
  <./img/pfs/obdd/lattice.pdf> <./img/pfs/obdd/obdd.pdf>]
 File: img/pfs/obdd/lattice.pdf Graphic file (type pdf)
 
 <use img/pfs/obdd/lattice.pdf>
-Package pdftex.def Info: img/pfs/obdd/lattice.pdf used on input line 365.
+Package pdftex.def Info: img/pfs/obdd/lattice.pdf used on input line 322.
 (pdftex.def)             Requested size: 195.12851pt x 202.3555pt.
 File: img/pfs/obdd/obdd.pdf Graphic file (type pdf)
  <use img/pfs/obdd/obdd.pdf>
-Package pdftex.def Info: img/pfs/obdd/obdd.pdf used on input line 365.
+Package pdftex.def Info: img/pfs/obdd/obdd.pdf used on input line 322.
 (pdftex.def)             Requested size: 296.30627pt x 144.53963pt.
 
-Overfull \hbox (18.36911pt too wide) in paragraph at lines 365--365
+Overfull \hbox (18.36911pt too wide) in paragraph at lines 322--322
  [] 
+ []
+
+[46
+
+] <img/pfs/opfs_avg_time.pdf, id=547, 417.478pt x 315.53458pt>
+File: img/pfs/opfs_avg_time.pdf Graphic file (type pdf)
+
+<use img/pfs/opfs_avg_time.pdf>
+Package pdftex.def Info: img/pfs/opfs_avg_time.pdf used on input line 332.
+(pdftex.def)             Requested size: 215.10196pt x 162.57674pt.
+
+Overfull \vbox (15.6856pt too high) detected at line 332
  []
 
 [47
 
-] [48
+ <./img/pfs/opfs_avg_time.pdf>]
+File: img/pfs/opfs_avg_time.pdf Graphic file (type pdf)
+ <use img/pfs/opfs_avg_time.pdf>
+Package pdftex.def Info: img/pfs/opfs_avg_time.pdf used on input line 332.
+(pdftex.def)             Requested size: 215.10196pt x 162.57674pt.
+
+Overfull \vbox (15.6856pt too high) detected at line 332
+ []
+
+[48
 
 ] [49
 
@@ -1997,61 +2034,81 @@ Overfull \hbox (18.36911pt too wide) in paragraph at lines 365--365
 
 ] [53
 
-] [54
+]
+<img/pfs/ubb-pfs_avg_time.pdf, id=622, 410.34993pt x 315.53458pt>
+File: img/pfs/ubb-pfs_avg_time.pdf Graphic file (type pdf)
 
-] [55
+<use img/pfs/ubb-pfs_avg_time.pdf>
+Package pdftex.def Info: img/pfs/ubb-pfs_avg_time.pdf used on input line 366.
+(pdftex.def)             Requested size: 215.10196pt x 165.39813pt.
+ [54
 
-] [56
+ <./img/pfs/ubb-pfs_avg_time.pdf>]
+File: img/pfs/ubb-pfs_avg_time.pdf Graphic file (type pdf)
+
+<use img/pfs/ubb-pfs_avg_time.pdf>
+Package pdftex.def Info: img/pfs/ubb-pfs_avg_time.pdf used on input line 366.
+(pdftex.def)             Requested size: 215.10196pt x 165.39813pt.
+ [55
 
 ]
-<img/pucs/partition/full_lattice.pdf, id=561, 484.209pt x 448.07399pt>
+<img/pfs/ubb-pfs_avg_calls.pdf, id=679, 413.39255pt x 322.65492pt>
+File: img/pfs/ubb-pfs_avg_calls.pdf Graphic file (type pdf)
+
+<use img/pfs/ubb-pfs_avg_calls.pdf>
+Package pdftex.def Info: img/pfs/ubb-pfs_avg_calls.pdf used on input line 374.
+(pdftex.def)             Requested size: 215.10196pt x 167.8849pt.
+ [56
+
+ <./img/pfs/ubb-pfs_avg_calls.pdf>]
+[57
+
+] <img/pucs/partition/full_lattice.pdf, id=735, 484.209pt x 448.07399pt>
 File: img/pucs/partition/full_lattice.pdf Graphic file (type pdf)
 
 <use img/pucs/partition/full_lattice.pdf>
 Package pdftex.def Info: img/pucs/partition/full_lattice.pdf used on input line
- 511.
+ 396.
 (pdftex.def)             Requested size: 484.20781pt x 448.07288pt.
 
-<img/pucs/partition/all_parts.pdf, id=563, 484.209pt x 448.07399pt>
+<img/pucs/partition/all_parts.pdf, id=737, 484.209pt x 448.07399pt>
 File: img/pucs/partition/all_parts.pdf Graphic file (type pdf)
 
 <use img/pucs/partition/all_parts.pdf>
-Package pdftex.def Info: img/pucs/partition/all_parts.pdf used on input line 51
-1.
+Package pdftex.def Info: img/pucs/partition/all_parts.pdf used on input line 39
+6.
 (pdftex.def)             Requested size: 484.20781pt x 448.07288pt.
- [57
+ [58
 
  <./img/pucs/partition/full_lattice.pdf> <./img/pucs/partition/all_parts.pdf>]
 File: img/pucs/partition/full_lattice.pdf Graphic file (type pdf)
 
 <use img/pucs/partition/full_lattice.pdf>
 Package pdftex.def Info: img/pucs/partition/full_lattice.pdf used on input line
- 511.
+ 396.
 (pdftex.def)             Requested size: 484.20781pt x 448.07288pt.
 File: img/pucs/partition/all_parts.pdf Graphic file (type pdf)
 
 <use img/pucs/partition/all_parts.pdf>
-Package pdftex.def Info: img/pucs/partition/all_parts.pdf used on input line 51
-1.
+Package pdftex.def Info: img/pucs/partition/all_parts.pdf used on input line 39
+6.
 (pdftex.def)             Requested size: 484.20781pt x 448.07288pt.
- [58
+ [59
 
 ]
 File: img/pucs/partition/full_lattice.pdf Graphic file (type pdf)
 
 <use img/pucs/partition/full_lattice.pdf>
 Package pdftex.def Info: img/pucs/partition/full_lattice.pdf used on input line
- 511.
+ 396.
 (pdftex.def)             Requested size: 484.20781pt x 448.07288pt.
 File: img/pucs/partition/all_parts.pdf Graphic file (type pdf)
 
 <use img/pucs/partition/all_parts.pdf>
-Package pdftex.def Info: img/pucs/partition/all_parts.pdf used on input line 51
-1.
+Package pdftex.def Info: img/pucs/partition/all_parts.pdf used on input line 39
+6.
 (pdftex.def)             Requested size: 484.20781pt x 448.07288pt.
- [59
-
-] [60
+ [60
 
 ] [61
 
@@ -2059,361 +2116,352 @@ Package pdftex.def Info: img/pucs/partition/all_parts.pdf used on input line 51
 
 ] [63
 
+] [64
+
 ]
-<img/pucs/sample_run/A.pdf, id=620, 542.025pt x 430.0065pt>
+<img/pucs/sample_run/A.pdf, id=794, 542.025pt x 430.0065pt>
 File: img/pucs/sample_run/A.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/A.pdf>
-Package pdftex.def Info: img/pucs/sample_run/A.pdf used on input line 545.
+Package pdftex.def Info: img/pucs/sample_run/A.pdf used on input line 430.
 (pdftex.def)             Requested size: 208.95485pt x 165.77281pt.
- [64
+ [65
 
- <./img/pucs/sample_run/A.pdf>] [65
-
-]
-[66
-
-] [67
+ <./img/pucs/sample_run/A.pdf>] [66
 
 ]
-LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 580.
- [68
-
-] [69
-
-] [70
-
-]
-<img/pucs/sample_run/Boolean_lattice.pdf, id=671, 484.209pt x 448.07399pt>
+<img/pucs/sample_run/Boolean_lattice.pdf, id=819, 484.209pt x 448.07399pt>
 File: img/pucs/sample_run/Boolean_lattice.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/Boolean_lattice.pdf>
 Package pdftex.def Info: img/pucs/sample_run/Boolean_lattice.pdf used on input 
-line 599.
+line 459.
 (pdftex.def)             Requested size: 147.49782pt x 136.488pt.
 File: img/pucs/sample_run/A.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/A.pdf>
-Package pdftex.def Info: img/pucs/sample_run/A.pdf used on input line 599.
+Package pdftex.def Info: img/pucs/sample_run/A.pdf used on input line 459.
 (pdftex.def)             Requested size: 147.49782pt x 117.01534pt.
 
-Overfull \hbox (19.00578pt too wide) in paragraph at lines 599--599
+Overfull \hbox (19.00578pt too wide) in paragraph at lines 459--459
  [] 
  []
 
-[71
+[67
 
  <./img/pucs/sample_run/Boolean_lattice.pdf>]
-<img/pucs/sample_run/B.pdf, id=687, 542.025pt x 430.0065pt>
+<img/pucs/sample_run/B.pdf, id=836, 542.025pt x 430.0065pt>
 File: img/pucs/sample_run/B.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/B.pdf>
-Package pdftex.def Info: img/pucs/sample_run/B.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/B.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-<img/pucs/sample_run/C.pdf, id=689, 542.025pt x 430.0065pt>
+<img/pucs/sample_run/C.pdf, id=838, 542.025pt x 430.0065pt>
 File: img/pucs/sample_run/C.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/C.pdf>
-Package pdftex.def Info: img/pucs/sample_run/C.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/C.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-<img/pucs/sample_run/D.pdf, id=691, 542.025pt x 430.0065pt>
+<img/pucs/sample_run/D.pdf, id=840, 542.025pt x 430.0065pt>
 File: img/pucs/sample_run/D.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/D.pdf>
-Package pdftex.def Info: img/pucs/sample_run/D.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/D.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-<img/pucs/sample_run/E.pdf, id=693, 542.025pt x 430.0065pt>
+<img/pucs/sample_run/E.pdf, id=842, 542.025pt x 430.0065pt>
 File: img/pucs/sample_run/E.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/E.pdf>
-Package pdftex.def Info: img/pucs/sample_run/E.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/E.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-Overfull \vbox (16.2209pt too high) detected at line 628
+Overfull \vbox (16.2209pt too high) detected at line 488
  []
 
-[72
+[68
 
  <./img/pucs/sample_run/B.pdf> <./img/pucs/sample_run/C.pdf> <./img/pucs/sample
 _run/D.pdf> <./img/pucs/sample_run/E.pdf>]
 File: img/pucs/sample_run/B.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/B.pdf>
-Package pdftex.def Info: img/pucs/sample_run/B.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/B.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/C.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/C.pdf>
-Package pdftex.def Info: img/pucs/sample_run/C.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/C.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/D.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/D.pdf>
-Package pdftex.def Info: img/pucs/sample_run/D.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/D.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/E.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/E.pdf>
-Package pdftex.def Info: img/pucs/sample_run/E.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/E.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-Overfull \vbox (16.2209pt too high) detected at line 628
+Overfull \vbox (16.2209pt too high) detected at line 488
  []
 
-[73
+[69
 
 ]
 File: img/pucs/sample_run/B.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/B.pdf>
-Package pdftex.def Info: img/pucs/sample_run/B.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/B.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/C.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/C.pdf>
-Package pdftex.def Info: img/pucs/sample_run/C.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/C.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/D.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/D.pdf>
-Package pdftex.def Info: img/pucs/sample_run/D.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/D.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/E.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/E.pdf>
-Package pdftex.def Info: img/pucs/sample_run/E.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/E.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-Overfull \vbox (16.2209pt too high) detected at line 628
+Overfull \vbox (16.2209pt too high) detected at line 488
  []
 
-[74
+[70
 
 ]
 File: img/pucs/sample_run/B.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/B.pdf>
-Package pdftex.def Info: img/pucs/sample_run/B.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/B.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/C.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/C.pdf>
-Package pdftex.def Info: img/pucs/sample_run/C.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/C.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/D.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/D.pdf>
-Package pdftex.def Info: img/pucs/sample_run/D.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/D.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/E.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/E.pdf>
-Package pdftex.def Info: img/pucs/sample_run/E.pdf used on input line 628.
+Package pdftex.def Info: img/pucs/sample_run/E.pdf used on input line 488.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-Overfull \vbox (16.2209pt too high) detected at line 628
+Overfull \vbox (16.2209pt too high) detected at line 488
  []
 
-[75
+[71
 
-] <img/pucs/sample_run/F.pdf, id=789, 542.025pt x 430.0065pt>
+] <img/pucs/sample_run/F.pdf, id=937, 542.025pt x 430.0065pt>
 File: img/pucs/sample_run/F.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/F.pdf>
-Package pdftex.def Info: img/pucs/sample_run/F.pdf used on input line 658.
+Package pdftex.def Info: img/pucs/sample_run/F.pdf used on input line 518.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-<img/pucs/sample_run/G.pdf, id=791, 542.025pt x 430.0065pt>
+<img/pucs/sample_run/G.pdf, id=939, 542.025pt x 430.0065pt>
 File: img/pucs/sample_run/G.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/G.pdf>
-Package pdftex.def Info: img/pucs/sample_run/G.pdf used on input line 658.
+Package pdftex.def Info: img/pucs/sample_run/G.pdf used on input line 518.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-<img/pucs/sample_run/H.pdf, id=793, 542.025pt x 430.0065pt>
+<img/pucs/sample_run/H.pdf, id=941, 542.025pt x 430.0065pt>
 File: img/pucs/sample_run/H.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/H.pdf>
-Package pdftex.def Info: img/pucs/sample_run/H.pdf used on input line 658.
+Package pdftex.def Info: img/pucs/sample_run/H.pdf used on input line 518.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-<img/pucs/sample_run/I.pdf, id=795, 542.025pt x 430.0065pt>
+<img/pucs/sample_run/I.pdf, id=943, 542.025pt x 430.0065pt>
 File: img/pucs/sample_run/I.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/I.pdf>
-Package pdftex.def Info: img/pucs/sample_run/I.pdf used on input line 658.
+Package pdftex.def Info: img/pucs/sample_run/I.pdf used on input line 518.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-Overfull \vbox (16.2209pt too high) detected at line 658
+Overfull \vbox (16.2209pt too high) detected at line 518
  []
 
-[76
+[72
 
  <./img/pucs/sample_run/F.pdf> <./img/pucs/sample_run/G.pdf> <./img/pucs/sample
 _run/H.pdf> <./img/pucs/sample_run/I.pdf>]
 File: img/pucs/sample_run/F.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/F.pdf>
-Package pdftex.def Info: img/pucs/sample_run/F.pdf used on input line 658.
+Package pdftex.def Info: img/pucs/sample_run/F.pdf used on input line 518.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/G.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/G.pdf>
-Package pdftex.def Info: img/pucs/sample_run/G.pdf used on input line 658.
+Package pdftex.def Info: img/pucs/sample_run/G.pdf used on input line 518.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/H.pdf Graphic file (type pdf)
  <use img/pucs/sample_run/H.pdf>
-Package pdftex.def Info: img/pucs/sample_run/H.pdf used on input line 658.
+Package pdftex.def Info: img/pucs/sample_run/H.pdf used on input line 518.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 File: img/pucs/sample_run/I.pdf Graphic file (type pdf)
 
 <use img/pucs/sample_run/I.pdf>
-Package pdftex.def Info: img/pucs/sample_run/I.pdf used on input line 658.
+Package pdftex.def Info: img/pucs/sample_run/I.pdf used on input line 518.
 (pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
 
-Overfull \vbox (16.2209pt too high) detected at line 658
+Overfull \vbox (16.2209pt too high) detected at line 518
+ []
+
+[73
+
+]
+File: img/pucs/sample_run/F.pdf Graphic file (type pdf)
+ <use img/pucs/sample_run/F.pdf>
+Package pdftex.def Info: img/pucs/sample_run/F.pdf used on input line 518.
+(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
+File: img/pucs/sample_run/G.pdf Graphic file (type pdf)
+ <use img/pucs/sample_run/G.pdf>
+Package pdftex.def Info: img/pucs/sample_run/G.pdf used on input line 518.
+(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
+File: img/pucs/sample_run/H.pdf Graphic file (type pdf)
+
+<use img/pucs/sample_run/H.pdf>
+Package pdftex.def Info: img/pucs/sample_run/H.pdf used on input line 518.
+(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
+File: img/pucs/sample_run/I.pdf Graphic file (type pdf)
+ <use img/pucs/sample_run/I.pdf>
+Package pdftex.def Info: img/pucs/sample_run/I.pdf used on input line 518.
+(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
+
+Overfull \vbox (16.2209pt too high) detected at line 518
+ []
+
+[74
+
+]
+File: img/pucs/sample_run/F.pdf Graphic file (type pdf)
+ <use img/pucs/sample_run/F.pdf>
+Package pdftex.def Info: img/pucs/sample_run/F.pdf used on input line 518.
+(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
+File: img/pucs/sample_run/G.pdf Graphic file (type pdf)
+ <use img/pucs/sample_run/G.pdf>
+Package pdftex.def Info: img/pucs/sample_run/G.pdf used on input line 518.
+(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
+File: img/pucs/sample_run/H.pdf Graphic file (type pdf)
+
+<use img/pucs/sample_run/H.pdf>
+Package pdftex.def Info: img/pucs/sample_run/H.pdf used on input line 518.
+(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
+File: img/pucs/sample_run/I.pdf Graphic file (type pdf)
+ <use img/pucs/sample_run/I.pdf>
+Package pdftex.def Info: img/pucs/sample_run/I.pdf used on input line 518.
+(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
+
+Overfull \vbox (16.2209pt too high) detected at line 518
+ []
+
+[75
+
+] [76
+
+]
+<img/pucs/experiments/time_sffs_bfs_pucs.pdf, id=1044, 410.34993pt x 315.80971p
+t>
+File: img/pucs/experiments/time_sffs_bfs_pucs.pdf Graphic file (type pdf)
+ <use img/pucs/experiments/time_sffs_bfs_pucs.pdf>
+Package pdftex.def Info: img/pucs/experiments/time_sffs_bfs_pucs.pdf used on in
+put line 547.
+(pdftex.def)             Requested size: 138.2795pt x 106.41974pt.
+
+<img/pucs/experiments/correctness_sffs_bfs_pucs.pdf, id=1046, 413.31413pt x 315
+.53458pt>
+File: img/pucs/experiments/correctness_sffs_bfs_pucs.pdf Graphic file (type pdf
+)
+ <use img/pucs/experiments/correctness_sffs_bfs_pucs.pdf>
+Package pdftex.def Info: img/pucs/experiments/correctness_sffs_bfs_pucs.pdf use
+d on input line 547.
+(pdftex.def)             Requested size: 138.2795pt x 105.5615pt.
+
+Overfull \hbox (0.56914pt too wide) in paragraph at lines 547--547
+ [] 
  []
 
 [77
 
-]
-File: img/pucs/sample_run/F.pdf Graphic file (type pdf)
- <use img/pucs/sample_run/F.pdf>
-Package pdftex.def Info: img/pucs/sample_run/F.pdf used on input line 658.
-(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
-File: img/pucs/sample_run/G.pdf Graphic file (type pdf)
- <use img/pucs/sample_run/G.pdf>
-Package pdftex.def Info: img/pucs/sample_run/G.pdf used on input line 658.
-(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
-File: img/pucs/sample_run/H.pdf Graphic file (type pdf)
+ <./img/pucs/experiments/time_sffs_bfs_pucs.pdf> <./img/pucs/experiments/correc
+tness_sffs_bfs_pucs.pdf>] [78
 
-<use img/pucs/sample_run/H.pdf>
-Package pdftex.def Info: img/pucs/sample_run/H.pdf used on input line 658.
-(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
-File: img/pucs/sample_run/I.pdf Graphic file (type pdf)
- <use img/pucs/sample_run/I.pdf>
-Package pdftex.def Info: img/pucs/sample_run/I.pdf used on input line 658.
-(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
-
-Overfull \vbox (16.2209pt too high) detected at line 658
- []
-
-[78
+] [79
 
 ]
-File: img/pucs/sample_run/F.pdf Graphic file (type pdf)
- <use img/pucs/sample_run/F.pdf>
-Package pdftex.def Info: img/pucs/sample_run/F.pdf used on input line 658.
-(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
-File: img/pucs/sample_run/G.pdf Graphic file (type pdf)
- <use img/pucs/sample_run/G.pdf>
-Package pdftex.def Info: img/pucs/sample_run/G.pdf used on input line 658.
-(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
-File: img/pucs/sample_run/H.pdf Graphic file (type pdf)
+<img/svm/svm.pdf, id=1154, 181.28127pt x 134.87991pt>
+File: img/svm/svm.pdf Graphic file (type pdf)
+ <use img/svm/svm.pdf>
+Package pdftex.def Info: img/svm/svm.pdf used on input line 564.
+(pdftex.def)             Requested size: 153.64493pt x 114.32533pt.
 
-<use img/pucs/sample_run/H.pdf>
-Package pdftex.def Info: img/pucs/sample_run/H.pdf used on input line 658.
-(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
-File: img/pucs/sample_run/I.pdf Graphic file (type pdf)
- <use img/pucs/sample_run/I.pdf>
-Package pdftex.def Info: img/pucs/sample_run/I.pdf used on input line 658.
-(pdftex.def)             Requested size: 122.91406pt x 97.50839pt.
+[80
 
-Overfull \vbox (16.2209pt too high) detected at line 658
- []
-
-[79
-
-] [80
-
-] [81
+ <./img/svm/svm.pdf>] [81
 
 ] [82
 
 ] [83
 
-]
-<img/pucs/parameters/n200-20-3_time.png, id=911, 702.625pt x 501.875pt>
-File: img/pucs/parameters/n200-20-3_time.png Graphic file (type png)
+] [84
 
-<use img/pucs/parameters/n200-20-3_time.png>
-Package pdftex.def Info: img/pucs/parameters/n200-20-3_time.png used on input l
-ine 678.
-(pdftex.def)             Requested size: 184.3758pt x 131.69438pt.
- [84
+] [85
 
- <./img/pucs/parameters/n200-20-3_time.png>]
-File: img/pucs/parameters/n200-20-3_time.png Graphic file (type png)
- <use img/pucs/parameters/n200-20-3_time.png>
-Package pdftex.def Info: img/pucs/parameters/n200-20-3_time.png used on input l
-ine 678.
-(pdftex.def)             Requested size: 184.3758pt x 131.69438pt.
- [85
+] [86
 
-]
-<img/pucs/parameters/n200-20-3_error.png, id=929, 702.625pt x 501.875pt>
-File: img/pucs/parameters/n200-20-3_error.png Graphic file (type png)
-
-<use img/pucs/parameters/n200-20-3_error.png>
-Package pdftex.def Info: img/pucs/parameters/n200-20-3_error.png used on input 
-line 691.
-(pdftex.def)             Requested size: 184.3758pt x 131.69438pt.
-
-Overfull \vbox (18.53737pt too high) detected at line 691
- []
-
-[86
-
- <./img/pucs/parameters/n200-20-3_error.png>]
-File: img/pucs/parameters/n200-20-3_error.png Graphic file (type png)
-
-<use img/pucs/parameters/n200-20-3_error.png>
-Package pdftex.def Info: img/pucs/parameters/n200-20-3_error.png used on input 
-line 691.
-(pdftex.def)             Requested size: 184.3758pt x 131.69438pt.
-
-Overfull \vbox (18.53737pt too high) detected at line 691
- []
-
-[87
+] [87
 
 ] [88
 
 ] [89
 
+] [90
+
 ]
-<img/pucs/experiments/time_sffs_bfs_pucs.pdf, id=955, 410.34993pt x 315.80971pt
->
-File: img/pucs/experiments/time_sffs_bfs_pucs.pdf Graphic file (type pdf)
- <use img/pucs/experiments/time_sffs_bfs_pucs.pdf>
-Package pdftex.def Info: img/pucs/experiments/time_sffs_bfs_pucs.pdf used on in
-put line 781.
-(pdftex.def)             Requested size: 138.2795pt x 106.41974pt.
+<img/uci/avg_features.pdf, id=1218, 409.94215pt x 363.2378pt>
+File: img/uci/avg_features.pdf Graphic file (type pdf)
 
-<img/pucs/experiments/correctness_sffs_bfs_pucs.pdf, id=957, 413.31413pt x 315.
-53458pt>
-File: img/pucs/experiments/correctness_sffs_bfs_pucs.pdf Graphic file (type pdf
-)
- <use img/pucs/experiments/correctness_sffs_bfs_pucs.pdf>
-Package pdftex.def Info: img/pucs/experiments/correctness_sffs_bfs_pucs.pdf use
-d on input line 781.
-(pdftex.def)             Requested size: 138.2795pt x 105.5615pt.
+<use img/uci/avg_features.pdf>
+Package pdftex.def Info: img/uci/avg_features.pdf used on input line 593.
+(pdftex.def)             Requested size: 184.3758pt x 163.3668pt.
 
-Overfull \hbox (0.56914pt too wide) in paragraph at lines 781--781
- [] 
+Overfull \vbox (2.50491pt too high) detected at line 593
  []
 
-[90
+[91
 
- <./img/pucs/experiments/time_sffs_bfs_pucs.pdf> <./img/pucs/experiments/correc
-tness_sffs_bfs_pucs.pdf>] [91
+ <./img/uci/avg_features.pdf>]
+File: img/uci/avg_features.pdf Graphic file (type pdf)
+ <use img/uci/avg_features.pdf>
+Package pdftex.def Info: img/uci/avg_features.pdf used on input line 593.
+(pdftex.def)             Requested size: 184.3758pt x 163.3668pt.
 
-] [92
+Overfull \vbox (2.50491pt too high) detected at line 593
+ []
 
-]
-<img/svm/svm.pdf, id=1066, 181.28127pt x 134.87991pt>
-File: img/svm/svm.pdf Graphic file (type pdf)
- <use img/svm/svm.pdf>
-Package pdftex.def Info: img/svm/svm.pdf used on input line 798.
-(pdftex.def)             Requested size: 153.64493pt x 114.32533pt.
+[92
 
-[93
+] <img/uci/svm_error.pdf, id=1279, 413.39255pt x 363.2378pt>
+File: img/uci/svm_error.pdf Graphic file (type pdf)
 
- <./img/svm/svm.pdf>] [94
+<use img/uci/svm_error.pdf>
+Package pdftex.def Info: img/uci/svm_error.pdf used on input line 600.
+(pdftex.def)             Requested size: 184.3758pt x 162.00334pt.
+ [93
+
+ <./img/uci/svm_error.pdf>]
+File: img/uci/svm_error.pdf Graphic file (type pdf)
+
+<use img/uci/svm_error.pdf>
+Package pdftex.def Info: img/uci/svm_error.pdf used on input line 600.
+(pdftex.def)             Requested size: 184.3758pt x 162.00334pt.
+ [94
 
 ] [95
 
@@ -2432,65 +2480,6 @@ Package pdftex.def Info: img/svm/svm.pdf used on input line 798.
 ] [102
 
 ]
-[103
-
-] <img/uci/avg_features.pdf, id=1130, 409.94215pt x 363.2378pt>
-File: img/uci/avg_features.pdf Graphic file (type pdf)
-
-<use img/uci/avg_features.pdf>
-Package pdftex.def Info: img/uci/avg_features.pdf used on input line 827.
-(pdftex.def)             Requested size: 184.3758pt x 163.3668pt.
-
-Overfull \vbox (2.50491pt too high) detected at line 827
- []
-
-[104
-
- <./img/uci/avg_features.pdf>]
-File: img/uci/avg_features.pdf Graphic file (type pdf)
- <use img/uci/avg_features.pdf>
-Package pdftex.def Info: img/uci/avg_features.pdf used on input line 827.
-(pdftex.def)             Requested size: 184.3758pt x 163.3668pt.
-
-Overfull \vbox (2.50491pt too high) detected at line 827
- []
-
-[105
-
-] <img/uci/svm_error.pdf, id=1190, 413.39255pt x 363.2378pt>
-File: img/uci/svm_error.pdf Graphic file (type pdf)
-
-<use img/uci/svm_error.pdf>
-Package pdftex.def Info: img/uci/svm_error.pdf used on input line 834.
-(pdftex.def)             Requested size: 184.3758pt x 162.00334pt.
- [106
-
- <./img/uci/svm_error.pdf>]
-File: img/uci/svm_error.pdf Graphic file (type pdf)
-
-<use img/uci/svm_error.pdf>
-Package pdftex.def Info: img/uci/svm_error.pdf used on input line 834.
-(pdftex.def)             Requested size: 184.3758pt x 162.00334pt.
- [107
-
-] [108
-
-] [109
-
-] [110
-
-] [111
-
-] [112
-
-] [113
-
-] [114
-
-]
-[115
-
-]
 \tf@nav=\write6
 \openout6 = `presentation.nav'.
 
@@ -2500,11 +2489,12 @@ Package pdftex.def Info: img/uci/svm_error.pdf used on input line 834.
 \tf@snm=\write8
 \openout8 = `presentation.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 851.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 851.
- (./presentation.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 851.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 851.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 617.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 617.
+
+(./presentation.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 617.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 617.
 Package rerunfilecheck Info: File `presentation.out' has not changed.
 (rerunfilecheck)             Checksum: 2B1D03C8E64E263E7EEA0447042CF2D9;377.
 
@@ -2518,14 +2508,14 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 851.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 617.
  ) 
 Here is how much of TeX's memory you used:
- 21830 strings out of 493029
- 426471 string characters out of 6136235
- 513474 words of memory out of 5000000
- 24538 multiletter control sequences out of 15000+600000
- 16200 words of font info for 60 fonts, out of 8000000 for 9000
+ 21778 strings out of 493029
+ 425983 string characters out of 6136235
+ 506410 words of memory out of 5000000
+ 24520 multiletter control sequences out of 15000+600000
+ 12746 words of font info for 47 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  71i,14n,88p,1776b,680s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
@@ -2534,25 +2524,20 @@ e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmss9.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmssi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmssi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmssi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
-10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/fourier/fourier-ms.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/adobe/utopia/putb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/adobe/ut
-opia/putr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/adobe/utopia/putri8a
-.pfb>
-Output written on presentation.pdf (115 pages, 558406 bytes).
+ype1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmssi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmssi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt
+10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/fourier/fourier-ms.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/adobe/utopia/putb8a.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/adobe/utopia/putr8a.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/adobe/utopia/putri8a.pfb>
+Output written on presentation.pdf (102 pages, 511716 bytes).
 PDF statistics:
- 1411 PDF objects out of 1440 (max. 8388607)
- 977 compressed objects within 10 object streams
- 257 named destinations out of 1000 (max. 500000)
- 787 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1478 PDF objects out of 1728 (max. 8388607)
+ 927 compressed objects within 10 object streams
+ 230 named destinations out of 1000 (max. 500000)
+ 821 words of extra memory for PDF output out of 10000 (max. 10000000)
 

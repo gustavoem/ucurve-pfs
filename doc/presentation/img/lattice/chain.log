@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.9.3)  26 NOV 2017 15:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.9.3)  5 DEC 2017 16:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1155,7 +1155,7 @@ LaTeX Font Info:    Font shape `U/futm/m/n' will be
 Here is how much of TeX's memory you used:
  14720 strings out of 493029
  284569 string characters out of 6136235
- 349330 words of memory out of 5000000
+ 349882 words of memory out of 5000000
  17958 multiletter control sequences out of 15000+600000
  26421 words of font info for 35 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1163,7 +1163,7 @@ Here is how much of TeX's memory you used:
 {/usr/share
 /texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/
 fonts/type1/adobe/utopia/putr8a.pfb>
-Output written on chain.pdf (1 page, 8621 bytes).
+Output written on chain.pdf (1 page, 8630 bytes).
 PDF statistics:
  16 PDF objects out of 1000 (max. 8388607)
  11 compressed objects within 1 object stream

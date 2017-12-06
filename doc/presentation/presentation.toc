@@ -3,6 +3,6 @@
 \beamer@sectionintoc {1}{O problema U-curve}{2}{0}{1}
 \beamer@sectionintoc {2}{Algoritmos baseados em florestas}{18}{0}{2}
 \beamer@sectionintoc {3}{Melhoramentos ao \texttt {Poset-Forest-Search}}{37}{0}{3}
-\beamer@sectionintoc {4}{O algoritmo \texttt {Parallel-U-Curve-Search}}{56}{0}{4}
-\beamer@sectionintoc {5}{Aplica\IeC {\c c}\IeC {\~o}es inst\IeC {\^a}ncias reais}{91}{0}{5}
-\beamer@sectionintoc {6}{Revis\IeC {\~a}o}{108}{0}{6}
+\beamer@sectionintoc {4}{O algoritmo \texttt {Parallel-U-Curve-Search}}{57}{0}{4}
+\beamer@sectionintoc {5}{Aplica\IeC {\c c}\IeC {\~o}es inst\IeC {\^a}ncias reais}{78}{0}{5}
+\beamer@sectionintoc {6}{Revis\IeC {\~a}o}{95}{0}{6}
