@@ -188,7 +188,7 @@ Na figura~\ref{fig:pfs:pfs_trees} mostramos duas árvores do espaço de busca
 geradas pelo algoritmo. Note que estas árvores permitem o percorrimento
 do espaço de busca em duas direções. Seja $Y$ um conjunto da árvore da 
 figura~\ref{fig:pfs:lower} e $X$ o conjunto usado para aplicação 
-recursiva do lema~\ref{lemma:lower_forest}, então os nós que compõe a 
+recursiva do lema~\ref{lemma:lower_forest}, então os nós que compõem a 
 sub-árvore com raiz $Y$ é exatamente o intervalo $[Y, X \cup Y]$. Na 
 árvore dual, apresentada na figura~\ref{fig:pfs:lower}, os nós da 
 sub-árvore com raiz $Y$ é dado por $[Y \setminus X, Y]$.
@@ -742,7 +742,7 @@ adjacências pode não ser simples.
 
 Se ordenamos as raízes de forma lexicográfica da direita
 para esquerda (da característica com maior índice para característica
-com menor índice). Então, a menor raiz é aquela que possui mais zeros
+com menor índice), então a menor raiz é aquela que possui mais zeros
 da direita para esquerda, ou seja, o menor valor para o maior índice
 de uma característica presente e consequentemente o menor 
 $\varname{leftmost}$ da floresta $\forest_A$. Já a maior raiz é aquela 
@@ -1359,7 +1359,7 @@ pela própria topologia do problema; se a função é, por exemplo, monótona
 crescente, então a única raiz empilhada é a do conjunto vazio.
 
 Em nossa implementação, definimos que a função \textsc{FinishStepOne} é
-verdadeira quando o número de raízes é maior que o número de cores da 
+verdadeira quando o número de raízes é maior que o número de núcleos da 
 máquina ou quando o número de iterações é maior do que duas vezes a 
 quantidade de características. 
 

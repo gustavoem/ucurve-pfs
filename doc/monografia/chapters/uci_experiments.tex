@@ -54,13 +54,13 @@ assumindo que estamos no caso U-Curve.
 A função de custo MCE que utilizamos neste trabalho, disponível no
 arcabouço \toolname{featsel}~\cite{Reis+17}, assume que os valores
 das características são discretos, portanto ainda é necessário 
-discretizar os alguns dados de treinamento do UCI, que tiverem variáveis 
+discretizar alguns dados de treinamento do UCI, que tiverem variáveis 
 contínuas, para fazermos a seleção de características com o arcabouço.
 A estratégia que utilizamos para tal tarefa é de 
 discretizar os valores de características contínuas por quartis, 
 mapeando seus valores para um inteiro entre 0 e 3. Existem entretanto 
 outras estratégias mais elaboradas, como a de Fayyad e Irani~\cite{FI93}
-que separa dados por classes minimizando umaa medida de entropia média 
+que separa dados por classes minimizando uma medida de entropia média 
 destas classes.
 
 \section{Support Vector Machine com kernel linear}
@@ -82,7 +82,7 @@ dado basta responder em qual lado do hiperplano este dado está
 localizado. Se houverem $k$ classes, então podemos criar $k(k-1)$ 
 classificadores binários para cada par de classes e então, para rotular 
 um dado, utilizamos um esquema de votação em que a classe mais votada 
-dentre todos os estes classificadores dá o rótulo ao ponto.
+por todos estes classificadores dá o rótulo ao ponto.
 
 O modelo de SVM linear tem um parâmetro $C$ que determina como o 
 hiperplano é posicionado no espaço de pontos de treinamento. Para 

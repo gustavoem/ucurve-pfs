@@ -368,11 +368,14 @@ qualidade da solução obtida.
 \section{Parâmetros de funcionamento}
 Na seção anterior apresentamos a dinâmica básica do algoritmo 
 \algname{PUCS}, porém por simplicidade não definimos três parâmetros 
-que regem o funcionamento do mesmo, necessários para especificar o número variáveis fixas utilizado, o número máximo de chamadas recursivas do algoritmo, e a maneira de se resolver um caso base. Apesar de ser fácil entender a 
-dinâmica do algoritmo sem conhecer estes parâmetros, eles têm papel 
-crítico no desempenho do mesmo, tanto no quesito de uso de recursos 
-computacionais quanto na qualidade da solução encontrada. Denominaremos estes 
-parâmetros por $p$, $l$, e algoritmo base.
+que regem o funcionamento do mesmo, necessários para especificar o 
+número de variáveis fixas utilizado, o número máximo de chamadas 
+recursivas do algoritmo, e a maneira de se resolver um caso base. 
+Apesar de ser fácil entender a dinâmica do algoritmo sem conhecer estes 
+parâmetros, eles têm papel crítico no desempenho do mesmo, tanto no 
+quesito de uso de recursos computacionais quanto na qualidade da solução 
+encontrada. Denominaremos estes parâmetros por $p$, $l$, e algoritmo 
+base.
 
 O parâmetro $p$ define a quantidade de variáveis fixas no 
 particionamento do espaço de busca. $p$ deve estar contido no intervalo 
@@ -611,7 +614,7 @@ tempo de execução aumenta.
 
 \section{Experimentos com instâncias artificiais}
 Nesta seção apresentamos testes feitos com o \algname{PUCS} ao  
-solucionar instâncias artificiais do problema U-curve onde função de 
+solucionar instâncias artificiais do problema U-curve onde a função de 
 custo utilizada é a de soma de subconjuntos (equação~\ref{cost_function:subset_sum}). Estes testes foram feitos
 no arcabouço \toolname{featsel} e foram rodados em uma servidora 
 Dell PowerEdge 850, com 64 núcleos e 256 GB de memória RAM.

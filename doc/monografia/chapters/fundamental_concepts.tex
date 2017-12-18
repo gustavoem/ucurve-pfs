@@ -13,8 +13,8 @@ $\powerset (S)$, que é a coleção de todos os subconjuntos possíveis de
 
 \begin{mydefinition}[Problema de seleção de características] Seja $S$
 um conjunto de características, finito e não vazio, e $c$ uma função de 
-custo. Encontrar $X \in \powerset (S)$ tal que $c (X) \leq c (Y)$,
-$\forall Y \in \powerset (S)$.
+custo. Encontrar $X \in \powerset (S)$ tal que $c (X) \leq c (Z)$,
+$\forall Z \in \powerset (S)$.
 \end{mydefinition}
 
 O espaço de busca do problema de seleção de características possui uma
@@ -57,7 +57,7 @@ máquina, uma possível função de custo é a entropia condicional média
 Dado um problema de aprendizado em que $Y$ é o conjunto de possíveis
 rótulos e $W = (w_1, ..., w_n)$, com $w_i \in A_i$, é o conjunto de
 variáveis. Seja $W' = (w_{I(1)}, w_{I(2)}, ..., w_{I(k)})$ um conjunto 
-de variáveis (características) escolhidas, $\mathbf{X}$ uma vetor 
+de variáveis (características) escolhidas, $\mathbf{X}$ um vetor 
 aleatório de tamanho $k$ com ${X_j} \in A_{I(j)}$, e $log0 = 0$. Então,
 a {\bf \em entropia condicional} de $Y$ dado $\mathbf{X} = \mathbf x$ é:
 
@@ -170,8 +170,13 @@ utilizada é, então:
 
 \begin{equation} \label{cost_function:mce}
     \hat{\expectation}[H (Y | \mathbf{X})] = \frac{N}{t}
-    \sum_{\mathbf{x} \in \mathbf{X}} H (Y | \mathbf{X = x}) \probability (\mathbf{X = x}).
+    \sum_{\mathbf{x} \in \mathbf{X} : \hat{\probability}{(\mathbf{x}}) > {1 \over t}} 
+        \hat{H} (Y | \mathbf{X = x}) \hat{\probability} (\mathbf{X = x}).
 \end{equation}
+em que $t$ é a quantidade de amostras observadas e 
+$\hat{H}(Y | \mathbf{X = x})$ e $\hat{\probability}(\mathbf{X = x})$ são
+valores estimados, a partir das amostra, de $H(Y | \mathbf{X = x})$ e 
+$\probability(\mathbf{X = x})$, respectivamente.
 
 \section{O problema U-curve}
 A função de custo apresentada na seção ~\ref{fund_concept:mce}
@@ -197,7 +202,7 @@ central deste trabalho.
 \begin{mydefinition}[Problema U-Curve]
 Dados um conjunto finito e não-vazio $S$ e uma função de custo $c$ 
 decomponível em curvas em U, encontrar um subconjunto $X \in 
-\powerset (S)$ tal que $c(X) \leq c(Y)$,  $\forall Y \in \powerset (S)$.
+\powerset (S)$ tal que $c(X) \leq c(Z)$,  $\forall Z \in \powerset (S)$.
 \end{mydefinition}
 
 O problema U-Curve é um caso particular do problema de seleção de 
@@ -224,11 +229,11 @@ provável que a solução encontrada ainda seja próxima da melhor solução.
 \section{Funções de custo artificiais}
 Para testar e comparar o desempenho de algoritmos precisamos de muitas 
 instâncias do problema U-Curve. Usar instâncias reais para este fim pode
-ser inviável devido a escassez de dados e, além disso, é possível isto
-cause uma análise viesada para os dados usados. Por isso é necessário 
-usar funções de custo que nos permitam criar instâncias artificiais 
-parecidas com problemas reais e que sejam tão gerais quanto possível, 
-evitando que a avaliação dos algoritmos seja viesada. 
+ser inviável devido a escassez de dados e, além disso, é possível que 
+isto cause uma análise viesada para os dados usados. Por isso é 
+necessário usar funções de custo que nos permitam criar instâncias 
+artificiais parecidas com problemas reais e que sejam tão gerais quanto 
+possíveis, evitando que a avaliação dos algoritmos seja viesada. 
 
 Nesta seção apresentamos duas funções de custo artificiais, a primeira 
 foi utilizada na maioria dos testes de desempenho dos algoritmos, 
@@ -300,7 +305,7 @@ custo é decomponível em curvas U. Entretanto, é possível que as funções
 de custo apresentem oscilações, ou seja, mínimos locais. Por isso, é 
 interessante estudar a robustez dos algoritmos que resolvem o problema 
 U-Curve quando a hipótese de curva em U não é verdadeira. Apesar de não 
-analisarmos os algoritmos deste trabalho quanto sua robustez, achamos 
+analisarmos os algoritmos deste trabalho quanto a sua robustez, achamos 
 importante citar esta métrica de qualidade.
 
 Uma maneira de gerar funções com oscilações e violações da curva em U
@@ -318,15 +323,21 @@ em que:
     {\mathbf W} & \text { é uma matriz positiva-definida de pesos que dá forma a função.}
 \end{align*}
 
-A função de custo acima é decomponível em curvas em U. Podemos então adicionar à mesma um ruído senoidal, para esse fim generalizando a função com o acréscimo de um termo:
+A função de custo acima é decomponível em curvas em U. Podemos então 
+adicionar à mesma um ruído senoidal, para esse fim generalizando a função com o acréscimo de um termo:
 \begin{equation} \label{cost_function:esmaeil}
     c(X | X_0, {\mathbf W}, c_{max}) = c_{max} [1 - e^{- \frac{1}{2} (X - X_0)^T {\mathbf W} (X - X_0)}]  + A \cos (2\pi f \beta (X)),
 \end{equation}
-onde  $\beta (X) = \frac{1}{n} \sum_{i = 1}^{n} X (i)$ e $A \in \fieldR$ é uma constante que regula a amplitude do ruído, 
+onde  $\beta (X) = \frac{1}{n} \sum_{i = 1}^{n} X (i)$ e 
+$A \in \fieldR$ é uma constante que regula a amplitude do ruído, 
 ou seja, a profundidade dos mínimos locais; e $f \in \fieldR$ controla a
 frequência do ruído, isto é, qual a distância entre os mínimos locais 
 gerados.
 
-A função de custo da equação~\ref{cost_function:esmaeil} foi utilizada por Atashpaz-Gargari e colegas para avaliar a robustez de um algoritmo para o problema U-curve~\cite{AG+18}. Esta função já encontra-se implementada no arcabouço featsel e será utilizada em experimentos computacionais futuros.
-
-
+A função de custo da equação~\ref{cost_function:esmaeil} foi utilizada 
+por Atashpaz-Gargari e colegas para avaliar a robustez de um algoritmo 
+para o problema U-curve~\cite{AG+18}. Esta função já encontra-se 
+implementada no arcabouço \toolname{featsel}~\cite{Reis+17} (um 
+arcabouço em \langname{C++} que permite fazer seleção de características
+com diferentes algoritmos e funções de custo) e será utilizada em 
+experimentos computacionais futuros.
