@@ -20,6 +20,23 @@
 \usepackage{booktabs}  % nicer table borders
 \usepackage{subfigure} % add subfigures
 
+\newcommand{\foreignword}[1]{\textit{#1}}
+\newcommand{\toolname}[1]{\textit{#1}}
+%\newcommand{\fieldR}{\mathbb{R}}
+%\newcommand{\powerset}{\mathcal{P}}
+%\newcommand{\probability}{\mathbb{P}}
+%\newcommand{\expectation}{\mathbb{E}}
+\newcommand{\algname}[1]{\texttt{#1}}
+%\newcommand{\langname}[1]{\texttt{#1}}
+%\newcommand{\varname}[1]{\texttt{#1}}
+%\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+%\newcommand{\ceil}[1]{\lceil #1 \rceil}
+%\newcommand{\mathsc}[1]{{\normalfont\textsc{#1}}}
+%\newcommand{\forest}{\mathcal{F}}
+%\newcommand{\pfsnode}[1]{\mathbf #1}
+%\newcommand{\species}[1]{\textit{#1}}
+%\newcommand{\gender}[1]{\textit{#1}}
+
 \graphicspath{{./figures/}} 
 
 \setstretch{1.5}
@@ -88,8 +105,78 @@ Laboratório Especial de Toxinologia Aplicada, Instituto Butantan\\
 
 
 \section{Resumo do Projeto Proposto} \label{sec:resumo} % até 2 páginas
+O problema U-curve é uma formulação de um problema de otimização que 
+pode ser utilizado na etapa de seleção de características em 
+Aprendizado de Máquina, com aplicações em desenho de modelos 
+computacionais de sistemas biológicos. Não obstante, soluções propostas 
+até o presente momento para atacar esse problema têm limitações do 
+ponto de vista de consumo de tempo computacional e/ou de memória, o que 
+implica na necessidade do desenvolvimento de novos algoritmos. Nesse 
+sentido, em 2012 foi proposto o algoritmo 
+\algname{Poset\--Forest\--Search} (\algname{PFS}), 
+que organiza o espaço de busca em florestas de posets. Esse algoritmo 
+foi implementado e testado, com resultados promissores; todavia, novos 
+melhoramentos são necessários para que o \algname{PFS} se torne uma 
+alternativa competitiva para resolver o problema U-curve. Neste projeto 
+propomos modificações ao \algname{PFS} na escolha de caminhos de 
+percorrimento da floresta de busca, e na estrutura de dados utilizada 
+para armazenar este grafo, com o uso de diagramas de decisão binária 
+reduzidos e ordenados (OBDDs); também propomos a criação de uma versão 
+paralela e escalável do algoritmo \algname{PFS}. Além disso, propomos a 
+criação de um algoritmo baseado no \algname{PFS} que tenha 
+características de um algoritmo de aproximação, no qual o critério de 
+aproximação da solução ótima se baseie no teorema da navalha de Ockham. 
+Os algoritmos desenvolvidos serão implementados no arcabouço 
+\toolname{featsel} e testados com instâncias artificiais e também reais,
+com conjuntos de dados de aprendizado de máquina retirados do University 
+of California Irvine (UCI) Machine Learning Repository.
 
+ 
+\section{Atividades Realizadas}
+\subsection{Estudo de algoritmos baseados em florestas}
+O algoritmo \algname{Poset\--Forest\--Search} (\algname{PFS}) é um 
+algoritmo ótimo para resolver o problema de otimização U-Curve e serviu 
+de base para a criação da maioria dos algoritmos elaborados neste 
+trabalho. O \algname{PFS} é uma generalização de um outro algoritmo mais
+simples, o \algname{U-curve-Branch-and-Bound} (\algname{UBB}), que é
+um algoritmo \foreignword{branch-and-bound} ótimo que decompõe o espaço
+de busca em uma árvore, e acha o mínimo global do problema fazendo 
+ramificações e podas nesta árvore.
 
+A árvore de busca do \algname{UBB} permite que a procura pelo mínimo 
+ocorra de maneira parecida com uma busca em profundidade, que percorre
+cadeias do reticulado Booleano de subconjuntos menores para maiores. 
+Sempre que o custo de um subconjunto $X_i$ aumenta em comparação ao 
+anterior $X_j$ no percorrimento, a hipótese de que a função de custo é 
+decomponível em curvas em U garante que a subárvore que começa em $X_i$
+pode ser removida do espaço de busca; chamamos este procedimento de
+poda. O algoritmo \algname{UBB} tem, entretanto, uma limitação, pois
+quando a função de custo do problema é monótona não-crescente, a 
+condição de poda nunca é verdadeira e o espaço de busca inteiro é 
+visitado, o que compromete a escalabilidade do algoritmo.
+
+O \algname{PFS} enfrenta esta limitação ao fazer percorrimentos de
+cadeias do espaço de busca em duas direções, de conjuntos menores para
+maiores (como faz o \algname{UBB}) e também o contrário. Para fazer 
+isso, este algoritmo decompõe o espaço de busca em duas árvores, uma 
+para cada direção de percorrimento. Com a criação de duas estruturas 
+para representar o mesmo espaço de busca, torna-se necessário a 
+atualização de uma estrutura sempre que a outra sofrer mudanças, e isto
+implica na utilização de florestas ao invés de árvores para representar
+o espaço de busca no \algname{PFS}. Resumidamente, uma iteração do 
+deste algoritmo deve escolher uma direção de percorrimento; fazer o 
+percorrimento com poda (de maneira similar ao \algname{UBB}); e, 
+finalmente, atualizar a floresta dual a que foi percorrida.
+
+\subsection{Modificações do PFS na escolha de raízes}
+\subsection{Mudificação do PFS no armazenamento de raízes}
+\subsection{Paralelização do PFS}
+\subsection{Elaboração do UBB-PFS}
+\subsection{Elaboração de um algoritmo de aproximação}
+\subsection{Testes com instâncias reais do problema de seleção de 
+            características}
+\section{Avaliação e disseminação de resultados}
+\section{Conclusão}
 \pagebreak
 
 
