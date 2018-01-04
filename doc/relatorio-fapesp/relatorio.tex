@@ -1,0 +1,115 @@
+\documentclass[12pt]{article}
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage[top=3cm, bottom=2cm, left=3cm, right=2cm]{geometry}
+\usepackage{tikz}
+\usepackage{indentfirst}
+\usepackage{textcomp}
+\title{Relatorio IC}
+
+% packages added by Marcelo
+%
+\usepackage{lscape}    % for landscape pages
+\usepackage{hyperref}  % to allow hyperlinks
+\usepackage{booktabs}  % nicer table borders
+\usepackage{subfigure} % add subfigures
+
+\graphicspath{{./figures/}} 
+
+\setstretch{1.5}
+
+\begin{document}
+
+% FAPESP demands the usage of double spacing
+%
+\doublespacing
+
+\begin{titlepage}
+    \vfill 
+    \begin{center}
+        {\Large Relatório Científico Final -- Iniciação Científica\\
+         \bigskip
+         Processo FAPESP 2016/25959-7
+        }
+        
+        \bigskip
+        \bigskip
+    
+        {\LARGE Projeto de algoritmos baseados em florestas de posets 
+                para o problema de otimização U-curve}
+
+        \bigskip
+        \bigskip
+        {\Large {\bf Beneficiário:} \href{mailto:gustavo.estrela.matos@usp.br}{Gustavo Estrela de Matos}\\ 
+        
+        {\bf Responsável:} \href{mailto:marcelo.reis@butantan.gov.br}{Marcelo da Silva Reis}\\
+
+        \bigskip
+        \bigskip
+        \bigskip
+        \bigskip
+        \bigskip
+        \bigskip
+        \bigskip
+Relatório referente aos trabalhos desenvolvidos entre 1 de maio e 31 de dezembro de 2017
+
+        \bigskip
+        \bigskip
+        \bigskip
+        \bigskip
+        \bigskip
+        \bigskip
+        \bigskip
+
+Laboratório Especial de Toxinologia Aplicada, Instituto Butantan\\
+        \bigskip
+        São Paulo, \today\\
+        }
+
+        \bigskip
+        \bigskip
+
+       
+
+\end{center}
+\end{titlepage}
+
+
+\tableofcontents
+
+\pagebreak
+
+
+
+\section{Resumo do Projeto Proposto} \label{sec:resumo} % até 2 páginas
+
+
+\pagebreak
+
+
+\begin{thebibliography}{9} \label{sec:referencias}
+
+\addcontentsline{toc}{section}{Referências}
+
+\bibitem{msreis thesis}
+Reis, Marcelo S. ``Minimization of decomposable in U-shaped curves functions defined on poset chains–algorithms and applications." PhD thesis, Institute of Mathematics and Statistics, University of São Paulo, Brazil, (2012).
+
+\bibitem{ucs paper}
+Reis, Marcelo S., Carlos E. Ferreira, and Junior Barrera. ``The U-curve optimization problem: improvements on the original algorithm and time complexity analysis." arXiv preprint arXiv:1407.6067, (2014). 
+
+
+\bibitem{bryant}
+Bryant, Randal E. ``Graph-based algorithms for boolean function manipulation." IEEE Transactions on Computers, 100.8 (1986): 677-691. 
+
+
+\end{thebibliography}
+
+\end{document}
+
+
