@@ -11,6 +11,7 @@
 \usepackage{tikz}
 \usepackage{indentfirst}
 \usepackage{textcomp}
+\usepackage[font={small,it}]{caption}
 \title{Relatorio IC}
 
 % packages added by Marcelo
@@ -27,12 +28,12 @@
 %\newcommand{\probability}{\mathbb{P}}
 %\newcommand{\expectation}{\mathbb{E}}
 \newcommand{\algname}[1]{\texttt{#1}}
-%\newcommand{\langname}[1]{\texttt{#1}}
+\newcommand{\langname}[1]{\texttt{#1}}
 %\newcommand{\varname}[1]{\texttt{#1}}
 %\newcommand{\floor}[1]{\lfloor #1 \rfloor}
 %\newcommand{\ceil}[1]{\lceil #1 \rceil}
 %\newcommand{\mathsc}[1]{{\normalfont\textsc{#1}}}
-%\newcommand{\forest}{\mathcal{F}}
+\newcommand{\forest}{\mathcal{F}}
 %\newcommand{\pfsnode}[1]{\mathbf #1}
 %\newcommand{\species}[1]{\textit{#1}}
 %\newcommand{\gender}[1]{\textit{#1}}
@@ -113,7 +114,7 @@ até o presente momento para atacar esse problema têm limitações do
 ponto de vista de consumo de tempo computacional e/ou de memória, o que 
 implica na necessidade do desenvolvimento de novos algoritmos. Nesse 
 sentido, em 2012 foi proposto o algoritmo 
-\algname{Poset\--Forest\--Search} (\algname{PFS}), 
+\algname{Poset\--Forest\--Search} (\algname{PFS})~\cite{msreis thesis}, 
 que organiza o espaço de busca em florestas de posets. Esse algoritmo 
 foi implementado e testado, com resultados promissores; todavia, novos 
 melhoramentos são necessários para que o \algname{PFS} se torne uma 
@@ -121,18 +122,24 @@ alternativa competitiva para resolver o problema U-curve. Neste projeto
 propomos modificações ao \algname{PFS} na escolha de caminhos de 
 percorrimento da floresta de busca, e na estrutura de dados utilizada 
 para armazenar este grafo, com o uso de diagramas de decisão binária 
-reduzidos e ordenados (OBDDs); também propomos a criação de uma versão 
-paralela e escalável do algoritmo \algname{PFS}. Além disso, propomos a 
-criação de um algoritmo baseado no \algname{PFS} que tenha 
-características de um algoritmo de aproximação, no qual o critério de 
-aproximação da solução ótima se baseie no teorema da navalha de Ockham. 
-Os algoritmos desenvolvidos serão implementados no arcabouço 
-\toolname{featsel} e testados com instâncias artificiais e também reais,
-com conjuntos de dados de aprendizado de máquina retirados do University 
-of California Irvine (UCI) Machine Learning Repository.
+reduzidos e ordenados (OBDDs)~\cite{bryant}; também propomos a criação 
+de uma versão paralela e escalável do algoritmo \algname{PFS}. Além 
+disso, propomos a criação de um algoritmo baseado no \algname{PFS} que 
+tenha características de um algoritmo de aproximação, no qual o critério 
+de aproximação da solução ótima se baseie no teorema da navalha de 
+Ockham. Os algoritmos desenvolvidos serão implementados no arcabouço 
+\toolname{featsel}~\cite{featsel paper} e testados com instâncias 
+artificiais e também reais, com conjuntos de dados de aprendizado de 
+máquina retirados do University of California Irvine (UCI) Machine 
+Learning Repository.
 
  
 \section{Atividades Realizadas}
+
+Uma implementação do \algname{PFS}, feita por Reis, está disponível no
+arcabouço \toolname{featsel}. Usamos esta implementação como base para
+estudar as modificações feitas ao \algname{PFS}.
+
 \subsection{Estudo de algoritmos baseados em florestas}
 O algoritmo \algname{Poset\--Forest\--Search} (\algname{PFS}) é um 
 algoritmo ótimo para resolver o problema de otimização U-Curve e serviu 
@@ -168,7 +175,132 @@ deste algoritmo deve escolher uma direção de percorrimento; fazer o
 percorrimento com poda (de maneira similar ao \algname{UBB}); e, 
 finalmente, atualizar a floresta dual a que foi percorrida.
 
+
 \subsection{Modificações do PFS na escolha de raízes}
+Para se fazer um percorrimento no espaço de busca, o algoritmo 
+\algname{PFS} deve escolher uma direção de percorrimento, isto é, uma
+das duas florestas que representam o espaço de busca, e também uma raiz
+da floresta escolhida. Esta escolha é feita de maneira arbitrária, e por
+conta disso, investigamos como diferentes escolhas podem afetar o 
+desempenho do algoritmo.
+
+Na implementação de Reis, a estrutura de dados utilizada para armazenar
+raízes é a \toolname{map} do \langname{C++}. Escolhe-se nesta 
+implementação o primeiro ou último elemento da estrutura, o que coincide
+ com a primeira ou última raiz quando estas estão ordenadas 
+lexicograficamente por seus vetores característicos. Em nosso trabalho, 
+experimentamos duas modificações para esta escolha:
+\begin{itemize}
+    \item{de maneira aleatória e uniformemente provável;}
+    \item{e de maneira determinística, com a raiz de maior sub-árvore
+          completa. Neste caso, o tamanho da sub-árvore completa é o 
+          tamanho deste grafo quando nenhuma poda foi feita.}
+\end{itemize}
+
+A justificativa para se fazer uma escolha uniforme entre as raízes é
+ter um algoritmo que não possui viés na escolha de percorrimentos, assim 
+podemos investigar se o viés da escolha arbitrária feita na 
+implementação de Reis compromete a execução do algoritmo. Para fazer a 
+implementação da escolha aleatória e 
+uniforme fizemos uma pequena modificação ao código de Reis. Dado uma 
+floresta $\forest = \{r_1, r_2, \dots, r_l\}$ sorteia-se um número 
+pseudo-aleatório $a$ entre $1$ e $l$ e escolhe-se a raiz $r_a$ para o 
+percorrimento.
+
+A escolha de raiz com maior sub-árvore foi feita com a intuição de que
+percorrimentos em árvores maiores implicariam em maiores podas e 
+consequentemente menos nós visitados no espaço de busca. A decomposição
+do espaço de busca em árvore feito por Reis faz com que ordenar as 
+raízes por tamanho decrescente de sub-árvores completas coincida com 
+uma ordenação lexicográfica da direita para a esquerda dos vetores 
+característicos das raízes. Para fazer isto, basta modificar a 
+ordenação feita pela estrutura \toolname{map} do \langname{C++}.
+
+Chamamos o algoritmo que faz a escolha uniforme das raízes de 
+\algname{PFS\_RAND}, e os resultados de tempo de execução e número
+de chamadas da função de custo são apresentados na tabela 
+\ref{tab:pfsrand_vs_pfs}. Podemos observar que esta modificação ao 
+\algname{PFS} não foi benéfica, pois comparando com a implementação de 
+Reis o tempo de execução médio aumentou, e o número médio de chamadas da 
+função de custo continua parecido. O fato do número de chamadas da 
+função de custo não ter diferenças significativas implica que esta 
+escolha de raiz não trouxe mudanças a dinâmica do algoritmo original, 
+logo o tempo a mais de execução veio do código que faz a escolha da 
+raiz. Isto é feito com o percorrimento da estrutura de \toolname{map}, 
+o que adiciona tempo linear (sobre a quantidade de raízes) a cada 
+escolha de raiz.
+
+\begin{table}
+\centering
+\footnotesize
+\caption{Comparação entre os algoritmos \algname{PFS} e 
+\algname{PFS\_RAND}. O tempo de execução do segundo é maior do que o 
+primeiro enquanto a quantidade de chamadas da função custo é parecida
+em ambos.} \label{tab:pfsrand_vs_pfs}
+ \resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c cc c cc}
+\toprule
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)}  & \phantom{} & \multicolumn{2}{c}{Número médio de cálculos de custo}\\
+\cline{1-2}\cline{4-5}\cline{7-8}\\
+$|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_RAND} && \algname{PFS} & \algname{PFS\_RAND} \\
+10 &    1024 &&  0.013 $\pm$ 0.003 & 0.014 $\pm$ 0.003 &&   590.8 $\pm$ 198.5 & 599.5 $\pm$ 177.5 \\
+11 &    2048 &&  0.019 $\pm$ 0.004 & 0.022 $\pm$ 0.007 &&   1114.8 $\pm$ 331.3 & 1090.1 $\pm$ 350.3 \\
+12 &    4096 &&  0.029 $\pm$ 0.008 & 0.036 $\pm$ 0.013 &&   1848.6 $\pm$ 600.8 & 1835.7 $\pm$ 683.0 \\
+13 &    8192 &&  0.060 $\pm$ 0.018 & 0.090 $\pm$ 0.039 &&   4314.4 $\pm$ 1496.4 & 4201.1 $\pm$ 1580.7 \\
+14 &   16384 &&  0.100 $\pm$ 0.041 & 0.191 $\pm$ 0.110 &&   7323.4 $\pm$ 3318.9 & 7333.8 $\pm$ 3161.0 \\
+15 &   32768 &&  0.180 $\pm$ 0.076 & 0.453 $\pm$ 0.311 &&   12958.1 $\pm$ 5654.0 & 12807.5 $\pm$ 5753.7 \\
+16 &   65536 &&  0.406 $\pm$ 0.185 & 1.715 $\pm$ 1.400 &&   27573.8 $\pm$ 12459.5 & 27036.9 $\pm$ 12687.5 \\
+17 &  131072 &&  0.717 $\pm$ 0.397 & 5.416 $\pm$ 5.266 &&   48176.2 $\pm$ 26938.3 & 47852.1 $\pm$ 26427.6 \\
+18 &  262144 &&  1.325 $\pm$ 0.754 & 15.890 $\pm$ 17.726 &&   84417.9 $\pm$ 48587.7 & 84025.0 $\pm$ 48882.4 \\
+19 &  524288 &&  2.771 $\pm$ 1.603 & 69.600 $\pm$ 82.342 &&   167659.1 $\pm$ 99686.7 & 164612.1 $\pm$ 102018.3 \\
+\bottomrule
+\end{tabular}%
+ }
+\end{table}
+
+Chamamos de \algname{PFS\_LEFTMOST} o algoritmo que faz a escolha da 
+raiz com maior sub-árvore completa, e a 
+tabela~\ref{tab:pfsleftmost_vs_pfs} mostra resultados de tempo de 
+execução e número de chamadas da função de custo desta variante 
+comparado a implementação de Reis. Podemos observar que esta modificação
+também não foi benéfica pois, além do maior tempo de execução, o número
+de chamadas da função de custo aumentou. Isto significa que o 
+comportamento do algoritmo foi o contrário a intuição que motivou a 
+modificação, pois mais nós do espaço de busca foram visitados.
+
+\begin{table}
+\centering
+\footnotesize
+\caption{Comparação entre os algoritmos \algname{PFS} e 
+\algname{PFS\_LEFTMOST}. O tempo de execução e também o número de 
+chamadas da função custo é maior para o \algname{PFS\_LEFTMOST}.} 
+\label{tab:pfsleftmost_vs_pfs}
+ \resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c cc c cc}
+\toprule
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)}  & \phantom{} & \multicolumn{2}{c}{Número médio de cálculos de custo}\\
+\cline{1-2}\cline{4-5}\cline{7-8}\\
+$|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_LEFTMOST} && \algname{PFS} & \algname{PFS\_LEFTMOST} \\
+10 &    1024 &&  0.013 $\pm$ 0.002 & 0.023 $\pm$ 0.004 &&  606.1 $\pm$ 133.5 & 665.0 $\pm$ 165.8 \\
+11 &    2048 &&  0.020 $\pm$ 0.004 & 0.042 $\pm$ 0.010 &&  1122.1 $\pm$ 351.2 & 1316.6 $\pm$ 382.2 \\
+12 &    4096 &&  0.032 $\pm$ 0.008 & 0.078 $\pm$ 0.024 &&  2183.7 $\pm$ 733.2 & 2515.8 $\pm$ 871.3 \\
+13 &    8192 &&  0.054 $\pm$ 0.017 & 0.160 $\pm$ 0.061 &&  3887.7 $\pm$ 1389.9 & 4716.8 $\pm$ 1777.8 \\
+14 &   16384 &&  0.107 $\pm$ 0.034 & 0.345 $\pm$ 0.133 &&  7851.2 $\pm$ 2793.0 & 9506.8 $\pm$ 3673.9 \\
+15 &   32768 &&  0.196 $\pm$ 0.085 & 0.672 $\pm$ 0.274 &&  13780.3 $\pm$ 6049.9 & 17071.6 $\pm$ 7005.1 \\
+16 &   65536 &&  0.348 $\pm$ 0.189 & 1.271 $\pm$ 0.661 &&  24106.5 $\pm$ 13159.9 & 30055.6 $\pm$ 15363.6 \\
+17 &  131072 &&  0.785 $\pm$ 0.361 & 3.137 $\pm$ 1.476 &&  52369.0 $\pm$ 24751.2 & 67585.6 $\pm$ 30978.4 \\
+18 &  262144 &&  1.445 $\pm$ 0.657 & 6.146 $\pm$ 3.032 &&  92095.9 $\pm$ 42566.6 & 120635.7 $\pm$ 58039.0 \\
+19 &  524288 &&  3.298 $\pm$ 1.883 & 13.881 $\pm$ 7.595 &&  199151.0 $\pm$ 112167.8 & 256078.6 $\pm$ 135958.4 \\
+%20 & 1048576 &&  6.141 $\pm$ 3.728 & 28.733 $\pm$ 18.120 &&  356259.2 $\pm$ 218253.1 & 465255.8 $\pm$ 276843.3 \\
+%21 & 2097152 &&  10.817 $\pm$ 7.714 & 52.374 $\pm$ 38.565 &&  608984.4 $\pm$ 432151.7 & 801620.2 $\pm$ 561000.7 \\
+\bottomrule 
+\end{tabular}%
+ }
+\end{table}
+
+
+
+
 \subsection{Mudificação do PFS no armazenamento de raízes}
 \subsection{Paralelização do PFS}
 \subsection{Elaboração do UBB-PFS}
@@ -187,9 +319,10 @@ finalmente, atualizar a floresta dual a que foi percorrida.
 \bibitem{msreis thesis}
 Reis, Marcelo S. ``Minimization of decomposable in U-shaped curves functions defined on poset chains–algorithms and applications." PhD thesis, Institute of Mathematics and Statistics, University of São Paulo, Brazil, (2012).
 
-\bibitem{ucs paper}
-Reis, Marcelo S., Carlos E. Ferreira, and Junior Barrera. ``The U-curve optimization problem: improvements on the original algorithm and time complexity analysis." arXiv preprint arXiv:1407.6067, (2014). 
-
+\bibitem{featsel paper}
+Reis, Marcelo S., Gustavo Estrela, Carlos E. Ferreira and Junior Barrera.
+``featsel: A framework for benchmarking of feature selection algorithms
+and cost functions". SoftwareX 6 (2017), pp. 193-197.
 
 \bibitem{bryant}
 Bryant, Randal E. ``Graph-based algorithms for boolean function manipulation." IEEE Transactions on Computers, 100.8 (1986): 677-691. 
