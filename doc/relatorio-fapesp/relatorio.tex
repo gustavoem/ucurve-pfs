@@ -34,11 +34,11 @@
 %\newcommand{\ceil}[1]{\lceil #1 \rceil}
 %\newcommand{\mathsc}[1]{{\normalfont\textsc{#1}}}
 \newcommand{\forest}{\mathcal{F}}
-%\newcommand{\pfsnode}[1]{\mathbf #1}
+\newcommand{\pfsnode}[1]{\mathbf #1}
 %\newcommand{\species}[1]{\textit{#1}}
 %\newcommand{\gender}[1]{\textit{#1}}
 
-\graphicspath{{./figures/}} 
+\graphicspath{{./img/}} 
 
 \setstretch{1.5}
 
@@ -122,7 +122,7 @@ alternativa competitiva para resolver o problema U-curve. Neste projeto
 propomos modificações ao \algname{PFS} na escolha de caminhos de 
 percorrimento da floresta de busca, e na estrutura de dados utilizada 
 para armazenar este grafo, com o uso de diagramas de decisão binária 
-reduzidos e ordenados (OBDDs)~\cite{bryant}; também propomos a criação 
+ordenados (OBDDs)~\cite{bryant}; também propomos a criação 
 de uma versão paralela e escalável do algoritmo \algname{PFS}. Além 
 disso, propomos a criação de um algoritmo baseado no \algname{PFS} que 
 tenha características de um algoritmo de aproximação, no qual o critério 
@@ -298,11 +298,164 @@ $|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_LEFTMOST} && \algname{PFS} & 
  }
 \end{table}
 
-
-
-
 \subsection{Mudificação do PFS no armazenamento de raízes}
+A quantidade de raízes durante a execução do \algname{PFS} pode ser 
+grande, e por isso a estrutura utilizada para o seu armazenamento deve
+ser eficiente para operações como inserções, remoções e consultas. 
+Motivados por resultados de um trabalho de iniciação científica 
+anterior (FAPESP processo \#2014/23564-0), experimentamos o uso de
+diagramas de decisão binária ordenados (OBDDs) para o armazenamento
+de raízes.
+
+A estrutura de OBDD é um diagrama capaz de representar funções Booleanas
+$f: \{0, 1\}^n \to \{0, 1\}$. Para utilizarmos esta estrutura no 
+armazenamento de raízes, criamos uma OBDD que representa a função que 
+mapeia para valores $1$ os subconjuntos que são raízes da floresta
+e para $0$ os demais. Para de fato armazenar as raízes tivemos que 
+modificar a estrutura usual de OBDD, então ao invés de usar folhas com 
+valores $0$ ou $1$, usamos folhas que armazenam nós do espaço de busca
+ou um ponteiro nulo. A figura~\ref{fig:pfs:obdd} mostra um exemplo de 
+floresta do espaço de busca e a correspondente representação em nossa 
+estrutura de OBDD. 
+
+\begin{figure}[]
+  \centering 
+  \begin{tabular}{c c}
+    \subfigure {\scalebox{.7}{
+     \includegraphics[clip=true]{pfs/obdd/lattice.pdf}}
+     \label{fig:pfs:obdd:A} }
+      & 
+      \subfigure {\scalebox{.9}{
+    \includegraphics[clip=true]{pfs/obdd/obdd.pdf}}
+        \label{fig:pfs:obdd:B} }
+  \end{tabular}
+  \caption{Exemplo de OBDD que representa uma floresta do 
+    \algname{PFS}. Esta OBDD contém os nós $\pfsnode{N}$, $\pfsnode{M}$
+    e $\pfsnode{R}$, que representam respectivamente os subconjuntos
+    $000$, $010$ e $100$. As folhas $NIL$ indicam que os subconjuntos 
+    de tal caminho na OBDD não são raízes na floresta, como por exemplo 
+    os subconjuntos $11X$}
+  \label{fig:pfs:obdd}
+\end{figure}
+
+Como a estrutura de dados que armazena as raízes foi modificada, é 
+necessário definir o abordagem para escolha de raiz na etapa de 
+percorrimento. Utilizamos então a abordagem de escolha aleatória e 
+uniforme, pois esta mostrou uma dinâmica similar a implementação de
+Reis.
+
+Chamamos o algoritmo que usa OBDDs para armazenamento de raízes de 
+\algname{OPFS}. A tabela~\ref{tab:opfs_vs_pfs} mostra uma comparação de
+tempo de execução e número de cálculos da função de custo entre o 
+algoritmo original e esta modificação. Observamos que o número de 
+chamadas da função custo é similar enquanto o tempo de execução é maior
+para o algoritmo \algname{OPFS}, portanto esta modificação não trouxe 
+melhoras ao algoritmo \algname{PFS}.
+
+\begin{table}
+\centering
+\footnotesize
+\caption{Comparação entre os algoritmos \algname{PFS} e \algname{OPFS}. 
+O número de chamadas médio da função custo é parecido enquanto o tempo
+de execução é maior para o \algname{OBDD}.}
+\label{tab:opfs_vs_pfs}
+\begin{tabular}{cc c cc c cc}
+\toprule
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)}  & \phantom{} & \multicolumn{2}{c}{Número médio de cálculos de custo}\\
+\cline{1-2}\cline{4-5}\cline{7-8}\\
+$|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{OPFS} && \algname{PFS} & \algname{OPFS} \\
+10 &    1024 &&  0.013 $\pm$ 0.003 & 0.018 $\pm$ 0.003 &&  598.0 $\pm$ 192.8 & 635.5 $\pm$ 171.9 \\
+11 &    2048 &&  0.020 $\pm$ 0.004 & 0.029 $\pm$ 0.007 &&  1152.1 $\pm$ 314.7 & 1117.9 $\pm$ 336.4 \\
+12 &    4096 &&  0.031 $\pm$ 0.010 & 0.049 $\pm$ 0.013 &&  2024.1 $\pm$ 751.6 & 2048.2 $\pm$ 700.9 \\
+13 &    8192 &&  0.057 $\pm$ 0.017 & 0.097 $\pm$ 0.033 &&  3996.3 $\pm$ 1431.6 & 3973.4 $\pm$ 1462.6 \\
+14 &   16384 &&  0.094 $\pm$ 0.038 & 0.171 $\pm$ 0.063 &&  6634.8 $\pm$ 2944.0 & 6906.5 $\pm$ 2786.5 \\
+15 &   32768 &&  0.182 $\pm$ 0.079 & 0.323 $\pm$ 0.156 &&  13140.1 $\pm$ 6020.6 & 12711.2 $\pm$ 6319.7 \\
+16 &   65536 &&  0.370 $\pm$ 0.169 & 0.660 $\pm$ 0.314 &&  25658.2 $\pm$ 11606.7 & 25303.4 $\pm$ 12169.5 \\
+17 &  131072 &&  0.819 $\pm$ 0.370 & 1.480 $\pm$ 0.665 &&  53344.9 $\pm$ 24350.4 & 53217.2 $\pm$ 24154.5 \\
+18 &  262144 &&  1.515 $\pm$ 0.905 & 2.736 $\pm$ 1.626 &&  94677.6 $\pm$ 54496.3 & 94079.4 $\pm$ 55435.6 \\
+19 &  524288 &&  2.612 $\pm$ 1.869 & 4.818 $\pm$ 3.355 &&  156150.5 $\pm$ 107369.8 & 156021.8 $\pm$ 107516.8 \\
+20 & 1048576 &&  6.085 $\pm$ 3.900 & 11.550 $\pm$ 7.661 &&  344144.1 $\pm$ 212627.1 & 343229.2 $\pm$ 212624.4 \\
+% 21 & 2097152 &&  11.416 $\pm$ 8.296 & 21.818 $\pm$ 16.269 &&  616936.2 $\pm$ 436491.2 & 613526.2 $\pm$ 438580.0 \\
+% 22 & 4194304 &&  19.950 $\pm$ 17.799 & 42.112 $\pm$ 45.109 &&  960842.2 $\pm$ 785137.2 & 959905.4 $\pm$ 783257.3 \\
+% 23 & 8388608 &&  42.792 $\pm$ 35.622 & 87.262 $\pm$ 90.579 &&  2053472.4 $\pm$ 1690882.1 & 2060184.5 $\pm$ 1682011.0 \\
+% 24 & 16777216 &&  85.646 $\pm$ 79.186 & 149.567 $\pm$ 108.104 &&  4080290.8 $\pm$ 3166258.4 & 4100480.6 $\pm$ 3141423.9 \\
+\bottomrule 
+\end{tabular}%
+\end{table}
+
+
 \subsection{Paralelização do PFS}
+A decomposição do espaço de busca em uma floresta feita pelo algoritmo
+\algname{PFS} separa tal espaço em partes disjuntas que são árvores.
+Estruturas disjuntas como estas podem ser percorridas de maneira 
+paralela sem ou com poucas interferências entre linhas de processamento,
+portanto a paralelização do algoritmo \algname{PFS} pode trazer ganhos 
+em tempo de execução. Desta maneira, paralelizamos este algoritmo, e 
+para isso utilizamos a biblioteca \toolname{OpenMP}.
+
+Entretanto, apesar da etapa de percorrimento das árvores ser quase 
+independente entre linhas de processamento paralelas, a etapa de 
+atualização da floresta dual a que foi percorrida é dependente. Além
+de possuir seções críticas, em que apenas uma linha de processamento 
+pode avançar de cada vez, a atualização da floresta dual pode ter
+condições de corrida, isto é, o resultado da atualização pode depender
+da ordem em que as linhas de processamento avançam no código. Condições
+de corrida não tratadas podem inclusive levar a inconsistências na
+representação do espaço de busca.
+
+Este algoritmo paralelo foi chamado de \algname{PPFS}. Testamos o 
+desempenho deste algoritmo comparado ao \algname{PFS} e os resultados
+são apresentados na tabela~\ref{tab:ppfs_vs_pfs}. Podemos notar que o
+tempo de execução do algoritmo paralelo é pior do que a versão original,
+portanto o trabalho adicional de controle de linhas de processamento
+não é recompensado pelo ganho de tempo de processamento paralelo. Isto
+aconteceu porque a etapa de ramificação, que pode ser feita em paralelo
+sem grandes dificuldades, é curta em relação a etapa de atualização de
+floresta dual, que possui diversas seções críticas e também um código
+adicional para controle de condições de corrida.
+
+
+\begin{table}
+\centering
+\footnotesize
+\caption{Comparação entre os algoritmos \algname{PFS} e \algname{PPFS}.
+O algoritmo \algname{PPFS} apresenta um número similar de média de 
+chamadas da função custo ao \algname{PFS}, mas possui tempo de execução 
+médio maior.}
+\label{tab:ppfs_vs_pfs}
+% \resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c cc c cc}
+\toprule
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{2}{c}{Tempo de execução médio (s)} & \phantom{} & \multicolumn{2}{c}{Número médio de cálculos de custo} \\
+\cline{1-2}\cline{4-5}\cline{7-8}\\
+$|S|$ & $2^{|S|}$ && PFS & PPFS && PFS & PPFS \\
+ % 1 &       2 && 0.005 $\pm$ 0.004 & 0.028 $\pm$ 0.006 &&  2.0 $\pm$  0.0 &  2.0 $\pm$  0.0 \\
+ % 2 &       4 && 0.004 $\pm$ 0.000 & 0.038 $\pm$ 0.008 &&  3.9 $\pm$  0.3 &  3.9 $\pm$  0.3 \\
+ % 3 &       8 && 0.004 $\pm$ 0.000 & 0.039 $\pm$ 0.007 &&  7.0 $\pm$  1.2 &  7.0 $\pm$  1.2 \\
+ % 4 &      16 && 0.004 $\pm$ 0.000 & 0.047 $\pm$ 0.008 && 12.8 $\pm$  3.0 & 13.2 $\pm$  3.3 \\
+ % 5 &      32 && 0.005 $\pm$ 0.000 & 0.058 $\pm$ 0.009 && 26.8 $\pm$  4.5 & 26.9 $\pm$  3.0 \\
+ % 6 &      64 && 0.005 $\pm$ 0.000 & 0.061 $\pm$ 0.010 && 52.7 $\pm$  7.3 & 50.5 $\pm$  6.4 \\
+ % 7 &     128 && 0.005 $\pm$ 0.000 & 0.070 $\pm$ 0.013 && 87.3 $\pm$ 20.5 & 82.8 $\pm$ 23.5 \\
+ % 8 &     256 && 0.006 $\pm$ 0.000 & 0.079 $\pm$ 0.013 && 177.0 $\pm$ 32.1 & 171.2 $\pm$ 36.2 \\
+ % 9 &     512 && 0.008 $\pm$ 0.001 & 0.104 $\pm$ 0.021 && 333.8 $\pm$ 93.9 & 344.5 $\pm$ 95.2 \\
+10 &    1024 && 0.011 $\pm$ 0.001 & 0.146 $\pm$ 0.027 && 643.6 $\pm$ 133.0 & 626.5 $\pm$ 151.1 \\
+11 &    2048 && 0.017 $\pm$ 0.004 & 0.227 $\pm$ 0.062 && 1151.0 $\pm$ 359.7 & 1135.6 $\pm$ 381.1 \\
+12 &    4096 && 0.029 $\pm$ 0.007 & 0.385 $\pm$ 0.113 && 2173.1 $\pm$ 652.5 & 2139.2 $\pm$ 710.3 \\
+13 &    8192 && 0.049 $\pm$ 0.015 & 0.640 $\pm$ 0.237 && 3839.8 $\pm$ 1376.6 & 3743.5 $\pm$ 1532.9 \\
+14 &   16384 && 0.104 $\pm$ 0.037 & 1.337 $\pm$ 0.513 && 8175.9 $\pm$ 3037.4 & 8026.4 $\pm$ 3303.7 \\
+15 &   32768 && 0.163 $\pm$ 0.078 & 2.010 $\pm$ 1.096 && 12459.6 $\pm$ 6164.5 & 12062.2 $\pm$ 6897.2 \\
+16 &   65536 && 0.360 $\pm$ 0.163 & 4.483 $\pm$ 2.030 && 27027.3 $\pm$ 12397.0 & 26835.7 $\pm$ 12446.9 \\
+17 &  131072 && 0.664 $\pm$ 0.362 & 8.072 $\pm$ 4.370 && 48001.9 $\pm$ 26149.2 & 48093.4 $\pm$ 26233.2 \\
+18 &  262144 && 1.250 $\pm$ 0.690 & 14.341 $\pm$ 8.062 && 85880.9 $\pm$ 47950.8 & 86050.8 $\pm$ 49186.8 \\
+19 &  524288 && 2.936 $\pm$ 1.629 & 34.639 $\pm$ 19.074 && 198503.0 $\pm$ 108116.1 & 197832.5 $\pm$ 110659.6 \\
+20 & 1048576 && 5.024 $\pm$ 3.097 & 61.038 $\pm$ 38.250 && 321495.8 $\pm$ 198004.3 & 318507.0 $\pm$ 199354.3 \\
+% 21 & 2097152 && 11.997 $\pm$ 7.637 & 144.610 $\pm$ 89.521 && 754636.3 $\pm$ 478683.6 & 759129.7 $\pm$ 472831.1 \\
+\bottomrule
+\end{tabular}
+% }
+\end{table}
+
+
 \subsection{Elaboração do UBB-PFS}
 \subsection{Elaboração de um algoritmo de aproximação}
 \subsection{Testes com instâncias reais do problema de seleção de 
@@ -320,13 +473,17 @@ $|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_LEFTMOST} && \algname{PFS} & 
 Reis, Marcelo S. ``Minimization of decomposable in U-shaped curves functions defined on poset chains–algorithms and applications." PhD thesis, Institute of Mathematics and Statistics, University of São Paulo, Brazil, (2012).
 
 \bibitem{featsel paper}
-Reis, Marcelo S., Gustavo Estrela, Carlos E. Ferreira and Junior Barrera.
+Reis, Marcelo S., Gustavo Estrela, Carlos E. Ferreira e Junior Barrera.
 ``featsel: A framework for benchmarking of feature selection algorithms
 and cost functions". SoftwareX 6 (2017), pp. 193-197.
 
 \bibitem{bryant}
 Bryant, Randal E. ``Graph-based algorithms for boolean function manipulation." IEEE Transactions on Computers, 100.8 (1986): 677-691. 
 
+\bibitem{ic1}
+Gustavo E. Matos e Marcelo S. Reis. ``Estudos de estruturas de dados 
+eficientes para abordar o problema de otimização U-curve". Relatório
+científico final FAPESP, Instituto Butantan, Brasil (2015).
 
 \end{thebibliography}
 

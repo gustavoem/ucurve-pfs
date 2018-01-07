@@ -1,0 +1,45 @@
+% Red-black tree
+% Author: Madit
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{my_colors}
+\usepackage[paperheight=2.0in, paperwidth=4.1in, margin=0in]{geometry}
+\usetikzlibrary{arrows}
+
+\tikzset{
+  treenode/.style = {align=center, inner sep=2pt, text centered,
+    font=\sffamily, draw=black},
+  notleaf/.style = {treenode, circle},
+  leaf/.style = {treenode, rectangle}
+}
+
+\begin{document}
+\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
+  level distance = 1.5cm}] 
+\node [notleaf] {$a$}
+child { 
+    node [notleaf] {$b$} 
+    child {
+        node [notleaf] {$c$}
+        child {node [leaf, fill=my_yellow]{$\mathbf{N}$}}
+        child {node [leaf]{$NIL$}}
+    }
+    child{ 
+        node [notleaf] {$c$}
+        child {node [leaf, fill=my_yellow]{$\mathbf{M}$}}
+        child {node [leaf]{$NIL$}}
+    }                            
+}
+child{ 
+    node [notleaf] {$b$}
+    child { 
+        node [notleaf] {$c$} 
+        child{node [leaf, fill=my_yellow]{$\mathbf{R}$}}
+        child{node [leaf]{$NIL$}}
+    }
+    child{ node [leaf] {$NIL$}}
+};
+\end{tikzpicture}
+\end{document}
+

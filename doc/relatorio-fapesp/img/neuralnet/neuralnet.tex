@@ -1,0 +1,79 @@
+\documentclass{article}
+
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{my_colors}
+\usepackage[paperheight=2.9in,paperwidth=3.3in,margin=0in]{geometry}
+
+\begin{document}
+\pagestyle{empty}
+
+\def\layersep{2.5cm}
+
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!30, node distance=\layersep]
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[neuron, fill=pres_orange];
+    \tikzstyle{output neuron}=[neuron, fill=pres_blue];
+    \tikzstyle{hidden neuron}=[neuron, fill=black!20];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    % Draw the input layer nodes
+    \node[input neuron, pin=left:$x_1$] (i0) at (0, 0) {};
+    \node[input neuron, pin=left:$x_2$] (i1) at (0, -1) {};
+    \node[input neuron, pin=left:$x_3$] (i2) at (0, -2) {};
+    \node[input neuron, pin=left:$x_4$] (i3) at (0, -3) {};
+
+
+    % Draw the hidden layer nodes
+    \node[hidden neuron] (h0) at (\layersep, 1) {};
+    \node[hidden neuron] (h1) at (\layersep, 0) {};
+    \node[hidden neuron] (h2) at (\layersep, -1) {};
+    \node[hidden neuron] (h3) at (\layersep, -2) {};
+    \node[] (hdots) at (\layersep, -3) {$\vdots$};
+    \node[hidden neuron] (h4) at (\layersep, -4) {};
+
+    %output layer
+    \node[output neuron] (o0) at (2*\layersep, -1.5) {};
+
+    % Connect input to hidden layer
+    \path (i0) edge (h0);
+    \path (i0) edge (h1);
+    \path (i0) edge (h2);
+    \path (i0) edge (h3);
+    \path (i0) edge (h4);
+    \path (i0) edge (h0);
+
+    \path (i1) edge (h0);
+    \path (i1) edge (h1);
+    \path (i1) edge (h2);
+    \path (i1) edge (h3);
+    \path (i1) edge (h4);
+    \path (i1) edge (h0);
+
+    \path (i2) edge (h0);
+    \path (i2) edge (h1);
+    \path (i2) edge (h2);
+    \path (i2) edge (h3);
+    \path (i2) edge (h4);
+    \path (i2) edge (h0);
+
+    \path (i3) edge (h0);
+    \path (i3) edge (h1);
+    \path (i3) edge (h2);
+    \path (i3) edge (h3);
+    \path (i3) edge (h4);
+    \path (i3) edge (h0);    
+
+    \path (h0) edge (o0);
+    \path (h1) edge (o0);
+    \path (h2) edge (o0);
+    \path (h3) edge (o0);
+    \path (h4) edge (o0);
+
+    \node[annot,above of=h0, node distance=1cm] (hl) {Hidden layer};
+    \node[annot,above of=h0, node distance=1cm, xshift=2.5cm] {Output layer};
+    \node[annot,above of=h0, node distance=1cm, xshift=-2.5cm] {Input layer};
+\end{tikzpicture}
+\end{document}
+
