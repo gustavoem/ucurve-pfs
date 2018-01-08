@@ -457,6 +457,155 @@ $|S|$ & $2^{|S|}$ && PFS & PPFS && PFS & PPFS \\
 
 
 \subsection{Elaboração do UBB-PFS}
+Visto que a paralelização do \algname{PFS} não teve bons resultados 
+devido o entrelace de linhas de processamento na atualização da floresta 
+dual, criamos um novo algoritmo paralelo em que as linhas de execução
+interferem minimamente uma nas outras. Este algoritmo particiona o 
+espaço de busca e resolve cada parte de maneira paralela e independente
+como um sub-problema do problema original. Chamamos este algoritmo de 
+\algname{UBB-PFS} porque ele possui duas etapas em que procedimentos 
+similares ao \algname{UBB} e o \algname{PFS} ocorrem. 
+
+Na primeira etapa, percorre-se o reticulado de maneira idêntica a que 
+se faz no algoritmo \algname{UBB}, ou seja, com uma busca em
+profundidade. A cada iteração deste percorrimento, a pilha de busca em 
+profundidade contém nós que são raízes de sub-árvores completas do
+espaço de busca. Portanto, a cada iteração da primeira etapa, o espaço
+de busca está particionado nas seguintes partes:
+\begin{itemize}
+    \item{Subconjuntos visitados na primeira etapa: estes subconjuntos
+        entraram na pilha de busca de profundidade, foram visitados e 
+        foram removidos da pilha. O custo de todos estes subconjuntos 
+        foram calculados.}
+    \item{Subconjuntos não visitados na primeira etapa: estes elementos
+        estão contidos em uma das sub-árvores com raiz na pilha de
+        busca em profundidade. Note este conjunto é particionado por
+        estas sub-árvores.}
+\end{itemize}
+
+Desta maneira, a cada iteração da primeira etapa, podemos encontrar a
+solução do problema ao encontrar a melhor solução entre o mínimo dos
+elementos visitados e o mínimo de cada uma das partes que são 
+sub-árvores. Determinar o mínimo dos elementos visitados é fácil, pois
+o custo destes elementos já foi calculado no percorrimento, já
+para determinar o mínimo dos elementos não visitados é necessário 
+resolver sub-problemas do problema original, o que é feito na segunda
+etapa do \algname{UBB-PFS}.
+
+A decomposição do espaço de busca em uma árvore feita pelo algoritmo
+\algname{UBB} permite que cada sub-árvore do espaço de busca seja
+representada também por um reticulado Booleano completo. Desta maneira,
+é possível transformar o problema de encontrar o mínimo local  de uma 
+sub-árvore em um problema de seleção de características. A segunda etapa 
+do \algname{UBB-PFS} é então responsável por mapear cada uma das 
+sub-árvores não percorridas do espaço de busca em um problema auxiliar
+de seleção de características e resolvê-los em paralelo com chamadas
+do algoritmo \algname{PFS}. Como estes sub-problemas são independentes,
+as chamadas em paralelo devem ter pouco ou nenhum entrelace, o que deve
+trazer a melhora de desempenho que não foi possível com a simples 
+paralelização do \algname{PFS}.
+
+Entretanto, ainda é necessário definir em que momento o algoritmo deve
+passar da primeira para a segunda etapa. A princípio, esta transição
+pode ocorrer em qualquer fim de iteração da busca em profundidade, 
+entretanto fazer esta transição prematuramente pode implicar em um 
+particionamento grosso do espaço de busca, com poucas raízes na pilha
+de busca em profundidade; por outro lado, quanto mais tarde fizermos 
+esta transição, menor será o trabalho realizado em paralelo, já que a
+primeira etapa  é feita sempre de maneira serial. Definimos em nossa 
+implementação que a transição deve ocorrer sempre que o número de 
+sub-árvores for maior do que o número de núcleos de processamento do 
+computador ou quando o número de iterações da primeira etapa for maior
+do que duas vezes a quantidade de características do problema.
+
+A tabela~\ref{tab:ubbpfs_vs_ubb_vs_pfs_time} mostra a comparação de 
+tempo de execução entre os algoritmos \algname{UBB}, \algname{PFS} e
+\algname{UBB-PFS}. Apesar do \algname{UBB} possuir limitações quando
+a função é monotônica não-crescente, este é o algoritmo mais rápido
+no caso médio, seguido pelo \algname{UBB-PFS}, e o \algname{PFS} é o 
+mais lento. A tabela~\ref{tab:ubbpfs_vs_ubb_vs_pfs_computed_nodes} 
+mostra a comparação de número de chamadas da função custo, e podemos
+observar que o \algname{PFS} tem o menor número, seguido pelo 
+\algname{UBB-PFS} e o \algname{UBB}, que possui maior número de 
+chamadas.
+
+\begin{table}
+\centering
+\footnotesize
+\caption{Comparação de tempo médio de execução entre os algoritmos
+\algname{UBB}, \algname{PFS} e \algname{UBB-PFS}. Podemos observar que
+o \algname{PFS} foi o mais lento enquanto o \algname{UBB} foi o mais
+rápido e o \algname{UBB-PFS} teve desempenho itermediário para estas
+instâncias.}
+\label{tab:ubbpfs_vs_ubb_vs_pfs_time}
+% \resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c ccc}
+\toprule
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{3}{c}{Tempo de execução médio (s)}\\
+\cline{1-2}\cline{4-6}\\
+$|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS  \\
+10 &    1024 &&  0.006 $\pm$ 0.001 & 0.011 $\pm$ 0.002 & 0.023 $\pm$ 0.004 \\
+11 &    2048 &&  0.007 $\pm$ 0.001 & 0.017 $\pm$ 0.004 & 0.026 $\pm$ 0.004 \\
+12 &    4096 &&  0.010 $\pm$ 0.003 & 0.029 $\pm$ 0.009 & 0.034 $\pm$ 0.006 \\
+13 &    8192 &&  0.013 $\pm$ 0.006 & 0.047 $\pm$ 0.016 & 0.044 $\pm$ 0.011 \\
+14 &   16384 &&  0.024 $\pm$ 0.013 & 0.094 $\pm$ 0.034 & 0.068 $\pm$ 0.023 \\
+15 &   32768 &&  0.043 $\pm$ 0.026 & 0.186 $\pm$ 0.074 & 0.113 $\pm$ 0.042 \\
+16 &   65536 &&  0.083 $\pm$ 0.060 & 0.339 $\pm$ 0.168 & 0.187 $\pm$ 0.082 \\
+17 &  131072 &&  0.161 $\pm$ 0.122 & 0.650 $\pm$ 0.347 & 0.326 $\pm$ 0.175 \\
+18 &  262144 &&  0.321 $\pm$ 0.233 & 1.482 $\pm$ 0.768 & 0.703 $\pm$ 0.380 \\
+19 &  524288 &&  0.620 $\pm$ 0.447 & 2.711 $\pm$ 1.562 & 1.309 $\pm$ 0.729 \\
+20 & 1048576 &&  1.312 $\pm$ 0.970 & 5.007 $\pm$ 3.302 & 2.478 $\pm$ 1.547 \\
+21 & 2097152 &&  2.494 $\pm$ 1.893 & 11.125 $\pm$ 6.749 & 5.458 $\pm$ 3.294 \\
+22 & 4194304 &&  4.589 $\pm$ 4.122 & 19.085 $\pm$ 15.147 & 8.832 $\pm$ 6.846 \\
+23 & 8388608 &&  12.228 $\pm$ 7.922 & 40.323 $\pm$ 29.649 & 18.891 $\pm$ 12.786 \\
+24 & 16777216 &&  24.273 $\pm$ 16.277 & 113.332 $\pm$ 76.688 & 67.178 $\pm$ 46.516 \\
+\bottomrule
+\end{tabular}
+% }
+\end{table}
+
+
+\begin{table}
+\centering
+\footnotesize
+\caption{Comparação sobre o número de chamadas de função custo entre
+os algoritmos \algname{UBB}, \algname{PFS} e \algname{UBB-PFS}. Vemos
+nesta tabela que o número de nós computados pelo \algname{UBB} é o maior
+enquanto o do \algname{PFS} é o menor; o \algname{UBB-PFS} tem 
+desempenho intermediário, porém próximo ao do \algname{PFS}.}
+\label{tab:ubbpfs_vs_ubb_vs_pfs_computed_nodes}
+% \resizebox{\columnwidth}{!}{%
+\begin{tabular}{cc c ccc}
+\toprule
+\multicolumn{2}{c}{Instância} & \phantom{} & \multicolumn{3}{c}{Número médio de cálculos de custo}\\
+\cline{1-2}\cline{4-6} \\
+$|S|$ & $2^{|S|}$ && UBB & PFS & UBB-PFS  \\
+10 &    1024  && 699.4 $\pm$ 361.3 & 611.3 $\pm$ 178.8 & 634.7 $\pm$ 209.8 \\
+11 &    2048  && 1217.2 $\pm$ 747.1 & 1145.4 $\pm$ 358.9 & 1178.8 $\pm$ 484.1 \\
+12 &    4096  && 2898.0 $\pm$ 1380.4 & 2103.1 $\pm$ 793.6 & 2363.0 $\pm$ 760.4 \\
+13 &    8192  && 4422.6 $\pm$ 3293.8 & 3650.9 $\pm$ 1371.9 & 3934.4 $\pm$ 1487.7 \\
+14 &   16384  && 10089.4 $\pm$ 6452.1 & 7536.3 $\pm$ 2926.1 & 8012.2 $\pm$ 3387.4 \\
+15 &   32768  && 19097.5 $\pm$ 12793.8 & 14546.5 $\pm$ 6081.0 & 15299.2 $\pm$ 6598.4 \\
+16 &   65536  && 37663.1 $\pm$ 28321.2 & 25744.0 $\pm$ 12795.4 & 27028.4 $\pm$ 13031.9 \\
+17 &  131072  && 73373.3 $\pm$ 55994.3 & 46808.9 $\pm$ 24533.5 & 49348.6 $\pm$ 24556.7 \\
+18 &  262144  && 150035.2 $\pm$ 108299.3 & 103166.6 $\pm$ 52464.7 & 105306.4 $\pm$ 53472.0 \\
+19 &  524288  && 292561.2 $\pm$ 210771.2 & 183125.7 $\pm$ 104965.4 & 189545.7 $\pm$ 102145.9 \\
+20 & 1048576  && 617049.5 $\pm$ 450468.2 & 323097.4 $\pm$ 213634.3 & 340694.2 $\pm$ 202389.6 \\
+21 & 2097152  && 1172641.6 $\pm$ 879148.5 & 691991.3 $\pm$ 413262.9 & 704790.2 $\pm$ 407143.8 \\
+22 & 4194304  && 2099973.2 $\pm$ 1863285.8 & 1133395.1 $\pm$ 874492.0 & 1156564.2 $\pm$ 862152.0 \\
+23 & 8388608  && 5435778.8 $\pm$ 3468245.3 & 2276694.5 $\pm$ 1621342.2 & 2345648.2 $\pm$ 1558258.5 \\
+24 & 16777216 && 10146842.9 $\pm$ 6673018.3 & 5527504.2 $\pm$ 3413432.3 & 5609052.7 $\pm$ 3337059.1 \\
+\bottomrule
+\end{tabular}
+% }
+\end{table}
+Estes resultados mostram que o desempenho do \algname{UBB-PFS} é 
+intermediário entre o \algname{UBB} e \algname{PFS} para dois parâmetros
+diferentes de qualidade. Portanto, podemos considerar o 
+\algname{UBB-PFS} uma opção competitiva para problemas de seleção de 
+características.
+
+
 \subsection{Elaboração de um algoritmo de aproximação}
 \subsection{Testes com instâncias reais do problema de seleção de 
             características}
