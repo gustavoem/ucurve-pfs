@@ -135,12 +135,27 @@ Learning Repository.
 
  
 \section{Atividades Realizadas}
-
-Uma implementação do \algname{PFS}, feita por Reis, está disponível no
-arcabouço \toolname{featsel}. Usamos esta implementação como base para
-estudar as modificações feitas ao \algname{PFS}.
+As seções a seguir descrevem os trabalhos realizados neste projeto. A
+seção~\ref{sec:pfs_studies} descreve o algoritmo 
+\algname{Poset\--Forest\--Search} (\algname{PFS}), cujo o estudo foi a
+primeira atividade deste projeto. As seções \ref{sec:pfs_root_choice} e 
+\ref{sec:pfs_root_data} mostram modificações feitas ao algoritmo
+\algname{PFS} com o intuito de melhorar seu desempenho. Uma 
+implementação do \algname{PFS}, feita por Reis, está disponível no
+arcabouço \toolname{featsel}; usamos esta implementação como base para
+estudar as modificações feitas ao \algname{PFS}. A seção~\ref{sec:ppfs}
+mostra como paralelizamos este algoritmo. A seção~\ref{sec:ubb_pfs} 
+mostra como elaboramos o algoritmo \algname{UBB-PFS}, um algoritmo 
+paralelo que particiona no espaço de busca. A seção~\ref{sec:pucs} 
+mostra como desenvolvemos o algoritmo 
+\algname{Parallel\--U\--curve\--Search}, um algoritmo de divisão e 
+conquista criado para resolver o problema de seleção de características 
+de forma paralela. Finalmente, na seção~\ref{sec:uci} apresentamos uma
+aplicação de seleção de características em seleção de modelos de 
+aprendizado de máquina.
 
 \subsection{Estudo de algoritmos baseados em florestas}
+\label{sec:pfs_studies}
 O algoritmo \algname{Poset\--Forest\--Search} (\algname{PFS}) é um 
 algoritmo ótimo para resolver o problema de otimização U-Curve e serviu 
 de base para a criação da maioria dos algoritmos elaborados neste 
@@ -177,6 +192,7 @@ finalmente, atualizar a floresta dual a que foi percorrida.
 
 
 \subsection{Modificações do \algname{PFS} na escolha de raízes}
+\label{sec:pfs_root_choice}
 Para se fazer um percorrimento no espaço de busca, o algoritmo 
 \algname{PFS} deve escolher uma direção de percorrimento, isto é, uma
 das duas florestas que representam o espaço de busca, e também uma raiz
@@ -299,6 +315,7 @@ $|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PFS\_LEFTMOST} && \algname{PFS} & 
 \end{table}
 
 \subsection{Mudificação do \algname{PFS} no armazenamento de raízes}
+\label{sec:pfs_root_data}
 A quantidade de raízes durante a execução do \algname{PFS} pode ser 
 grande, e por isso a estrutura utilizada para o seu armazenamento deve
 ser eficiente para operações como inserções, remoções e consultas. 
@@ -385,6 +402,7 @@ $|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{OPFS} && \algname{PFS} & \algname{
 
 
 \subsection{Paralelização do \algname{PFS}}
+\label{sec:ppfs}
 A decomposição do espaço de busca em uma floresta feita pelo algoritmo
 \algname{PFS} separa tal espaço em partes disjuntas que são árvores.
 Estruturas disjuntas como estas podem ser percorridas de maneira 
@@ -457,6 +475,7 @@ $|S|$ & $2^{|S|}$ && \algname{PFS} & \algname{PPFS} && \algname{PFS} & \algname{
 
 
 \subsection{Elaboração do \algname{UBB-PFS}}
+\label{sec:ubb_pfs}
 Visto que a paralelização do \algname{PFS} não teve bons resultados 
 devido o entrelace de linhas de processamento na atualização da floresta 
 dual, criamos um novo algoritmo paralelo em que as linhas de execução
@@ -607,6 +626,7 @@ características.
 
 
 \subsection{Elaboração do \algname{Parallel-U-Curve-Search}}
+\label{sec:pucs}
 Apesar do algoritmo \algname{UBB-PFS} ser uma opção competitiva para o
 problema de seleção de características, este algoritmo possui pontos
 que poderiam ser explorados para se obter uma melhor paralelização. 
@@ -899,6 +919,7 @@ função custo que o \algname{UBB}, porém faz mais chamadas do que o
 
 \subsection{Testes com instâncias reais do problema de seleção de 
             características}
+\label{sec:uci}
 Como última atividade deste projeto, investigamos o uso de seleção de
 características na seleção de modelos de aprendizado. Com conjuntos de 
 dados do
