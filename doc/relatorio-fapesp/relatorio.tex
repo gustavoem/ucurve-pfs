@@ -142,11 +142,11 @@ primeira atividade deste projeto. As seções \ref{sec:pfs_root_choice} e
 \ref{sec:pfs_root_data} mostram modificações feitas ao algoritmo
 \algname{PFS} com o intuito de melhorar seu desempenho. Uma 
 implementação do \algname{PFS}, feita por Reis, está disponível no
-arcabouço \toolname{featsel}; usamos esta implementação como base para
-estudar as modificações feitas ao \algname{PFS}. A seção~\ref{sec:ppfs}
+arcabouço \toolname{featsel}, e usamos esta implementação como base para
+estudar as modificações a este algoritmo. A seção~\ref{sec:ppfs}
 mostra como paralelizamos este algoritmo. A seção~\ref{sec:ubb_pfs} 
-mostra como elaboramos o algoritmo \algname{UBB-PFS}, um algoritmo 
-paralelo que particiona no espaço de busca. A seção~\ref{sec:pucs} 
+mostra como elaboramos o algoritmo \algname{UBB-PFS}, uma algoritmo
+paralelo inspirado no \algname{PFS}. A seção~\ref{sec:pucs} 
 mostra como desenvolvemos o algoritmo 
 \algname{Parallel\--U\--curve\--Search}, um algoritmo de divisão e 
 conquista criado para resolver o problema de seleção de características 
@@ -196,14 +196,14 @@ finalmente, atualizar a floresta dual a que foi percorrida.
 Para se fazer um percorrimento no espaço de busca, o algoritmo 
 \algname{PFS} deve escolher uma direção de percorrimento, isto é, uma
 das duas florestas que representam o espaço de busca, e também uma raiz
-da floresta escolhida. Esta escolha é feita de maneira arbitrária, e por
-conta disso, investigamos como diferentes escolhas podem afetar o 
-desempenho do algoritmo.
+da floresta escolhida. Esta última escolha é feita de maneira 
+arbitrária, e por conta disso, investigamos como diferentes escolhas 
+podem afetar o desempenho do algoritmo.
 
 Na implementação de Reis, a estrutura de dados utilizada para armazenar
-raízes é a \toolname{map} do \langname{C++}. Escolhe-se nesta 
-implementação o primeiro ou último elemento da estrutura, o que coincide
- com a primeira ou última raiz quando estas estão ordenadas 
+raízes é a \toolname{map} do \langname{C++}, e por simplicidade, 
+escolhe-se o primeiro ou último elemento desta estrutura, o que coincide
+com a primeira ou última raiz quando estas estão ordenadas 
 lexicograficamente por seus vetores característicos. Em nosso trabalho, 
 experimentamos duas modificações para esta escolha:
 \begin{itemize}
@@ -356,7 +356,7 @@ estrutura de OBDD.
 \end{figure}
 
 Como a estrutura de dados que armazena as raízes foi modificada, é 
-necessário definir o abordagem para escolha de raiz na etapa de 
+necessário definir a abordagem para escolha de raiz na etapa de 
 percorrimento. Utilizamos então a abordagem de escolha aleatória e 
 uniforme, pois esta mostrou uma dinâmica similar a implementação de
 Reis.
@@ -531,7 +531,7 @@ entretanto fazer esta transição prematuramente pode implicar em um
 particionamento grosso do espaço de busca, com poucas raízes na pilha
 de busca em profundidade; por outro lado, quanto mais tarde fizermos 
 esta transição, menor será o trabalho realizado em paralelo, já que a
-primeira etapa  é feita sempre de maneira serial. Definimos em nossa 
+primeira etapa  é feita sempre de maneira sequencial. Definimos em nossa 
 implementação que a transição deve ocorrer sempre que o número de 
 sub-árvores for maior do que o número de núcleos de processamento do 
 computador ou quando o número de iterações da primeira etapa for maior
@@ -621,8 +621,7 @@ $|S|$ & $2^{|S|}$ && \algname{UBB} & \algname{PFS} & \algname{UBB-PFS}  \\
 Estes resultados mostram que o desempenho do \algname{UBB-PFS} é 
 intermediário entre o \algname{UBB} e \algname{PFS} para dois parâmetros
 diferentes de qualidade. Portanto, podemos considerar o 
-\algname{UBB-PFS} uma opção competitiva para problemas de seleção de 
-características.
+\algname{UBB-PFS} uma opção competitiva para o problema U-curve.
 
 
 \subsection{Elaboração do \algname{Parallel-U-Curve-Search}}
@@ -977,26 +976,107 @@ dos classificadores diminui quando existe seleção de características.
 
 
 \section{Avaliação e disseminação de resultados}
+Durante o curso deste projeto, participamos de conferências e elaboramos
+textos que incluem uma monografia e um artigo publicado.
+
+
 \subsection{Participação em conferências}
-% - x-meeting
-% - rca
-% -> apresentação de poster
+No mês de outubro, entre os dias 4 e 6, participamos da 13$^\text{a}$ 
+conferência de bioinformática X-Meeting, da AB3C. No mês de novembro, 
+participamos também da Reunião Científica Anual do Instituto Butantan. 
+Em ambas conferências, apresentamos um pôsteres que abordavam o problema 
+de seleção de características, o problema U-curve e resultados de 
+aplicação deste problema como apresentado na seção~\ref{sec:uci}; além
+disso, como estas conferência contava com a presença de pessoas de áreas
+biológicas, explicamos como o problema de seleção de características
+pode ser aplicado na seleção de modelos para identificação de vias de 
+sinalização celular.
 
 \subsection{Monografia de conclusão de curso}
-% - mencionar que tirou 10
+Este projeto de iniciação científica foi apresentado no Instituto de
+Matemática e Estatística da Universidade de São Paulo como um trabalho
+do curso ``MAC0499 - Trabalho de Formatura Supervisionado". Como
+tarefas do curso, elaboramos uma monografia e fizemos apresentação oral
+e de pôster, avaliados pelo professor responsável da matéria com nota 10 
+de 10 pontos possíveis.
 
 \subsection{Publicações}
 % com os esforços desta ic e da última:
 % - paper featsel publicado
 % - paper UCS em revisão
 % - paper PUCS em preparação
+Com os desenvolvimento deste projeto e do projeto FAPESP \#2014/23564-0,
+elaboramos um artigo aceito e publicado no periódico SoftwareX, com
+título ``featsel: A framework for benchmarking of feature selection 
+algorithms and cost functions". Este texto apresenta o arcabouço 
+\toolname{featsel}, uma ferramenta para implementação e avaliação de 
+algoritmos e funções de custo para o problema de seleção de 
+características. 
+
+Além disso, um outro artigo foi submetido e está em avaliação no 
+periódico Information Sciences, com título ``Optimal Boolean 
+lattice-based algorithms for the U-curve optimization problem". Neste
+texto apresentamos parte do trabalho desenvolvido na iniciação 
+científica FAPESP \#2014/23564-0, com a elaboração e aplicação de uma 
+estrutura de dados baseada em diagramas de decisão binária reduzidos e 
+ordenados para representação do espaço de busca no problema U-curve.
+
+Por fim, um outro artigo está sendo produzido para apresentar o 
+algoritmo \algname{PUCS} como uma alternativa de algoritmo adaptativo
+para resolver o problema U-curve.
 
 \section{Conclusão} 
-% - balanço do trabalho 
-% - como acreditamos que este trabalho impacta no trabalho de mestrado
+Durante a execução deste trabalho, estudamos algoritmos para o 
+problema U-curve baseados em florestas, com foco principal no algoritmo
+\algname{PFS}. Com entendimento sobre o funcionamento deste algoritmo,
+fomos capazes de investigar modificações a este nas escolhas de
+ramificações na busca pelo mínimo, e na estrutura de dados utilizada, 
+inserindo uma adaptação de uma estrutura previamente implementada em uma 
+outra oportunidade de iniciação científica.
+
+Ainda investigando o algoritmo \algname{PFS}, implementamos uma versão
+paralela deste algoritmo com o uso da biblioteca \toolname{OpenMP}, e
+constatamos que, apesar do \algname{PFS} aparentar ser um algoritmo
+facilmente paralelizado, a etapa de atualização das florestas dificultou
+a paralelização e comprometeu o tempo de execução de nossa 
+implementação.
+
+Procurando eliminar as dificuldades da paralelização do \algname{PFS},
+desenvolvemos o \algname{UBB-PFS}, que é uma adaptação do \algname{UBB}
+e \algname{PFS} que diminui o entrelace de linhas de processamento, 
+simplificando a paralelização do algoritmo com um particionamento do
+espaço de busca. Este algoritmo mostrou ser uma alternativa competitiva
+para resolver o problema U-curve, apesar de ter alguns pontos que ainda
+poderiam ser explorados.
+
+Para explorar estes pontos, desenvolvemos o algoritmo \algname{PUCS},
+que particiona o espaço de busca de maneira mais equilibrada que o 
+\algname{UBB-PFS}. Além disso, este algoritmo tem parâmetros que 
+permitem o seu uso em diversas instâncias do problema U-curve, pois
+ele pode ser ótimo ou sub-ótimo e, no caso sub-ótimo, é possível 
+escolher o que é mais adequado ao usuário em uma troca de tempo de 
+execução por qualidade de solução obtida.
+
+Com o fim do desenvolvimento de algoritmos para o problema U-curve, 
+aplicamos a solução deste problema na seleção de modelos de
+aprendizado computacional. Fizemos a seleção de modelos em problemas 
+reais de aprendizado de máquina, disponíveis no UCI Machine Learning 
+Repository. Nestes testes, observamos que a seleção de características 
+pode diminuir a complexidade de modelos de aprendizado sem comprometer 
+o seu desempenho de classificação.
+
+Como trabalho futuro nesta linha, propomos a aplicação de seleção de
+características na seleção de modelos para vias de sinalização celular.
+Uma proposta de mestrado já foi enviada e aceita pela FAPESP em que 
+propomos construir um banco de dados de interatomas, e tratar o problema 
+de seleção de modelos como uma busca por um subconjunto de interações 
+deste banco que melhor descreve uma via de sinalização. Desta maneira,
+com a criação de uma função de custo capaz de descrever a qualidade
+de um subconjunto de interações no modelo de um experimento biológico,
+seríamos capazes de utilizar algoritmos de seleção de características 
+para determinar modelos de vias de sinalização celular.
+
 \pagebreak
-
-
 \begin{thebibliography}{9} \label{sec:referencias}
 
 \addcontentsline{toc}{section}{Referências}
