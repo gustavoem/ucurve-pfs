@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<!--
+	Read Only by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Algoritmos para o problema U-curve</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body>
+
+		<!-- Header -->
+			<section id="header">
+				<header>
+					<span class="image avatar"><img src="images/avatar.jpg" alt="" /></span>
+					<h1 id="logo"><a href="#">Gustavo Estrela</a></h1>
+					<p>Orientado por Marcelo da Silva Reis, <br />
+					trabalhei com algoritmos para o problema U-curve</p>
+				</header>
+				<nav id="nav">
+					<ul>
+						<li><a href="#one" class="active">Descrição do trabalho</a></li>
+						<li><a href="#two">Materiais</a></li>
+						<li><a href="#three">Apreciação pessoal</a></li>
+						<!-- <li><a href="#four">Contact</a></li> -->
+					</ul>
+				</nav>
+				<footer>
+					<ul class="icons">
+						<!-- <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li> -->
+						<!-- <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li> -->
+						<!-- <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li> -->
+						<li><a href="https://github.com/gustavoem" class="icon fa-github"><span class="label">Github</span></a></li>
+						<li><a href="mailto:gestrela@ime.usp.br" class="icon fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+				</footer>
+			</section>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- One -->
+							<section id="one">
+								<div class="container">
+									<header class="major">
+										<h2>Projeto de Algoritmos Baseados em Floresta de Posets para o Poblema de Otimização U-curve</h2>
+										<!--<p>Projeto de Algoritmos Baseados em Florestas de Posets para o Problema de Otimização U-curve<br /></p>-->
+										<h1>Aluno: Gustavo Estrela de Matos</h1>
+										<h1>Orientador: Marcelo da Silva Reis</h1>
+									</header>
+									<p>
+									<h1>Resumo</h1>
+									<p> O problema U-curve é uma formulação de um problema de otimização que 
+										pode ser utilizado na etapa de seleção de características em Aprendizado
+										de Máquina, com aplicações em desenho de modelos computacionais de 
+										sistemas biológicos. Não obstante, soluções propostas até o presente 
+										momento para atacar esse problema têm limitações do ponto de vista de 
+										consumo de tempo computacional e/ou de memória, o que implica na 
+										necessidade do desenvolvimento de novos algoritmos. Nesse sentido, em 
+										2012 foi proposto o algoritmo Poset-Forest-Search (PFS), que organiza o
+										espaço de busca em florestas de posets. Esse algoritmo foi implementado 
+										e testado, com resultados promissores; todavia, novos melhoramentos são
+										necessários para que o PFS se torne uma alternativa competitiva para 
+										resolver o problema U-curve. Neste projeto propomos a construção de uma 
+										versão paralelizada e escalável do algoritmo PFS, utilizando diagramas 
+										de decisão binária reduzidos e ordenados. Além disso, propomos a criação
+										de um novo algoritmo para o problema U-curve que se baseia na estratégia
+										de divisão e conquista para particionar o espaço e achar a solução do
+										problema de forma paralela. Os algoritmos desenvolvidos serão 
+										implementados e testados em instâncias artificiais e também em 
+										conjuntos de dados próprios para experimentos comparativos entre 
+										diferentes algoritmos de seleção de características.</p>
+								</div>
+							</section>
+
+						<!-- Two -->
+							<section id="two">
+								<div class="container">
+									<h3>Materiais</h3>
+									<ul class="feature-icons">
+										<a href="main.pdf"><li class="fa-file-text">Monografia</a></li>
+										<a href="https://github.com/gustavoem/ucurve-pfs"><li class="fa-code">Código</a></li>
+										<a href="presentation.pdf"><li class="fa-television">Apresentação</a></li>
+									</ul>
+								</div>
+							</section>
+
+						<!-- Three -->
+							<section id="three">
+								<div class="container">
+									<h3>Apreciação pessoal</h3>
+									<p>Tive meu primeiro contato com o problema U-curve, tema principal do meu TCC, em 2014, quando ainda estava no segundo ano da graduação. Na época eu era monitor de uma matéria lecionada pelo professor Junior Barrera, que me explicou sobre o problema e também me apresentou ao Marcelo Reis, o orientador do meu TCC. Comecei a estudar o problema  já nesta época para escrever uma proposta de iniciação científica em que eu seria o beneficiário e Marcelo o orientador. A ideia desta iniciação científica era estudar o uso de diagramas de decisão binários reduzidos e ordenados (ROBDDs) - usados na implementação de alguns algoritmos deste TCC - no algoritmo U-Curve-Search, um algoritmo para o problema U-curve criado por Marcelo durante seu doutorado.</p>	
+
+									<p>Na minha primeira iniciação científica escrevi a estrutura de dados de ROBDDs e, com ajuda de Marcelo, fiz diversas modificações no U-Curve-Search, utilizando ROBDDs para representar o espaço de busca. Acho que a abordagem de Marcelo nesta iniciação foi muito responsável e inteligente, pois ele considerou a minha falta de experiência e fez com que os nossos avanços fossem de mudanças pontuais nos algoritmos criados, sempre seguidos de testes; desta forma, era mais fácil entender como a dinâmica dos algoritmos influenciavam no desempenho do algoritmo. Neste trabalho, apesar de ter ganhado bastante conhecimento na parte de otimização combinatória do problema U-curve, ainda não entendia como se aplicava a solução deste problema. Este trabalho foi interrompido em julho de 2015, quando participei do programa (agora congelado) Ciências Sem Fronteiras.</p>
+
+									<p>No meu período sanduíche estudei na Texas A&M University (TAMU), em College Station. Eu fui o único aluno do programa enviado a esta universidade, e isto aconteceu porque o professor Junior Barrera tinha contato com professores da faculdade, que interferiram na decisão dos organizadores do programa. O motivo para minha ida para a Texas A&M, fora a minha vontade de morar fora do país por um ano, foi estudar o problema U-curve com o professor Ulisses Braga-Neto. Ulisses é professor do departamento de engenharia elétrica da TAMU e com ele estudei o algoritmo Improved-U-Curve-Branch-and-Bound (IUBB), que organiza o espaço de busca do problema de maneira similar ao U-Curve-Branch-and-Bound (UBB), apresentado neste trabalho. Durante dois meses, fui estagiário do professor Ulisses e tentei modificar o IUBB de maneira que a solução encontrada fosse mais robusta do que no algoritmo original. Para entender isso, tive que estudar funções de custo do problema U-curve e isto fez com que minha visão sobre o problema deixasse de ser apenas sobre a parte combinatória, considerando as amostras e violações da hipótese U-curve.</p>
+
+									<p>Retornando ao Brasil, voltei a conversar com o professor Junior e Marcelo sobre o problema U-curve, apresentando o que tinha estudado com o Ulisses. Assim, passei a escrever com Marcelo uma nova proposta de iniciação científica, apresentada neste TCC. Em seguida, comecei a me reunir com Marcelo, Junior e o professor Gubi para criarmos um algoritmo paralelo para o problema U-Curve. Como fruto destas reuniões, conseguimos idealizar a estrutura do PUCS, que foi teve sua primeira versão implementada nos meses de janeiro e fevereiro. Com a ajuda do professor Gubitoso consegui melhorar a paralelização deste algoritmo. Analisar os resultados deste algoritmo foi complicado, porque ele depende de três parâmetros diferentes, mas depois de muitas simulações frustrantes consegui entender como os parâmetros influenciam o desempenho do algoritmo. Apesar da primeira implementação deste algoritmo ficar pronta nos dois primeiros meses do ano, as análises e mudanças deste algoritmo se estenderam até meados de julho.</p>
+
+									<p>No primeiro semestre de 2017 eu frequentei as aulas do professor Junior no curso de Aprendizado de Máquina. Este curso foi muito importante para que eu pudesse entender como a seleção de características pode contribuir na seleção de modelos de aprendizado; o exemplo mais memorável pra mim foi quando aprendi o que era um W-Operador, pois sempre citei este exemplo nas propostas de iniciação científica, mas nunca tinha entendido como isto acontecia. Outras matérias que contribuíram para o desenvolvimento deste trabalho foram: Estrutura de Dados (MAC0323), Álgebra Booleana (MAC0329), Análise de Algoritmos (MAC0338), Otimização Combinatória (MAC0325), Algoritmos em Grafos (MAC0328), Visão e Processamento de Imagens (MAC0417) e Programação Concorrente e Paralela (MAC0219).</p>
+
+									<p>Com o curso de aprendizado de máquina, aprendi o que era necessário para fazer os experimentos de seleção de características em instâncias reais. Usamos conjuntos de dados do UCI Machine Learning para treinar e validar modelos de aprendizado feitos com seleção de características e sem. Os conjuntos de dados que usamos eram principalmente da área de Biologia, pois no mês de outubro apresentei na conferência X-Meeting o andamento deste trabalho com o algoritmo PUCS. Ainda no mês de outubro tive a segunda reunião de andamento de TCC com a professora Nina e tive que confrontar um fato: pouco do que tinha sido proposto para este trabalho estava feito. Apesar de eu ter trabalhado desde o começo do ano no PUCS, este algoritmo não estava no escopo do projeto de TCC.</p>
+
+									<p>Contando com uma sugestão da professora Nina, ajustamos o escopo deste trabalho para incluir também o PUCS, e nos comprometemos a implementar e testar melhoramentos do PFS nos próximos dois últimos meses de trabalho. Com isso, iniciou-se  o momento em que trabalhei mais intensamente neste trabalho: além de ter que implementar pelo menos mais quatro algoritmos (foram cinco), era necessário reportar todo este trabalho na monografia. Felizmente, com o apoio dos meus familiares e amigos, consegui me dedicar integralmente a este trabalho, terminando o que havia proposto com Marcelo depois da reformulação do escopo do trabalho.</p>
+								</div>
+							</section>
+					</div>
+
+				<!-- Footer -->
+					<section id="footer">
+						<div class="container">
+							<ul class="copyright">
+								<!-- <li>&copy; Untitled. All rights reserved.</li> -->
+								<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollzer.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
